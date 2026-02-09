@@ -361,3 +361,21 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Android
+*.apk
+*.aab
+*.keystore
+*.jks
+local.properties
+.gradle/
+
+# iOS
+*.mobileprovision
+*.p12
+*.ipa
+DerivedData/
+
+# Certificates
+*.pfx
+*.snk
