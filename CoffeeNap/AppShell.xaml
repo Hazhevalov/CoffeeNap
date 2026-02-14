@@ -6,9 +6,14 @@
     xmlns:local="clr-namespace:CoffeeNap"
     Title="CoffeeNap">
 
-    <ShellContent
-        Title="Coffee Nap"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <Tab Title="Главная">
+            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+        </Tab>
+
+        <Tab Title="Профиль">
+            <ShellContent ContentTemplate="{DataTemplate local:SecondPage}" />
+        </Tab>
+    </TabBar>
 
 </Shell>
