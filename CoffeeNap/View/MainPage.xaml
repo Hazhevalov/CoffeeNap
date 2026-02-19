@@ -1,74 +1,102 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              x:Class="CoffeeNap.MainPage"
-             BackgroundColor="#f5f5f5" 
-             Background="#f5f5f5">
+             BackgroundColor="#f5f5f5">
 
-    <StackLayout>
-        <!--NavBar-->
-        <FlexLayout Direction="Row" 
-                    JustifyContent="SpaceBetween" 
-                    Wrap="NoWrap" 
-                    Padding="15"
-                    AlignItems="Start"
-                    HeightRequest="90"
-                    BackgroundColor="#fff"
-                    VerticalOptions="Start">
+    <!-- Главный грид вместо StackLayout -->
+    <Grid RowSpacing="10" ColumnSpacing="0">
+        <Grid.RowDefinitions>
+            <!-- NavBar -->
+            <RowDefinition Height="Auto"/>
+            <!-- Дневная норма кофеина -->
+            <RowDefinition Height="Auto"/>
+            <!-- Источник кофеина -->
+            <RowDefinition Height="Auto"/>
+            <!-- Ваши употребления (CollectionView растягивается) -->
+            <RowDefinition Height="*"/>
+            <!--TabBar-->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-            <HorizontalStackLayout Spacing="10">
+        <!-- NavBar -->
+        <Border Padding="15" 
+                BackgroundColor="#fff" 
+                HeightRequest="90"
+                StrokeThickness="0">
 
-                <!-- Кнопка профиля -->
-                <Button ImageSource="profile_ico.png"
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0, 0, 30, 30"/>
+            </Border.StrokeShape>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Кнопка профиля -->
+                    <Button ImageSource="profile_ico.png"
                         BackgroundColor="#000"
                         TextColor="#fff"
                         CornerRadius="100"
                         HeightRequest="56"
-                        WidthRequest="56"/>
+                        WidthRequest="56"
+                        Grid.Column="0"/>
 
-                <!-- Текст справа от кнопки -->
-                <VerticalStackLayout Spacing="2">
+                    <!-- Текст справа от кнопки -->
+                    <VerticalStackLayout Spacing="2" 
+                                     Grid.Column="1">
 
-                    <Label Text="Добро пожаловать,"
-                       TextColor="#000"
-                       FontSize="16" />
-                    <Label Text="Mr. Kwim"
-                       TextColor="#000"
-                       FontAttributes="Bold"
-                       FontSize="20" />
+                        <Label Text="Добро пожаловать,"
+                           TextColor="#000"
+                           FontSize="16" />
 
-                </VerticalStackLayout>
-            </HorizontalStackLayout>
+                        <Label Text="Mr. Kwim"
+                           TextColor="#000"
+                           FontAttributes="Bold"
+                           FontSize="20" />
+                    </VerticalStackLayout>
+                </Grid>
 
-            <!--Кнопка настроек-->
-            <Button ImageSource="settings_ico.png"
+                <!-- Кнопка настроек -->
+                <Button ImageSource="settings_ico.png"
                     BackgroundColor="#000"
                     TextColor="#fff"
-                    CornerRadius="100" 
-                    HeightRequest="56" 
-                    WidthRequest="56" />
-        </FlexLayout>
+                    CornerRadius="100"
+                    HeightRequest="56"
+                    WidthRequest="56"
+                    Grid.Column="1"
+                    HorizontalOptions="End"/>
+            </Grid>
+        </Border>
 
-        <!--Блок Дневная норма кофеина-->
-        <Border StrokeShape="30"
-                Margin="10, 15">
-            
-            <Grid Padding="15" BackgroundColor="#000" RowSpacing="15">
-                    <Grid.RowDefinitions>
-                        <!-- заголовок -->
-                        <RowDefinition Height="Auto"/>
-                        <!-- прогресс -->
-                        <RowDefinition Height="Auto"/>
-                        <!-- значение -->
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+        <!-- Блок Дневная норма кофеина -->
+        <Border Grid.Row="1" 
+                StrokeShape="30" 
+                Margin="10, 0">
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+            <Grid Padding="15" 
+                  BackgroundColor="#000" 
+                  RowSpacing="15">
 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
                 <Label Text="Дневная
                              норма кофеина"
@@ -79,7 +107,6 @@
                        FontAttributes="Bold"
                        VerticalOptions="Center"/>
 
-
                 <Button ImageSource="more_ico.png"
                         WidthRequest="56"
                         HeightRequest="56"
@@ -88,24 +115,20 @@
                         Grid.Row="0"
                         Grid.Column="2"/>
 
-                <!--Прогрессбар-->
-                <Grid Grid.Row="1"
-                      Grid.Column="1"
-                      HeightRequest="12"
-                      VerticalOptions="Center"
-                      Grid.ColumnSpan="1">
+                <!-- Прогрессбар -->
+                <Grid Grid.Row="1" Grid.Column="1" 
+                      HeightRequest="12" 
+                      VerticalOptions="Center">
 
-                    <Border BackgroundColor="#2B2B2B"
-                            StrokeShape="RoundRectangle 12"
+                    <Border BackgroundColor="#2B2B2B" 
+                            StrokeShape="RoundRectangle 12" 
                             StrokeThickness="0">
 
-                        <Grid>
-                            <Border BackgroundColor="#C3F421"
-                                    StrokeShape="RoundRectangle 12"
-                                    HorizontalOptions="Start"
-                                    WidthRequest="100"
-                                    StrokeThickness="0"/>
-                        </Grid>
+                        <Border BackgroundColor="#C3F421" 
+                                StrokeShape="RoundRectangle 12" 
+                                HorizontalOptions="Start" 
+                                WidthRequest="100" 
+                                StrokeThickness="0"/>
                     </Border>
                 </Grid>
 
@@ -113,7 +136,7 @@
                        TextColor="#fff"
                        FontSize="12"
                        Grid.Row="1"
-                       Grid.Column="3"
+                       Grid.Column="2"
                        VerticalOptions="Center"
                        HorizontalOptions="End"
                        FontAttributes="Bold"/>
@@ -122,7 +145,7 @@
                        Grid.Column="1"
                        FontAttributes="Bold"
                        TextColor="#fff">
-                    
+
                     <Label.FormattedText>
                         <FormattedString>
                             <Span Text="150 " 
@@ -130,7 +153,7 @@
                                   FontAttributes="Bold"/>
 
                             <Span Text="миллиграмм" 
-                                  FontSize="20"
+                                  FontSize="20" 
                                   FontAttributes="Bold"/>
                         </FormattedString>
                     </Label.FormattedText>
@@ -138,38 +161,34 @@
             </Grid>
         </Border>
 
-        <!--Блок Источник кофеина-->
-        <Border StrokeShape="30"
-                BackgroundColor="#fff"
-                Stroke="#EAEAEA" Margin="15,0">
+        <!-- Блок Источник кофеина -->
+        <Border Grid.Row="2" 
+                StrokeShape="30" 
+                BackgroundColor="#fff" 
+                Stroke="#EAEAEA" 
+                Margin="10,0">
 
-            <Grid Padding="15" RowSpacing="15">
+            <Grid Padding="15" 
+                  RowSpacing="15">
+
                 <Grid.RowDefinitions>
-                    <!-- заголовок 0 -->
                     <RowDefinition Height="Auto"/>
-                    <!-- значения 1 -->
                     <RowDefinition Height="Auto"/>
-                    <!-- прогресс 2 -->
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Label Text="Ваш 
-                             источник кофеина" 
+                <Label Text="Ваш источник кофеина"
                        Grid.Row="0"
                        Grid.Column="0"
-                       Grid.RowSpan="1"
-                       Grid.ColumnSpan="2"
                        TextColor="#000"
                        FontSize="24"
                        FontAttributes="Bold"
                        VerticalOptions="Center"/>
-
 
                 <Button ImageSource="more_black_ico.png"
                         WidthRequest="56"
@@ -177,149 +196,270 @@
                         BackgroundColor="#fff"
                         CornerRadius="100"
                         Grid.Row="0"
-                        Grid.Column="2"/>
+                        Grid.Column="1"/>
 
-                <!--Второй прогрессбар-->
-                <Grid Grid.Row="1"
-                      Grid.Column="0"
-                      VerticalOptions="Center"
-                      Grid.ColumnSpan="3">
+                <!-- Прогрессбар -->
+                <Grid Grid.Row="1" 
+                      Grid.Column="0" 
+                      Grid.ColumnSpan="2" 
+                      VerticalOptions="Center">
 
-                    <Border BackgroundColor="#F4F4F4"
-                            StrokeShape="RoundRectangle 12"
+                    <Border BackgroundColor="#F4F4F4" 
+                            StrokeShape="RoundRectangle 12" 
                             StrokeThickness="0">
 
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="3*"/>
-                                <ColumnDefinition Width="3*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
+                        <!--Второй прогрессбар-->
+                        <Grid Grid.Row="1" Grid.Column="0" 
+                              VerticalOptions="Center" 
+                              Grid.ColumnSpan="3">
 
-                            <Border BackgroundColor="#AAAAAA"
-                                    StrokeShape="RoundRectangle 12"
-                                    HorizontalOptions="Start"
-                                    WidthRequest="320"
-                                    Padding="5"
-                                    StrokeThickness="0"
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="2">
+                            <Border BackgroundColor="#F4F4F4" 
+                                    StrokeShape="RoundRectangle 12" 
+                                    StrokeThickness="0">
+                                <Grid>
 
-                                <Label Text="33%"
-                                       HorizontalOptions="End"
-                                       TextColor="#fff"
-                                       FontSize="12" />
-                            </Border>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*"/>
+                                        <ColumnDefinition Width="3*"/>
+                                        <ColumnDefinition Width="3*"/>
+                                    </Grid.ColumnDefinitions>
 
-                            <Border BackgroundColor="#585858"
-                                    StrokeShape="RoundRectangle 12"
-                                    HorizontalOptions="Start"
-                                    WidthRequest="175"
-                                    Padding="5"
-                                    StrokeThickness="0"
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="1">
+                                    <Border BackgroundColor="#AAAAAA" 
+                                            StrokeShape="RoundRectangle 12"
+                                            HorizontalOptions="Start"
+                                            WidthRequest="320" 
+                                            Padding="5" 
+                                            StrokeThickness="0" 
+                                            Grid.Column="0" 
+                                            Grid.ColumnSpan="2">
 
-                                <Label Text="33%"
-                                       HorizontalOptions="End"
-                                       TextColor="#fff"
-                                       FontSize="12"/>
-                            </Border>
+                                        <Label Text="33%" 
+                                               HorizontalOptions="End" 
+                                               TextColor="#fff" 
+                                               FontSize="12" />
+                                    </Border>
 
-                            <Border BackgroundColor="#000"
-                                    StrokeShape="RoundRectangle 12"
-                                    HorizontalOptions="Start"
-                                    WidthRequest="75"
-                                    Padding="5"
-                                    StrokeThickness="0"
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="0">
-                                
-                                <Label Text="33%"
-                                       HorizontalOptions="End"
-                                       TextColor="#fff"
-                                       FontSize="12" />
+                                    <Border BackgroundColor="#585858" 
+                                            StrokeShape="RoundRectangle 12" 
+                                            HorizontalOptions="Start"
+                                            WidthRequest="175" 
+                                            Padding="5" 
+                                            StrokeThickness="0" 
+                                            Grid.Column="0" 
+                                            Grid.ColumnSpan="1">
+
+                                        <Label Text="33%" 
+                                               HorizontalOptions="End" 
+                                               TextColor="#fff" 
+                                               FontSize="12"/>
+                                    </Border>
+
+                                    <Border BackgroundColor="#000" 
+                                            StrokeShape="RoundRectangle 12" 
+                                            HorizontalOptions="Start" 
+                                            WidthRequest="75" 
+                                            Padding="5" 
+                                            StrokeThickness="0" 
+                                            Grid.Column="0" 
+                                            Grid.ColumnSpan="0">
+
+                                        <Label Text="33%" 
+                                               HorizontalOptions="End" 
+                                               TextColor="#fff" 
+                                               FontSize="12" />
+                                    </Border>
+                                </Grid>
                             </Border>
                         </Grid>
                     </Border>
                 </Grid>
+                <!-- Цветные блоки -->
+                <Grid Grid.Row="2" 
+                      Grid.Column="0" 
+                      Grid.ColumnSpan="2"
+                      ColumnSpacing="12">
 
-                    <Grid ColumnSpacing="12" Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                    <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                        <BoxView WidthRequest="10" 
+                                 HeightRequest="10" 
+                                 Color="#000" 
+                                 CornerRadius="100" 
+                                 VerticalOptions="Center"/>
 
-                        <!-- Блок 1 -->
-                        <Border Grid.Column="0"
-                                StrokeShape="RoundRectangle 100"
-                                Grid.Row="2"
-                                StrokeThickness="0">
-                                
+                        <Label Text="Кофе" 
+                               FontSize="14" 
+                               TextColor="#9E9E9E" 
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
 
-                            <HorizontalStackLayout Spacing="8">
-                                <BoxView WidthRequest="10"
-                                         HeightRequest="10"
-                                         Color="#000"
-                                         CornerRadius="100"
-                                         VerticalOptions="Center"/>                                    
+                    <HorizontalStackLayout Grid.Column="1" Spacing="8">
+                        <BoxView WidthRequest="10" 
+                                 HeightRequest="10" 
+                                 Color="#585858" 
+                                 CornerRadius="100" 
+                                 VerticalOptions="Center"/>
 
+                        <Label Text="Чай" 
+                               FontSize="14" 
+                               TextColor="#9E9E9E" 
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
 
-                                <Label Text="Кофе"
-                                       FontSize="14"
-                                       TextColor="#9E9E9E"
-                                       VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
-                        </Border>
-                        
-                        <!-- Блок 2 -->
-                        <Border Grid.Column="1"
-                                StrokeShape="RoundRectangle 100"
-                                Grid.Row="2"
-                                StrokeThickness="0">
-                               
-                            <HorizontalStackLayout Spacing="8">
-                                <BoxView WidthRequest="10"
-                                         HeightRequest="10"
-                                         Color="#585858"
-                                         CornerRadius="100"
-                                         VerticalOptions="Center"/>
+                    <HorizontalStackLayout Grid.Column="2" Spacing="8">
+                        <BoxView WidthRequest="10" 
+                                 HeightRequest="10" 
+                                 Color="#AAAAAA" 
+                                 CornerRadius="100" 
+                                 VerticalOptions="Center"/>
 
-
-                                <Label Text="Чай"
-                                       FontSize="14"
-                                       TextColor="#9E9E9E"
-                                       VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
-                        </Border>
-
-                        <!-- Блок 3 -->
-                        <Border Grid.Row="2"
-                                Grid.Column="2"
-                                StrokeShape="100"
-                                StrokeThickness="0"
-                                Stroke="#fff"
-                                BackgroundColor="#fff">
-
-                            <HorizontalStackLayout Spacing="8">
-                                <BoxView WidthRequest="10"
-                                         HeightRequest="10"
-                                         Color="#AAAAAA"
-                                         CornerRadius="100"
-                                         VerticalOptions="Center"/>
-
-
-                                <Label Text="Энергетики"
-                                       FontSize="14"
-                                       TextColor="#9E9E9E"
-                                       VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
-                        </Border>
-
+                        <Label Text="Энергетики" 
+                               FontSize="14" 
+                               TextColor="#9E9E9E"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
                 </Grid>
             </Grid>
         </Border>
-    </StackLayout>
+
+        <!-- Ваши употребления -->
+        <Border Grid.Row="3"
+                StrokeThickness="0"
+                BackgroundColor="#fff" 
+                Margin="0">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="30, 30, 0, 0"/>
+            </Border.StrokeShape>
+
+            <Grid Padding="15,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8*"/>
+                </Grid.RowDefinitions>
+
+                <BoxView HeightRequest="5"
+                         WidthRequest="50"
+                         CornerRadius="3"
+                         BackgroundColor="#F5F5F5"
+                         HorizontalOptions="Center"
+                         VerticalOptions="Center"
+                         Grid.Row="0"
+                         Margin="0, 10"/>
+
+                <Label Text="Ваши употребления" 
+                       TextColor="#000" 
+                       FontSize="24" 
+                       FontAttributes="Bold" 
+                       VerticalOptions="Center"
+                       Grid.Row="1"/>
+
+                <!--Скроллящий блок-->
+                <CollectionView Grid.Row="2">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="15" Stroke="#E3E3E3">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="6*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Изображение -->
+                                    <Border Grid.Column="0"
+                                            WidthRequest="52"
+                                            HeightRequest="52"
+                                            StrokeThickness="0"
+                                            BackgroundColor="#000">
+
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="20"/>
+                                        </Border.StrokeShape>
+
+                                        <!-- Сюда иконку нужно будет подставить -->
+                                        <Image Source="coffee_ico.png"
+                                               Aspect="AspectFill"/>
+                                    </Border>
+
+                                    <!-- Текст -->
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Spacing="5"
+                                                         VerticalOptions="Center">
+
+                                        <!-- Сюда заголовок нужно будет подставить (Кофе, Чай, Энергетик) -->
+                                        <Label Text="Латте на кокосовом"
+                                               TextColor="#000"
+                                               FontAttributes="Bold"
+                                               FontSize="16"/>
+
+                                        <!-- Сюда время с последнего употребления -->
+                                        <Label Text="15 минут назад"
+                                               TextColor="#AAAAAA"
+                                               FontSize="13"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+        
+        <!--Нижняя навигация-->
+        <Border Grid.Row="4"
+                BackgroundColor="#fff"
+                StrokeThickness="0"
+                VerticalOptions="Center"
+                Padding="10">
+
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="30, 30, 0, 0"/>
+            </Border.StrokeShape>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button WidthRequest="64"
+                        Grid.ColumnSpan="1"
+                        Padding="20"
+                        Grid.Column="0"
+                        ImageSource="home_active_ico.png"
+                        BackgroundColor="#000"
+                        CornerRadius="120"/>
+                
+                <Button WidthRequest="64"
+                        Grid.ColumnSpan="1"
+                        Padding="20"
+                        Grid.Column="1"
+                        ImageSource="add_ico.png"
+                        BackgroundColor="#fff"
+                        CornerRadius="120"/>
+                
+                <Button WidthRequest="64"
+                        Grid.ColumnSpan="1"
+                        Padding="20"
+                        Grid.Column="2"
+                        ImageSource="calendar_ico.png"
+                        BackgroundColor="#fff"
+                        CornerRadius="120"/>
+                
+
+            </Grid>
+        </Border>
+    </Grid>
 </ContentPage>
