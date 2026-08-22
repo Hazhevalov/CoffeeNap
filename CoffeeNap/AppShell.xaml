@@ -8,16 +8,12 @@
     Shell.TabBarForegroundColor="#000"
     Shell.TabBarUnselectedColor="#AAAAAA"
     Shell.TitleColor="#000"
+    FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False"
     Shell.TabBarIsVisible="False">
 
-    <TabBar>
-        <Tab Title="Home" Icon="home_ico.png">
-            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
-        </Tab>
-
-        <Tab Title="Add Drink" Icon="add_ico.png">
-            <ShellContent ContentTemplate="{DataTemplate local:SecondPage}" />
-        </Tab>
-    </TabBar>
+    <ShellContent
+        Route="MainPage"
+        ContentTemplate="{DataTemplate local:MainPage}" />
 
 </Shell>

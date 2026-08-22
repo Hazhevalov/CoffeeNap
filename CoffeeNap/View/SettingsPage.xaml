@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CoffeeNap.SettingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Настройки"
+    BackgroundColor="{StaticResource SurfaceColor}"
+    Shell.NavBarIsVisible="True">
+    <Label
+        FontFamily="Inter"
+        FontSize="24"
+        FontAttributes="Bold"
+        HorizontalOptions="Center"
+        Text="Настройки"
+        TextColor="{StaticResource InkColor}"
+        VerticalOptions="Center" />
+</ContentPage>

@@ -18,6 +18,17 @@
     <Color x:Key="MidnightBlue">#190649</Color>
     <Color x:Key="OffBlack">#1f1f1f</Color>
 
+    <!-- CoffeeNap main page palette -->
+    <Color x:Key="PageBackgroundColor">#F4F4F4</Color>
+    <Color x:Key="SurfaceColor">#FFFFFF</Color>
+    <Color x:Key="InkColor">#080808</Color>
+    <Color x:Key="SecondaryTextColor">#3E3E3E</Color>
+    <Color x:Key="MutedTextColor">#A2A2A2</Color>
+    <Color x:Key="DividerColor">#E7E7E7</Color>
+    <Color x:Key="ProgressTrackColor">#303030</Color>
+    <Color x:Key="ProgressAccentColor">#B7FF17</Color>
+    <SolidColorBrush x:Key="CardShadowBrush" Color="#22000000" />
+
     <Color x:Key="Gray100">#E1E1E1</Color>
     <Color x:Key="Gray200">#C8C8C8</Color>
     <Color x:Key="Gray300">#ACACAC</Color>
