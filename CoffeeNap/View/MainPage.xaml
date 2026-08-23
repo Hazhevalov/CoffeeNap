@@ -221,6 +221,7 @@
                                         FontFamily="Inter"
                                         FontSize="9"
                                         HorizontalTextAlignment="Center"
+                                        IsVisible="{Binding CoffeeSource.IsPercentageVisible}"
                                         Text="{Binding CoffeeSource.PercentageDisplay}"
                                         TextColor="{StaticResource SurfaceColor}"
                                         VerticalTextAlignment="Center" />
@@ -230,6 +231,7 @@
                                         FontFamily="Inter"
                                         FontSize="9"
                                         HorizontalTextAlignment="Center"
+                                        IsVisible="{Binding TeaSource.IsPercentageVisible}"
                                         Text="{Binding TeaSource.PercentageDisplay}"
                                         TextColor="{StaticResource SurfaceColor}"
                                         VerticalTextAlignment="Center" />
@@ -239,6 +241,7 @@
                                         FontFamily="Inter"
                                         FontSize="9"
                                         HorizontalTextAlignment="Center"
+                                        IsVisible="{Binding EnergyDrinkSource.IsPercentageVisible}"
                                         Text="{Binding EnergyDrinkSource.PercentageDisplay}"
                                         TextColor="{StaticResource SurfaceColor}"
                                         VerticalTextAlignment="Center" />

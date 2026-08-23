@@ -2,25 +2,29 @@ namespace CoffeeNap.Models;
 
 public sealed class CaffeineSourceStat
 {
-    public CaffeineSourceStat(string name, double amount, double totalAmount, Color color)
+    public CaffeineSourceStat(string name, int count, int totalCount, Color color)
     {
         Name = name;
-        Amount = Math.Max(0, amount);
-        TotalAmount = Math.Max(0, totalAmount);
+        Count = Math.Max(0, count);
+        TotalCount = Math.Max(0, totalCount);
         Color = color;
     }
 
     public string Name { get; }
 
-    public double Amount { get; }
+    public int Count { get; }
 
-    public double TotalAmount { get; }
+    public int TotalCount { get; }
 
     public Color Color { get; }
 
-    public double Percentage => TotalAmount <= 0 ? 0 : Amount / TotalAmount;
+    public double Ratio => TotalCount == 0 ? 0 : (double)Count / TotalCount;
 
-    public string PercentageDisplay => $"{Percentage:P0}";
+    public string PercentageDisplay => $"{Ratio:P0}";
 
-    public GridLength SegmentWidth => new(Percentage, GridUnitType.Star);
+    public bool IsPercentageVisible => Ratio >= 0.08;
+
+    public GridLength SegmentWidth => Ratio == 0
+        ? new GridLength(0)
+        : new GridLength(Ratio, GridUnitType.Star);
 }

@@ -1,7 +1,11 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace CoffeeNap.Models;
 
-public sealed class CaffeineConsumption
+public sealed class CaffeineConsumption : ObservableObject
 {
+    private CaffeineConsumptionType type;
+
     public required string Name { get; init; }
 
     public required DateTimeOffset ConsumedAt { get; init; }
@@ -11,6 +15,12 @@ public sealed class CaffeineConsumption
     public required string Icon { get; init; }
 
     public required Color IconBackground { get; init; }
+
+    public required CaffeineConsumptionType Type
+    {
+        get => type;
+        set => SetProperty(ref type, value);
+    }
 
     public string CaffeineDisplay => $"{CaffeineMg} мг";
 
