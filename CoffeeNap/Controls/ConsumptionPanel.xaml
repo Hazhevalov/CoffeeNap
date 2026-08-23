@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CoffeeNap.Controls.ConsumptionPanel"
+    x:Name="Panel"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:CoffeeNap.Models"
+    BackgroundColor="Transparent">
+
+    <Border
+        Padding="0"
+        BackgroundColor="{StaticResource SurfaceColor}"
+        StrokeThickness="0">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="20,20,0,0" />
+        </Border.StrokeShape>
+        <Border.Shadow>
+            <Shadow Brush="{StaticResource CardShadowBrush}" Offset="0,-2" Opacity="0.1" Radius="6" />
+        </Border.Shadow>
+
+        <Grid RowSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="36" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="DragHandleArea" Grid.Row="0" BackgroundColor="Transparent">
+                <Grid.GestureRecognizers>
+                    <PanGestureRecognizer PanUpdated="OnDragHandlePanUpdated" />
+                    <TapGestureRecognizer Tapped="OnDragHandleTapped" />
+                </Grid.GestureRecognizers>
+                <BoxView
+                    WidthRequest="42"
+                    HeightRequest="4"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    BackgroundColor="{StaticResource InkColor}"
+                    CornerRadius="2" />
+            </Grid>
+
+            <Grid Grid.Row="1" Padding="10,0,10,6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="26" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    FontFamily="Inter"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    Text="Ваши употребления"
+                    TextColor="{StaticResource InkColor}" />
+                <Border
+                    Grid.Column="1"
+                    WidthRequest="18"
+                    HeightRequest="18"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"
+                    BackgroundColor="Transparent"
+                    Stroke="{StaticResource InkColor}"
+                    StrokeThickness="2">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="9" />
+                    </Border.StrokeShape>
+                    <Label
+                        FontFamily="Inter"
+                        FontSize="12"
+                        FontAttributes="Bold"
+                        HorizontalTextAlignment="Center"
+                        Text="i"
+                        TextColor="{StaticResource InkColor}"
+                        VerticalTextAlignment="Center" />
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <CollectionView
+                    x:Name="ConsumptionList"
+                    Margin="0,1,0,0"
+                    BackgroundColor="{StaticResource SurfaceColor}"
+                    ItemsSource="{Binding Source={x:Reference Panel}, Path=ItemsSource}"
+                    Scrolled="OnConsumptionListScrolled"
+                    SelectionMode="None"
+                    VerticalScrollBarVisibility="Never">
+                    <CollectionView.GestureRecognizers>
+                        <SwipeGestureRecognizer
+                            Direction="Down"
+                            Swiped="OnConsumptionListSwipedDown"
+                            Threshold="56" />
+                    </CollectionView.GestureRecognizers>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:CaffeineConsumption">
+                            <Border
+                                Margin="10,3"
+                                MinimumHeightRequest="64"
+                                Padding="10"
+                                BackgroundColor="{StaticResource SurfaceColor}"
+                                Stroke="{StaticResource DividerColor}"
+                                StrokeThickness="1">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+                                <Border.Shadow>
+                                    <Shadow Brush="{StaticResource CardShadowBrush}" Offset="0,1" Opacity="0.06" Radius="3" />
+                                </Border.Shadow>
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="44" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border
+                                        WidthRequest="44"
+                                        HeightRequest="44"
+                                        Padding="10"
+                                        BackgroundColor="{Binding IconBackground}"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Center">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="22" />
+                                        </Border.StrokeShape>
+                                        <Image Source="{Binding Icon}" Aspect="AspectFit" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                                        <Label
+                                            FontFamily="Inter"
+                                            FontSize="14"
+                                            FontAttributes="Bold"
+                                            LineBreakMode="TailTruncation"
+                                            MaxLines="1"
+                                            Text="{Binding Name}"
+                                            TextColor="{StaticResource InkColor}" />
+                                        <Label
+                                            FontFamily="Inter"
+                                            FontSize="11"
+                                            Text="{Binding RelativeTime}"
+                                            TextColor="{StaticResource MutedTextColor}" />
+                                    </VerticalStackLayout>
+                                    <Label
+                                        Grid.Column="2"
+                                        Margin="4,0,0,0"
+                                        FontFamily="Inter"
+                                        FontSize="16"
+                                        FontAttributes="Bold"
+                                        Text="{Binding CaffeineDisplay}"
+                                        TextColor="{StaticResource InkColor}"
+                                        VerticalOptions="Center" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.Footer>
+                        <BoxView HeightRequest="12" BackgroundColor="{StaticResource SurfaceColor}" />
+                    </CollectionView.Footer>
+                </CollectionView>
+
+                <Grid
+                    x:Name="CollapsedListGestureLayer"
+                    ZIndex="10"
+                    BackgroundColor="Transparent"
+                    IsVisible="True">
+                    <Grid.GestureRecognizers>
+                        <PanGestureRecognizer PanUpdated="OnCollapsedListPanUpdated" />
+                    </Grid.GestureRecognizers>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</ContentView>
