@@ -12,7 +12,9 @@ public partial class MainViewModel : ObservableObject
     // Храним подписанные элементы отдельно, чтобы при изменении коллекции
     // можно было безопасно отписаться от старых обработчиков событий.
     private readonly HashSet<CaffeineConsumption> subscribedConsumptions = [];
-    private double currentCaffeine = 120;
+    private CancellationTokenSource? periodicUpdateCancellation;
+    private DateTime currentLocalDate = DateTime.Today;
+    private double currentCaffeine;
     private double dailyCaffeineLimit = 300;
     private CaffeineSourceStat coffeeSource = null!;
     private CaffeineSourceStat teaSource = null!;
@@ -31,11 +33,12 @@ public partial class MainViewModel : ObservableObject
     public double CurrentCaffeine
     {
         get => currentCaffeine;
-        set
+        private set
         {
             if (SetProperty(ref currentCaffeine, value))
             {
                 OnPropertyChanged(nameof(DailyProgress));
+                OnPropertyChanged(nameof(DailyProgressColor));
             }
         }
     }
@@ -48,6 +51,7 @@ public partial class MainViewModel : ObservableObject
             if (SetProperty(ref dailyCaffeineLimit, value))
             {
                 OnPropertyChanged(nameof(DailyProgress));
+                OnPropertyChanged(nameof(DailyProgressColor));
             }
         }
     }
@@ -74,6 +78,21 @@ public partial class MainViewModel : ObservableObject
         ? 0
         : Math.Clamp(CurrentCaffeine / DailyCaffeineLimit, 0, 1);
 
+    public Color DailyProgressColor
+    {
+        get
+        {
+            var ratio = DailyCaffeineLimit <= 0 ? 0 : CurrentCaffeine / DailyCaffeineLimit;
+            return ratio switch
+            {
+                <= 0.40 => GetResourceColor("CaffeineProgressLow", Colors.Lime),
+                <= 0.70 => GetResourceColor("CaffeineProgressMedium", Colors.Yellow),
+                < 1.00 => GetResourceColor("CaffeineProgressHigh", Colors.Orange),
+                _ => GetResourceColor("CaffeineProgressLimit", Colors.Red)
+            };
+        }
+    }
+
     public ObservableCollection<CaffeineSourceStat> SourceStats { get; }
 
     public ObservableCollection<CaffeineConsumption> Consumptions { get; }
@@ -87,23 +106,44 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private Task OpenCalendarAsync() => Shell.Current.GoToAsync(nameof(CalendarPage));
 
+    public void StartPeriodicUpdates()
+    {
+        if (periodicUpdateCancellation is { IsCancellationRequested: false })
+        {
+            return;
+        }
+
+        periodicUpdateCancellation = new CancellationTokenSource();
+        RefreshPeriodicData();
+        _ = RunPeriodicUpdatesAsync(periodicUpdateCancellation.Token);
+    }
+
+    public void StopPeriodicUpdates()
+    {
+        var cancellation = periodicUpdateCancellation;
+        periodicUpdateCancellation = null;
+        cancellation?.Cancel();
+        cancellation?.Dispose();
+    }
+
     private void LoadConsumptions()
     {
         // Временные данные для демонстрации интерфейса. Позже этот массив можно
         // заменить загрузкой из базы данных или внешнего сервиса.
         var now = DateTimeOffset.Now;
+        var yesterday = now.AddDays(-1);
         var testConsumptions = new[]
         {
-            CreateConsumption("Латте на кокосовом", 120, now.AddMinutes(-15), CaffeineConsumptionType.Coffee),
-            CreateConsumption("Эспрессо", 65, now.AddHours(-2), CaffeineConsumptionType.Coffee),
-            CreateConsumption("Капучино", 80, now.AddHours(-5), CaffeineConsumptionType.Coffee),
-            CreateConsumption("Американо", 95, now.AddDays(-1), CaffeineConsumptionType.Coffee),
-            CreateConsumption("Флэт уайт", 110, now.AddDays(-2), CaffeineConsumptionType.Coffee),
-            CreateConsumption("Зелёный чай", 35, now.AddDays(-3), CaffeineConsumptionType.Tea),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-4), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-5), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #3", 120, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик (500мл)", 160, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink)
+            CreateConsumption("Капучино", 800, GetTodayTimestamp(now, TimeSpan.FromMinutes(5)), CaffeineConsumptionType.Coffee),
+            CreateConsumption("Энергетик (500мл)", 160, GetTodayTimestamp(now, TimeSpan.FromMinutes(58)), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Эспрессо", 65, yesterday, CaffeineConsumptionType.Coffee),
+            CreateConsumption("Американо", 95, now.AddDays(-2), CaffeineConsumptionType.Coffee),
+            CreateConsumption("Флэт уайт", 110, now.AddDays(-3), CaffeineConsumptionType.Coffee),
+            CreateConsumption("Латте на кокосовом", 120, now.AddDays(-4), CaffeineConsumptionType.Coffee),
+            CreateConsumption("Зелёный чай", 35, now.AddDays(-5), CaffeineConsumptionType.Tea),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #3", 120, now.AddDays(-8), CaffeineConsumptionType.EnergyDrink)
         };
 
         // Во время пакетного заполнения не пересчитываем статистику после
@@ -123,6 +163,17 @@ public partial class MainViewModel : ObservableObject
 
         SynchronizeConsumptionSubscriptions();
         RecalculateSourceStatistics();
+        RecalculateDailyCaffeine(now);
+    }
+
+    private static DateTimeOffset GetTodayTimestamp(DateTimeOffset now, TimeSpan age)
+    {
+        var localNow = now.ToLocalTime();
+        var startOfToday = new DateTimeOffset(
+            localNow.Date,
+            TimeZoneInfo.Local.GetUtcOffset(localNow.Date));
+        var requested = localNow - age;
+        return requested >= startOfToday ? requested : startOfToday;
     }
 
     private static CaffeineConsumption CreateConsumption(
@@ -162,6 +213,7 @@ public partial class MainViewModel : ObservableObject
 
         SynchronizeConsumptionSubscriptions();
         RecalculateSourceStatistics();
+        RecalculateDailyCaffeine(DateTimeOffset.Now);
     }
 
     private void SynchronizeConsumptionSubscriptions()
@@ -183,11 +235,68 @@ public partial class MainViewModel : ObservableObject
 
     private void OnConsumptionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        // На распределение по источникам влияет только тип напитка.
         if (e.PropertyName == nameof(CaffeineConsumption.Type))
         {
             RecalculateSourceStatistics();
         }
+
+        if (e.PropertyName is nameof(CaffeineConsumption.CaffeineMg) or nameof(CaffeineConsumption.ConsumedAt))
+        {
+            RecalculateDailyCaffeine(DateTimeOffset.Now);
+        }
+    }
+
+    private void RecalculateDailyCaffeine(DateTimeOffset now)
+    {
+        var localNow = now.ToLocalTime();
+        var startOfToday = new DateTimeOffset(
+            localNow.Date,
+            TimeZoneInfo.Local.GetUtcOffset(localNow.Date));
+
+        CurrentCaffeine = Consumptions
+            .Where(consumption =>
+                consumption.ConsumedAt.ToLocalTime() >= startOfToday &&
+                consumption.ConsumedAt <= now)
+            .Sum(consumption => Math.Max(0, consumption.CaffeineMg));
+    }
+
+    private async Task RunPeriodicUpdatesAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(30));
+            while (await timer.WaitForNextTickAsync(cancellationToken))
+            {
+                await MainThread.InvokeOnMainThreadAsync(RefreshPeriodicData);
+            }
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // Нормальное завершение при уходе со страницы.
+        }
+    }
+
+    private void RefreshPeriodicData()
+    {
+        foreach (var consumption in Consumptions)
+        {
+            consumption.RefreshRelativeTime();
+        }
+
+        var now = DateTimeOffset.Now;
+        var today = now.ToLocalTime().Date;
+        if (today != currentLocalDate)
+        {
+            currentLocalDate = today;
+            RecalculateDailyCaffeine(now);
+        }
+    }
+
+    private static Color GetResourceColor(string key, Color fallback)
+    {
+        return Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
+            ? color
+            : fallback;
     }
 
     private void RecalculateSourceStatistics()

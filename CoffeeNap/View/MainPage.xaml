@@ -131,7 +131,7 @@
                                 VerticalOptions="Center"
                                 BackgroundColor="{StaticResource ProgressTrackColor}"
                                 Progress="{Binding DailyProgress}"
-                                ProgressColor="{StaticResource ProgressAccentColor}" />
+                                ProgressColor="{Binding DailyProgressColor}" />
                             <Label
                                 Grid.Column="1"
                                 FontFamily="Inter"
