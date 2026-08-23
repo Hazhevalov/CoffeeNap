@@ -391,12 +391,12 @@ public partial class MainViewModel : ObservableObject
             "Чай",
             counts[CaffeineConsumptionType.Tea],
             totalCount,
-            Color.FromArgb("#686868"));
+            Color.FromArgb("#B8B8B8"));
         EnergyDrinkSource = new CaffeineSourceStat(
             "Энергетики",
             counts[CaffeineConsumptionType.EnergyDrink],
             totalCount,
-            Color.FromArgb("#B8B8B8"));
+            Color.FromArgb("#686868"));
 
         // Поддерживаем коллекцию в том же порядке, что и сегменты диаграммы в XAML.
         SourceStats.Clear();

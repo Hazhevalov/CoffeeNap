@@ -19,10 +19,24 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Активная главная вкладка: команда не нужна, пользователь уже на MainPage. -->
+        <!-- Команда берётся у самого ContentView через x:Reference, а не из BindingContext. -->
         <Button
             Grid.Row="1"
             Grid.Column="0"
+            WidthRequest="56"
+            HeightRequest="56"
+            Padding="17"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            BackgroundColor="Transparent"
+            Command="{Binding Source={x:Reference NavigationBar}, Path=AddCommand}"
+            ImageSource="add_ico.png"
+            TextColor="{StaticResource InkColor}" />
+
+        <!-- Активная главная вкладка: команда не нужна, пользователь уже на MainPage. -->
+        <Button
+            Grid.Row="1"
+            Grid.Column="1"
             WidthRequest="96"
             HeightRequest="56"
             Padding="35,17"
@@ -33,24 +47,8 @@
             ImageSource="home_active_ico.png"
             Opacity="1" />
 
-        <!-- Команда берётся у самого ContentView через x:Reference, а не из BindingContext. -->
-        <Button
-            Grid.Row="1"
-            Grid.Column="1"
-            WidthRequest="56"
-            HeightRequest="56"
-            Padding="0"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"
-            BackgroundColor="Transparent"
-            Command="{Binding Source={x:Reference NavigationBar}, Path=AddCommand}"
-            FontFamily="Inter"
-            FontSize="28"
-            Text="+"
-            TextColor="{StaticResource InkColor}" />
-
         <!-- Правая кнопка открывает календарь переданной извне командой. -->
-        <ImageButton
+        <Button
             Grid.Row="1"
             Grid.Column="2"
             WidthRequest="56"
@@ -60,6 +58,6 @@
             VerticalOptions="Center"
             BackgroundColor="Transparent"
             Command="{Binding Source={x:Reference NavigationBar}, Path=CalendarCommand}"
-            Source="calendar_ico.png" />
+            ImageSource="calendar_ico.png" />
     </Grid>
 </ContentView>

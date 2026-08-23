@@ -53,7 +53,7 @@
                     FontAttributes="Bold"
                     Text="Ваши употребления"
                     TextColor="{StaticResource InkColor}" />
-                <Border
+                <!--<Border
                     Grid.Column="1"
                     WidthRequest="18"
                     HeightRequest="18"
@@ -73,7 +73,14 @@
                         Text="i"
                         TextColor="{StaticResource InkColor}"
                         VerticalTextAlignment="Center" />
-                </Border>
+                </Border>-->
+
+                <Image Source="info_ico.png" 
+                       WidthRequest="24" 
+                       HeightRequest="24"
+                       HorizontalOptions="End"
+                       VerticalOptions="Center"
+                       Grid.Column="1"/>
             </Grid>
 
             <Grid Grid.Row="2">
