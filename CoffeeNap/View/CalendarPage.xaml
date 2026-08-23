@@ -6,6 +6,7 @@
     Title="Календарь"
     BackgroundColor="{StaticResource SurfaceColor}"
     Shell.NavBarIsVisible="True">
+    <!-- Временный placeholder будущего календаря истории употреблений. -->
     <Label
         FontFamily="Inter"
         FontSize="24"

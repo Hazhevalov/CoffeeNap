@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-This is the minimum required version of the Apple Privacy Manifest for .NET MAUI apps.
-The contents below are needed because of APIs that are used in the .NET framework and .NET MAUI SDK.
+Минимальный Apple Privacy Manifest для .NET MAUI.
+Записи нужны из-за API, которые вызывает сам .NET runtime и MAUI SDK.
 
-You are responsible for adding extra entries as needed for your application.
+При добавлении новых API разработчик обязан дополнить этот манифест.
 
 More information: https://aka.ms/maui-privacy-manifest
 -->
@@ -12,6 +12,7 @@ More information: https://aka.ms/maui-privacy-manifest
 <dict>
     <key>NSPrivacyAccessedAPITypes</key>
     <array>
+        <!-- Runtime читает временные метки файлов для работы с файловой системой. -->
         <dict>
             <key>NSPrivacyAccessedAPIType</key>
             <string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
@@ -20,6 +21,7 @@ More information: https://aka.ms/maui-privacy-manifest
                 <string>C617.1</string>
             </array>
         </dict>
+        <!-- Системное время загрузки используется внутренними таймерами runtime. -->
         <dict>
             <key>NSPrivacyAccessedAPIType</key>
             <string>NSPrivacyAccessedAPICategorySystemBootTime</string>
@@ -28,6 +30,7 @@ More information: https://aka.ms/maui-privacy-manifest
                 <string>35F9.1</string>
             </array>
         </dict>
+        <!-- Runtime может проверять доступный объём диска. -->
         <dict>
             <key>NSPrivacyAccessedAPIType</key>
             <string>NSPrivacyAccessedAPICategoryDiskSpace</string>
@@ -37,7 +40,7 @@ More information: https://aka.ms/maui-privacy-manifest
             </array>
         </dict>
         <!--
-            The entry below is only needed when you're using the Preferences API in your app.
+            Этот блок нужно раскомментировать при использовании MAUI Preferences API.
         <dict>
             <key>NSPrivacyAccessedAPIType</key>
             <string>NSPrivacyAccessedAPICategoryUserDefaults</string>

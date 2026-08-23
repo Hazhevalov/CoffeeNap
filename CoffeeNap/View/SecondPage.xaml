@@ -5,8 +5,13 @@
              BackgroundColor="#f5f5f5" 
              Background="#f5f5f5">
 
+    <!--
+        Исторический статический прототип главного экрана. Он не использует ViewModel,
+        содержит жёстко заданные значения и не включён в текущую навигацию AppShell.
+        Актуальная реализация находится в MainPage.xaml; этот файл полезен как референс макета.
+    -->
     <StackLayout>
-        <!--NavBar-->
+        <!-- Верхняя панель прототипа: профиль слева и настройки справа. -->
         <FlexLayout Direction="Row" 
                     JustifyContent="SpaceBetween" 
                     Wrap="NoWrap" 
@@ -18,7 +23,7 @@
 
             <HorizontalStackLayout Spacing="10">
 
-                <!-- Кнопка профиля -->
+                <!-- Декоративная кнопка профиля без команды. -->
                 <Button ImageSource="profile_ico.png"
                         BackgroundColor="#000"
                         TextColor="#fff"
@@ -26,7 +31,7 @@
                         HeightRequest="56"
                         WidthRequest="56"/>
 
-                <!-- Текст справа от кнопки -->
+                <!-- Статическое приветствие рядом с аватаром. -->
                 <VerticalStackLayout Spacing="2">
 
                     <Label Text="Добро пожаловать,"
@@ -40,7 +45,7 @@
                 </VerticalStackLayout>
             </HorizontalStackLayout>
 
-            <!--Кнопка настроек-->
+            <!-- Декоративная кнопка настроек; переход здесь не подключён. -->
             <Button ImageSource="settings_ico.png"
                     BackgroundColor="#000"
                     TextColor="#fff"
@@ -49,17 +54,17 @@
                     WidthRequest="56" />
         </FlexLayout>
 
-        <!--Блок Дневная норма кофеина-->
+        <!-- Статический прототип карточки дневной нормы кофеина. -->
         <Border StrokeShape="30"
                 Margin="10, 15">
             
             <Grid Padding="15" BackgroundColor="#000" RowSpacing="15">
                     <Grid.RowDefinitions>
-                        <!-- заголовок -->
+                        <!-- Строка 0: заголовок и кнопка меню. -->
                         <RowDefinition Height="Auto"/>
-                        <!-- прогресс -->
+                        <!-- Строка 1: индикатор и максимальное значение. -->
                         <RowDefinition Height="Auto"/>
-                        <!-- значение -->
+                        <!-- Строка 2: текущая доза. -->
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
@@ -88,7 +93,7 @@
                         Grid.Row="0"
                         Grid.Column="2"/>
 
-                <!--Прогрессбар-->
+                <!-- Имитация ProgressBar двумя Border; WidthRequest задаёт заполнение вручную. -->
                 <Grid Grid.Row="1"
                       Grid.Column="1"
                       HeightRequest="12"
@@ -138,18 +143,18 @@
             </Grid>
         </Border>
 
-        <!--Блок Источник кофеина-->
+        <!-- Статический прототип карточки распределения источников. -->
         <Border StrokeShape="30"
                 BackgroundColor="#fff"
                 Stroke="#EAEAEA" Margin="15,0">
 
             <Grid Padding="15" RowSpacing="15">
                 <Grid.RowDefinitions>
-                    <!-- заголовок 0 -->
+                    <!-- Строка 0: заголовок. -->
                     <RowDefinition Height="Auto"/>
-                    <!-- значения 1 -->
+                    <!-- Строка 1: составная диаграмма. -->
                     <RowDefinition Height="Auto"/>
-                    <!-- прогресс 2 -->
+                    <!-- Строка 2: легенда. -->
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
@@ -179,7 +184,10 @@
                         Grid.Row="0"
                         Grid.Column="2"/>
 
-                <!--Второй прогрессбар-->
+                <!--
+                    Три наложенных Border имитируют накопительную диаграмму.
+                    Ширины и проценты захардкожены, в отличие от актуальной MainPage.
+                -->
                 <Grid Grid.Row="1"
                       Grid.Column="0"
                       VerticalOptions="Center"
@@ -252,7 +260,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Блок 1 -->
+                        <!-- Элемент легенды: кофе. -->
                         <Border Grid.Column="0"
                                 StrokeShape="RoundRectangle 100"
                                 Grid.Row="2"
@@ -274,7 +282,7 @@
                             </HorizontalStackLayout>
                         </Border>
                         
-                        <!-- Блок 2 -->
+                        <!-- Элемент легенды: чай. -->
                         <Border Grid.Column="1"
                                 StrokeShape="RoundRectangle 100"
                                 Grid.Row="2"
@@ -295,7 +303,7 @@
                             </HorizontalStackLayout>
                         </Border>
 
-                        <!-- Блок 3 -->
+                        <!-- Элемент легенды: энергетики. -->
                         <Border Grid.Row="2"
                                 Grid.Column="2"
                                 StrokeShape="100"

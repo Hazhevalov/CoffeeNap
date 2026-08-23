@@ -7,13 +7,26 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CoffeeNap.ViewModels;
 
+/// <summary>
+/// Главная модель представления приложения. Хранит историю употреблений,
+/// рассчитывает дневную дозу и распределение по источникам, а также предоставляет
+/// команды навигации, к которым привязаны кнопки <see cref="MainPage"/>.
+/// </summary>
 public partial class MainViewModel : ObservableObject
 {
     // Храним подписанные элементы отдельно, чтобы при изменении коллекции
     // можно было безопасно отписаться от старых обработчиков событий.
     private readonly HashSet<CaffeineConsumption> subscribedConsumptions = [];
+
+    // Источник отмены существует только пока MainPage видима. Он останавливает
+    // фоновый таймер и не позволяет запустить второй таймер параллельно.
     private CancellationTokenSource? periodicUpdateCancellation;
+
+    // Дата последнего обновления нужна для обнаружения перехода через полночь.
     private DateTime currentLocalDate = DateTime.Today;
+
+    // Поля ниже являются хранилищем для observable-свойств. SetProperty
+    // автоматически отправляет UI уведомление PropertyChanged.
     private double currentCaffeine;
     private double dailyCaffeineLimit = 300;
     private CaffeineSourceStat coffeeSource = null!;
@@ -21,6 +34,10 @@ public partial class MainViewModel : ObservableObject
     private CaffeineSourceStat energyDrinkSource = null!;
     private bool isLoadingConsumptions;
 
+    /// <summary>
+    /// Создаёт коллекции, подключает наблюдение за историей и загружает
+    /// демонстрационные записи. Экземпляр создаётся в code-behind MainPage.
+    /// </summary>
     public MainViewModel()
     {
         SourceStats = new ObservableCollection<CaffeineSourceStat>();
@@ -30,6 +47,10 @@ public partial class MainViewModel : ObservableObject
         LoadConsumptions();
     }
 
+    /// <summary>
+    /// Суммарное количество кофеина за текущий локальный день, в миллиграммах.
+    /// Изменяется только внутренними расчётами модели представления.
+    /// </summary>
     public double CurrentCaffeine
     {
         get => currentCaffeine;
@@ -37,12 +58,16 @@ public partial class MainViewModel : ObservableObject
         {
             if (SetProperty(ref currentCaffeine, value))
             {
+                // Оба вычисляемых свойства зависят от текущей дозы и сами не имеют setter.
                 OnPropertyChanged(nameof(DailyProgress));
                 OnPropertyChanged(nameof(DailyProgressColor));
             }
         }
     }
 
+    /// <summary>
+    /// Настраиваемая дневная норма кофеина в миллиграммах.
+    /// </summary>
     public double DailyCaffeineLimit
     {
         get => dailyCaffeineLimit;
@@ -56,28 +81,39 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
+    /// <summary>Статистика для записей типа «кофе».</summary>
     public CaffeineSourceStat CoffeeSource
     {
         get => coffeeSource;
         private set => SetProperty(ref coffeeSource, value);
     }
 
+    /// <summary>Статистика для записей типа «чай».</summary>
     public CaffeineSourceStat TeaSource
     {
         get => teaSource;
         private set => SetProperty(ref teaSource, value);
     }
 
+    /// <summary>Статистика для записей типа «энергетик».</summary>
     public CaffeineSourceStat EnergyDrinkSource
     {
         get => energyDrinkSource;
         private set => SetProperty(ref energyDrinkSource, value);
     }
 
+    /// <summary>
+    /// Заполнение индикатора дневной нормы в диапазоне от 0 до 1.
+    /// Значение ограничено единицей, даже когда норма превышена.
+    /// </summary>
     public double DailyProgress => DailyCaffeineLimit <= 0
         ? 0
         : Math.Clamp(CurrentCaffeine / DailyCaffeineLimit, 0, 1);
 
+    /// <summary>
+    /// Цвет индикатора нормы: от безопасного зелёного до красного при достижении лимита.
+    /// Пороговые цвета берутся из глобального словаря ресурсов.
+    /// </summary>
     public Color DailyProgressColor
     {
         get
@@ -93,19 +129,33 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Полный набор сегментов диаграммы источников. Сейчас XAML обращается к трём
+    /// именованным свойствам выше, но коллекция пригодна для будущего списка/легенды.
+    /// </summary>
     public ObservableCollection<CaffeineSourceStat> SourceStats { get; }
 
+    /// <summary>
+    /// Наблюдаемая история употреблений. CollectionView обновляется автоматически
+    /// при добавлении и удалении записей.
+    /// </summary>
     public ObservableCollection<CaffeineConsumption> Consumptions { get; }
 
+    // Атрибут RelayCommand генерирует публичное свойство OpenSettingsCommand.
     [RelayCommand]
     private Task OpenSettingsAsync() => Shell.Current.GoToAsync(nameof(SettingsPage));
 
+    // Переходы используют маршруты, зарегистрированные в AppShell.
     [RelayCommand]
     private Task OpenAddConsumptionAsync() => Shell.Current.GoToAsync(nameof(AddConsumptionPage));
 
     [RelayCommand]
     private Task OpenCalendarAsync() => Shell.Current.GoToAsync(nameof(CalendarPage));
 
+    /// <summary>
+    /// Запускает обновление относительных подписей времени раз в 30 секунд.
+    /// Повторный вызов безопасен: второй цикл не создаётся.
+    /// </summary>
     public void StartPeriodicUpdates()
     {
         if (periodicUpdateCancellation is { IsCancellationRequested: false })
@@ -118,6 +168,10 @@ public partial class MainViewModel : ObservableObject
         _ = RunPeriodicUpdatesAsync(periodicUpdateCancellation.Token);
     }
 
+    /// <summary>
+    /// Останавливает и освобождает периодический таймер. Вызывается, когда
+    /// главная страница перестаёт быть видимой.
+    /// </summary>
     public void StopPeriodicUpdates()
     {
         var cancellation = periodicUpdateCancellation;
@@ -168,6 +222,8 @@ public partial class MainViewModel : ObservableObject
 
     private static DateTimeOffset GetTodayTimestamp(DateTimeOffset now, TimeSpan age)
     {
+        // Демонстрационная запись должна остаться внутри текущего дня даже при
+        // запуске приложения сразу после полуночи.
         var localNow = now.ToLocalTime();
         var startOfToday = new DateTimeOffset(
             localNow.Date,
@@ -182,6 +238,7 @@ public partial class MainViewModel : ObservableObject
         DateTimeOffset consumedAt,
         CaffeineConsumptionType type)
     {
+        // Фабрика централизует соответствие типа напитка его иконке и цвету.
         var isEnergyDrink = type == CaffeineConsumptionType.EnergyDrink;
         var isTea = type == CaffeineConsumptionType.Tea;
 
@@ -206,6 +263,7 @@ public partial class MainViewModel : ObservableObject
 
     private void OnConsumptionsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        // Во время начальной пакетной загрузки расчёты выполняются один раз вручную.
         if (isLoadingConsumptions)
         {
             return;
@@ -235,6 +293,7 @@ public partial class MainViewModel : ObservableObject
 
     private void OnConsumptionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        // Пересчитываем только те показатели, которые зависят от изменённого поля.
         if (e.PropertyName == nameof(CaffeineConsumption.Type))
         {
             RecalculateSourceStatistics();
@@ -248,6 +307,8 @@ public partial class MainViewModel : ObservableObject
 
     private void RecalculateDailyCaffeine(DateTimeOffset now)
     {
+        // Граница дня строится в локальном часовом поясе пользователя. Будущие
+        // записи исключаются, отрицательная доза считается нулевой.
         var localNow = now.ToLocalTime();
         var startOfToday = new DateTimeOffset(
             localNow.Date,
@@ -262,6 +323,7 @@ public partial class MainViewModel : ObservableObject
 
     private async Task RunPeriodicUpdatesAsync(CancellationToken cancellationToken)
     {
+        // PeriodicTimer не занимает отдельный поток между срабатываниями.
         try
         {
             using var timer = new PeriodicTimer(TimeSpan.FromSeconds(30));
@@ -278,11 +340,14 @@ public partial class MainViewModel : ObservableObject
 
     private void RefreshPeriodicData()
     {
+        // RelativeTime — вычисляемое свойство, поэтому модель записи должна
+        // явно сообщить интерфейсу, что текст пора запросить заново.
         foreach (var consumption in Consumptions)
         {
             consumption.RefreshRelativeTime();
         }
 
+        // В полночь вчерашние записи перестают входить в дневную сумму.
         var now = DateTimeOffset.Now;
         var today = now.ToLocalTime().Date;
         if (today != currentLocalDate)
@@ -294,6 +359,8 @@ public partial class MainViewModel : ObservableObject
 
     private static Color GetResourceColor(string key, Color fallback)
     {
+        // Fallback сохраняет работоспособность ViewModel в preview/тестах,
+        // где Application.Current или словарь ресурсов могут отсутствовать.
         return Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
             ? color
             : fallback;
@@ -313,6 +380,8 @@ public partial class MainViewModel : ObservableObject
         }
 
         var totalCount = Consumptions.Count;
+        // Создаём новые immutable-объекты: это проще, чем вручную уведомлять UI
+        // об изменении каждого поля существующей статистики.
         CoffeeSource = new CaffeineSourceStat(
             "Кофе",
             counts[CaffeineConsumptionType.Coffee],
@@ -329,6 +398,7 @@ public partial class MainViewModel : ObservableObject
             totalCount,
             Color.FromArgb("#B8B8B8"));
 
+        // Поддерживаем коллекцию в том же порядке, что и сегменты диаграммы в XAML.
         SourceStats.Clear();
         SourceStats.Add(CoffeeSource);
         SourceStats.Add(TeaSource);

@@ -3,6 +3,11 @@ using System.Diagnostics;
 
 namespace CoffeeNap.Controls;
 
+/// <summary>
+/// Выдвижная нижняя панель с историей употреблений. Пользователь тянет панель
+/// за ручку, после чего она анимированно фиксируется в свёрнутом или раскрытом положении.
+/// Данные передаются снаружи через bindable-свойство <see cref="ItemsSource"/>.
+/// </summary>
 public partial class ConsumptionPanel : ContentView
 {
     // Панель фиксируется только в двух устойчивых положениях.
@@ -15,6 +20,8 @@ public partial class ConsumptionPanel : ContentView
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
         nameof(ItemsSource), typeof(IEnumerable), typeof(ConsumptionPanel));
 
+    // Верхняя координата свёрнутой панели зависит от высоты карточек MainPage,
+    // поэтому приходит извне и пересчитывается при изменении layout.
     public static readonly BindableProperty CollapsedTopInsetProperty = BindableProperty.Create(
         nameof(CollapsedTopInset),
         typeof(double),
@@ -23,6 +30,7 @@ public partial class ConsumptionPanel : ContentView
         propertyChanged: OnCollapsedTopInsetChanged);
 
     private const string SnapAnimationName = "ConsumptionPanelSnap";
+    // Длительность задаётся в миллисекундах, частота кадров анимации ниже — 16 мс.
     private const uint SnapAnimationDuration = 200;
     // Расстояние и скорость, после которых жест однозначно считается свайпом.
     private const double SnapDistanceThreshold = 64;
@@ -30,38 +38,54 @@ public partial class ConsumptionPanel : ContentView
     private const double DragActivationThreshold = 4;
     private const double ComfortableBottomSpacing = 20;
 
+    // Допустимые координаты TranslationY. Меньшее значение находится выше на экране.
     private double expandedTranslationY;
     private double collapsedTranslationY;
+
+    // Снимок текущего жеста: начальная позиция, пройденный путь и последняя скорость.
     private double gestureStartTranslationY;
     private double gestureDistanceY;
     private double gestureVelocityY;
     private double lastSampleTranslationY;
     private double lastAllocatedHeight;
     private long lastSampleTimestamp;
+
+    // Счётчик поколений позволяет отличить актуальную анимацию от уже отменённой.
     private int animationGeneration;
+
+    // Флаги разделяют этапы измерения, жеста и анимации и защищают их от конфликтов.
     private bool hasMeasured;
     private bool isDragging;
     private bool isDragActivated;
     private bool isAnimating;
     private ConsumptionPanelState panelState = ConsumptionPanelState.Collapsed;
 
+    /// <summary>Создаёт контрол и загружает его визуальное дерево из XAML.</summary>
     public ConsumptionPanel()
     {
         InitializeComponent();
     }
 
+    /// <summary>Коллекция записей, отображаемая внутренним CollectionView.</summary>
     public IEnumerable? ItemsSource
     {
         get => (IEnumerable?)GetValue(ItemsSourceProperty);
         set => SetValue(ItemsSourceProperty, value);
     }
 
+    /// <summary>
+    /// Координата верхнего края свёрнутой панели относительно области содержимого.
+    /// На MainPage привязана к фактической высоте блока FixedTopContent.
+    /// </summary>
     public double CollapsedTopInset
     {
         get => (double)GetValue(CollapsedTopInsetProperty);
         set => SetValue(CollapsedTopInsetProperty, value);
     }
 
+    /// <summary>
+    /// После измерения контрола вычисляет позиции фиксации для текущей высоты экрана.
+    /// </summary>
     protected override void OnSizeAllocated(double width, double height)
     {
         base.OnSizeAllocated(width, height);
@@ -91,6 +115,8 @@ public partial class ConsumptionPanel : ContentView
 
     private static void OnCollapsedTopInsetChanged(BindableObject bindable, object oldValue, object newValue)
     {
+        // Callback статический по требованиям BindableProperty; фактическую работу
+        // выполняем над экземпляром панели, переданным во входном параметре.
         var panel = (ConsumptionPanel)bindable;
         if (panel.Height <= 0 || Math.Abs((double)newValue - (double)oldValue) < 0.5)
         {
@@ -120,16 +146,19 @@ public partial class ConsumptionPanel : ContentView
 
     private void OnDragHandlePanUpdated(object? sender, PanUpdatedEventArgs e)
     {
+        // Event handler оставлен тонким, чтобы автомат состояний жеста был отдельно.
         ProcessPanelPan(e);
     }
 
     private void ProcessPanelPan(PanUpdatedEventArgs e)
     {
+        // До первого layout неизвестны безопасные границы перемещения.
         if (!hasMeasured)
         {
             return;
         }
 
+        // Один PanGestureRecognizer присылает последовательность Started → Running → Completed.
         switch (e.StatusType)
         {
             case GestureStatus.Started:
@@ -151,6 +180,7 @@ public partial class ConsumptionPanel : ContentView
 
     private void BeginPanelDrag()
     {
+        // Новый жест становится источником истины и прерывает текущую snap-анимацию.
         isDragging = true;
         CancelSnapAnimation();
         gestureStartTranslationY = TranslationY;
@@ -175,6 +205,7 @@ public partial class ConsumptionPanel : ContentView
             isDragActivated = true;
         }
 
+        // Вычитаем уже пройденную «мёртвую зону», чтобы при активации не было скачка.
         var effectiveTotalY = totalY - Math.CopySign(DragActivationThreshold, totalY);
         var nextTranslation = Math.Clamp(
             gestureStartTranslationY + effectiveTotalY,
@@ -192,6 +223,7 @@ public partial class ConsumptionPanel : ContentView
             lastSampleTimestamp = now;
         }
 
+        // Субпиксельные изменения не видны, но создают лишние обновления layout.
         if (Math.Abs(nextTranslation - TranslationY) >= 0.35)
         {
             TranslationY = nextTranslation;
@@ -202,6 +234,8 @@ public partial class ConsumptionPanel : ContentView
 
     private async void CompletePanelDrag()
     {
+        // Обработчик события имеет void-сигнатуру; асинхронно ждём завершения
+        // анимации перед окончательной фиксацией позиции.
         isDragging = false;
 
         var targetState = ResolveSnapState();
@@ -221,6 +255,7 @@ public partial class ConsumptionPanel : ContentView
             return ConsumptionPanelState.Collapsed;
         }
 
+        // Без выраженного свайпа выбираем ближайшую к текущей позиции границу.
         var midpoint = expandedTranslationY + ((collapsedTranslationY - expandedTranslationY) / 2);
         return TranslationY <= midpoint
             ? ConsumptionPanelState.Expanded
@@ -229,6 +264,7 @@ public partial class ConsumptionPanel : ContentView
 
     private async Task SnapToStateAsync(ConsumptionPanelState targetState)
     {
+        // В каждый момент должна работать не более чем одна анимация панели.
         CancelSnapAnimation();
         panelState = targetState;
 
@@ -244,6 +280,8 @@ public partial class ConsumptionPanel : ContentView
         // Номер поколения не даёт завершившейся старой анимации перезаписать
         // состояние, если пользователь уже начал новый жест.
         var generation = animationGeneration;
+        // MAUI Animation сообщает о завершении callback-ом. TaskCompletionSource
+        // преобразует его в Task, чтобы продолжение читалось как обычный async-код.
         var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         var animation = new Animation(
             value => TranslationY = value,
@@ -251,6 +289,8 @@ public partial class ConsumptionPanel : ContentView
             targetTranslation,
             Easing.CubicOut);
 
+        // Easing задаётся самой Animation, а Commit запускается с линейным ходом,
+        // чтобы easing не применился повторно.
         animation.Commit(
             this,
             SnapAnimationName,
@@ -270,6 +310,7 @@ public partial class ConsumptionPanel : ContentView
 
     private void CancelSnapAnimation()
     {
+        // Инкремент делает continuation предыдущей анимации устаревшим.
         animationGeneration++;
         this.AbortAnimation(SnapAnimationName);
         isAnimating = false;
@@ -277,6 +318,7 @@ public partial class ConsumptionPanel : ContentView
 
     private double GetTranslationForState(ConsumptionPanelState state)
     {
+        // TranslationY отсчитывается вниз: раскрытая панель имеет меньшее значение.
         return state == ConsumptionPanelState.Expanded
             ? expandedTranslationY
             : collapsedTranslationY;

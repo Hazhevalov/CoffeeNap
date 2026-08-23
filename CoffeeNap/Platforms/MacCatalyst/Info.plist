@@ -2,31 +2,34 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <!-- The Mac App Store requires you specify if the app uses encryption. -->
-    <!-- Please consult https://developer.apple.com/documentation/bundleresources/information_property_list/itsappusesnonexemptencryption -->
+    <!-- Перед публикацией нужно явно указать, использует ли приложение нестандартное шифрование. -->
     <!-- <key>ITSAppUsesNonExemptEncryption</key> -->
     <!-- Please indicate <true/> or <false/> here. -->
 
-    <!-- Specify the category for your app here. -->
-    <!-- Please consult https://developer.apple.com/documentation/bundleresources/information_property_list/lsapplicationcategorytype -->
+    <!-- Категория приложения в Mac App Store. -->
     <!-- <key>LSApplicationCategoryType</key> -->
     <!-- <string>public.app-category.YOUR-CATEGORY-HERE</string> -->
+	<!-- Семейство 2 соответствует интерфейсу iPad, на котором основан Mac Catalyst. -->
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>2</integer>
 	</array>
+	<!-- CoffeeNap публикуется в категории Lifestyle. -->
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.lifestyle</string>
+	<!-- Требуется 64-битная ARM-возможность; runtime x64 настраивается отдельно в csproj. -->
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>arm64</string>
 	</array>
+	<!-- Ориентации окна, унаследованные от UIKit-модели Catalyst. -->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- Полный набор ориентаций для iPad-представления. -->
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -34,6 +37,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- Имя сгенерированного MAUI-каталога иконок. -->
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
 </dict>

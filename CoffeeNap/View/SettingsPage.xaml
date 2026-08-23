@@ -6,6 +6,7 @@
     Title="Настройки"
     BackgroundColor="{StaticResource SurfaceColor}"
     Shell.NavBarIsVisible="True">
+    <!-- Временный placeholder до реализации настроек; Shell показывает кнопку «Назад». -->
     <Label
         FontFamily="Inter"
         FontSize="24"

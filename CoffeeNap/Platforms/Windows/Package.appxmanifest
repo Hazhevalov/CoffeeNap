@@ -6,25 +6,31 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap rescap">
 
+  <!-- Идентификатор, издатель и версия пакета. Placeholder-значения MAUI заменяет при сборке. -->
   <Identity Name="maui-package-name-placeholder" Publisher="CN=User Name" Version="0.0.0.0" />
 
+  <!-- Унаследованный идентификатор семейства Windows Phone, требуемый форматом манифеста. -->
   <mp:PhoneIdentity PhoneProductId="0B5E4887-79D1-41BA-BA8D-B699F1A24102" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
+  <!-- Метаданные, отображаемые Windows в свойствах установленного приложения. -->
   <Properties>
     <DisplayName>$placeholder$</DisplayName>
     <PublisherDisplayName>User Name</PublisherDisplayName>
     <Logo>$placeholder$.png</Logo>
   </Properties>
 
+  <!-- Минимальная и протестированная версии Windows для универсального и desktop-семейств. -->
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
   </Dependencies>
 
+  <!-- x-generate просит сборку автоматически сформировать языковые ресурсы. -->
   <Resources>
     <Resource Language="x-generate" />
   </Resources>
 
+  <!-- Точка входа, плитки и splash screen Windows-приложения. -->
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
       <uap:VisualElements
@@ -39,6 +45,7 @@
     </Application>
   </Applications>
 
+  <!-- runFullTrust разрешает desktop-приложению работать как обычный Win32-процесс. -->
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>

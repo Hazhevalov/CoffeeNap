@@ -6,6 +6,7 @@
     Title="Добавление употребления"
     BackgroundColor="{StaticResource SurfaceColor}"
     Shell.NavBarIsVisible="True">
+    <!-- Временный placeholder будущей формы добавления напитка. -->
     <Label
         FontFamily="Inter"
         FontSize="24"

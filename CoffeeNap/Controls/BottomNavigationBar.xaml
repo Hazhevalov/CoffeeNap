@@ -7,6 +7,7 @@
     BackgroundColor="{StaticResource SurfaceColor}"
     HeightRequest="82">
 
+    <!-- Три равные колонки соответствуют главной, добавлению и календарю. -->
     <Grid Padding="10,10,10,12">
         <Grid.RowDefinitions>
             <RowDefinition Height="1" />
@@ -18,12 +19,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <BoxView
-            Grid.Row="0"
-            Grid.ColumnSpan="3"
-            Margin="-10,-10,-10,0"
-            BackgroundColor="{StaticResource DividerColor}" />
-
+        <!-- Активная главная вкладка: команда не нужна, пользователь уже на MainPage. -->
         <Button
             Grid.Row="1"
             Grid.Column="0"
@@ -37,6 +33,7 @@
             ImageSource="home_active_ico.png"
             Opacity="1" />
 
+        <!-- Команда берётся у самого ContentView через x:Reference, а не из BindingContext. -->
         <Button
             Grid.Row="1"
             Grid.Column="1"
@@ -52,6 +49,7 @@
             Text="+"
             TextColor="{StaticResource InkColor}" />
 
+        <!-- Правая кнопка открывает календарь переданной извне командой. -->
         <ImageButton
             Grid.Row="1"
             Grid.Column="2"

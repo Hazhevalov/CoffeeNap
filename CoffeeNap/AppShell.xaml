@@ -12,6 +12,10 @@
     Shell.NavBarIsVisible="False"
     Shell.TabBarIsVisible="False">
 
+    <!--
+        Shell используется как навигационный стек без видимых flyout и tab bar.
+        MainPage — единственный корневой маршрут; остальные регистрируются в code-behind.
+    -->
     <ShellContent
         Route="MainPage"
         ContentTemplate="{DataTemplate local:MainPage}" />

@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<!-- Один проект собирается для Android, iOS и Mac Catalyst; Windows добавляется только на Windows-хосте. -->
 		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
 
-		<!-- Note for MacCatalyst:
+		<!-- Пояснение MAUI по архитектурам Mac Catalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
 		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
 		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
@@ -12,25 +13,29 @@
 		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 
 		<OutputType>Exe</OutputType>
+		<!-- Пространство имён по умолчанию для файлов без явно заданного RootNamespace. -->
 		<RootNamespace>CoffeeNap</RootNamespace>
+		<!-- Включает MAUI targets и модель Single Project с общими ресурсами для всех платформ. -->
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
+		<!-- Стандартные using подключаются автоматически; nullable-анализ включён. -->
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
-		<!-- Display name -->
+		<!-- Отображаемое пользователю название приложения. -->
 		<ApplicationTitle>CoffeeNap</ApplicationTitle>
 
-		<!-- App Identifier -->
+		<!-- Уникальный идентификатор пакета; перед публикацией companyname следует заменить. -->
 		<ApplicationId>com.companyname.coffeenap</ApplicationId>
 
-		<!-- Versions -->
+		<!-- Публичная версия и внутренний монотонно растущий номер сборки. -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
+		<!-- None запускает Windows-приложение без MSIX-пакета в режиме разработки. -->
 		<WindowsPackageType>None</WindowsPackageType>
 
+		<!-- Минимальные версии ОС, на которых разрешено устанавливать приложение. -->
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
@@ -39,40 +44,44 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- App Icon -->
+		<!-- Иконка: appicon.svg — фон, appiconfg.svg — адаптивный передний слой. -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
-		<!-- Splash Screen -->
+		<!-- Splash screen, автоматически преобразуемый MAUI в платформенные ресурсы. -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
-		<!-- Images -->
+		<!-- Все изображения папки доступны в XAML по одному имени файла. -->
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 		
-		<!-- Custom Fonts -->
+		<!-- Шрифты пакуются как MAUIFont; их псевдонимы регистрируются в MauiProgram. -->
 		<MauiFont Include="Resources\Fonts\*" />
 
-		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<!-- Raw-файлы сохраняются без префикса Resources/Raw и читаются через FileSystem API. -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- MVVM Toolkit генерирует RelayCommand/ObservableObject; остальные пакеты дают MAUI UI и debug-логирование. -->
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <!-- Явно сохраняет папку Models в обозревателе проекта даже при отсутствии файлов. -->
 	  <Folder Include="Models\" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <!-- Связывает code-behind альтернативной страницы с её XAML в IDE. -->
 	  <Compile Update="View\SecondPage.xaml.cs">
 	    <DependentUpon>SecondPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
+	  <!-- Передаёт SecondPage.xaml компилятору MAUI XAML. -->
 	  <MauiXaml Update="View\SecondPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -3,13 +3,12 @@ using UIKit;
 
 namespace CoffeeNap
 {
+    /// <summary>Нативная точка входа версии для macOS через Mac Catalyst.</summary>
     public class Program
     {
-        // This is the main entry point of the application.
+        // UIKit запускает приложение и назначает AppDelegate обработчиком жизненного цикла.
         static void Main(string[] args)
         {
-            // if you want to use a different Application Delegate class from "AppDelegate"
-            // you can specify it here.
             UIApplication.Main(args, null, typeof(AppDelegate));
         }
     }

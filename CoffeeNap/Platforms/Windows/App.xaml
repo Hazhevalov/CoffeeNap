@@ -5,4 +5,5 @@
     xmlns:maui="using:Microsoft.Maui"
     xmlns:local="using:CoffeeNap.WinUI">
 
+    <!-- Нативные WinUI-ресурсы можно добавлять здесь; общие MAUI-ресурсы находятся в App.xaml. -->
 </maui:MauiWinUIApplication>

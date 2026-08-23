@@ -3,13 +3,12 @@ using UIKit;
 
 namespace CoffeeNap
 {
+    /// <summary>Нативная точка входа iOS-приложения.</summary>
     public class Program
     {
-        // This is the main entry point of the application.
+        // UIKit создаёт цикл приложения и передаёт события жизненного цикла AppDelegate.
         static void Main(string[] args)
         {
-            // if you want to use a different Application Delegate class from "AppDelegate"
-            // you can specify it here.
             UIApplication.Main(args, null, typeof(AppDelegate));
         }
     }

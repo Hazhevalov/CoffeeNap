@@ -10,6 +10,10 @@
     SafeAreaEdges="All"
     Shell.NavBarIsVisible="False">
 
+    <!--
+        x:DataType включает компилируемые привязки к MainViewModel.
+        Корневая сетка отделяет растягиваемую область страницы от нижней навигации.
+    -->
     <Grid RowSpacing="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -34,6 +38,7 @@
                     Padding="10,13"
                     BackgroundColor="{StaticResource SurfaceColor}"
                     ColumnSpacing="9">
+                    <!-- Шапка: аватар, приветствие и переход к настройкам. -->
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="44" />
                         <ColumnDefinition Width="*" />
@@ -86,6 +91,7 @@
                     Padding="13"
                     BackgroundColor="{StaticResource InkColor}"
                     StrokeThickness="0">
+                    <!-- Карточка дневной нормы. Тёмный фон выделяет главный показатель. -->
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="16" />
                     </Border.StrokeShape>
@@ -122,6 +128,7 @@
                         </Grid>
 
                         <Grid Grid.Row="1" ColumnSpacing="7">
+                            <!-- Progress принимает значение 0..1; лимит справа остаётся числом в мг. -->
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
@@ -147,6 +154,7 @@
                             LineHeight="1"
                             TextColor="{StaticResource SurfaceColor}"
                             VerticalTextAlignment="End">
+                            <!-- FormattedString позволяет оформить число и единицу разными размерами. -->
                             <Label.FormattedText>
                                 <FormattedString>
                                     <Span
@@ -169,6 +177,7 @@
                     BackgroundColor="{StaticResource SurfaceColor}"
                     Stroke="{StaticResource DividerColor}"
                     StrokeThickness="1">
+                    <!-- Карточка распределения всех записей по типам напитка. -->
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="16" />
                     </Border.StrokeShape>
@@ -208,6 +217,10 @@
                             Grid.Row="1"
                             BackgroundColor="{StaticResource DividerColor}"
                             StrokeThickness="0">
+                            <!--
+                                Три Star-колонки получают относительную ширину из SegmentWidth.
+                                Вместе они образуют горизонтальную составную диаграмму.
+                            -->
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="10" />
                             </Border.StrokeShape>
@@ -251,6 +264,7 @@
                         </Border>
 
                         <Grid Grid.Row="2" ColumnSpacing="8">
+                            <!-- Легенда повторяет цвет каждого сегмента и его название. -->
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />

@@ -7,6 +7,7 @@
     xmlns:models="clr-namespace:CoffeeNap.Models"
     BackgroundColor="Transparent">
 
+    <!-- Белая карточка занимает всю высоту контрола; её положение меняет code-behind. -->
     <Border
         Padding="0"
         BackgroundColor="{StaticResource SurfaceColor}"
@@ -19,6 +20,7 @@
         </Border.Shadow>
 
         <Grid RowSpacing="0">
+            <!-- Строки: ручка фиксированной высоты, заголовок и прокручиваемый список. -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="36" />
                 <RowDefinition Height="Auto" />
@@ -40,6 +42,7 @@
             </Grid>
 
             <Grid Grid.Row="1" Padding="10,0,10,6">
+                <!-- Заголовок панели и декоративный информационный значок. -->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="26" />
@@ -83,6 +86,7 @@
                     SelectionMode="None"
                     VerticalScrollBarVisibility="Never">
                     <CollectionView.ItemTemplate>
+                        <!-- x:DataType включает проверку привязок элемента при компиляции. -->
                         <DataTemplate x:DataType="models:CaffeineConsumption">
                             <Border
                                 Margin="10,3"
@@ -98,6 +102,7 @@
                                     <Shadow Brush="{StaticResource CardShadowBrush}" Offset="0,1" Opacity="0.06" Radius="3" />
                                 </Border.Shadow>
                                 <Grid ColumnSpacing="10">
+                                    <!-- Карточка записи: иконка, название/время и доза кофеина. -->
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="44" />
                                         <ColumnDefinition Width="*" />

@@ -1,7 +1,12 @@
 ﻿namespace CoffeeNap
 {
+    /// <summary>
+    /// Навигационная оболочка приложения. AppShell.xaml задаёт стартовую страницу,
+    /// а конструктор регистрирует маршруты остальных экранов.
+    /// </summary>
     public partial class AppShell : Shell
     {
+        /// <summary>Загружает Shell и подготавливает маршруты для GoToAsync.</summary>
         public AppShell()
         {
             InitializeComponent();
