@@ -28,7 +28,6 @@
             <Grid x:Name="DragHandleArea" Grid.Row="0" BackgroundColor="Transparent">
                 <Grid.GestureRecognizers>
                     <PanGestureRecognizer PanUpdated="OnDragHandlePanUpdated" />
-                    <TapGestureRecognizer Tapped="OnDragHandleTapped" />
                 </Grid.GestureRecognizers>
                 <BoxView
                     WidthRequest="42"
@@ -79,15 +78,8 @@
                     Margin="0,1,0,0"
                     BackgroundColor="{StaticResource SurfaceColor}"
                     ItemsSource="{Binding Source={x:Reference Panel}, Path=ItemsSource}"
-                    Scrolled="OnConsumptionListScrolled"
                     SelectionMode="None"
                     VerticalScrollBarVisibility="Never">
-                    <CollectionView.GestureRecognizers>
-                        <SwipeGestureRecognizer
-                            Direction="Down"
-                            Swiped="OnConsumptionListSwipedDown"
-                            Threshold="56" />
-                    </CollectionView.GestureRecognizers>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:CaffeineConsumption">
                             <Border
@@ -150,19 +142,12 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                     <CollectionView.Footer>
-                        <BoxView HeightRequest="12" BackgroundColor="{StaticResource SurfaceColor}" />
+                        <BoxView
+                            x:Name="BottomScrollSpacer"
+                            HeightRequest="20"
+                            BackgroundColor="{StaticResource SurfaceColor}" />
                     </CollectionView.Footer>
                 </CollectionView>
-
-                <Grid
-                    x:Name="CollapsedListGestureLayer"
-                    ZIndex="10"
-                    BackgroundColor="Transparent"
-                    IsVisible="True">
-                    <Grid.GestureRecognizers>
-                        <PanGestureRecognizer PanUpdated="OnCollapsedListPanUpdated" />
-                    </Grid.GestureRecognizers>
-                </Grid>
             </Grid>
         </Grid>
     </Border>

@@ -170,5 +170,117 @@ public partial class MainViewModel : ObservableObject
             Icon = "energy_drink_ico.png",
             IconBackground = Color.FromArgb("#5C5C5C")
         });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Флэт уайт",
+            CaffeineMg = 110,
+            ConsumedAt = now.AddDays(-6),
+            Icon = "coffee_ico.png",
+            IconBackground = Colors.Black
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Матча латте",
+            CaffeineMg = 55,
+            ConsumedAt = now.AddDays(-7),
+            Icon = "tea_ico.png",
+            IconBackground = Color.FromArgb("#777777")
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Двойной эспрессо",
+            CaffeineMg = 130,
+            ConsumedAt = now.AddDays(-8),
+            Icon = "coffee_ico.png",
+            IconBackground = Colors.Black
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Энергетик без сахара",
+            CaffeineMg = 100,
+            ConsumedAt = now.AddDays(-9),
+            Icon = "energy_drink_ico.png",
+            IconBackground = Color.FromArgb("#5C5C5C")
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Кола (500мл)",
+            CaffeineMg = 50,
+            ConsumedAt = now.AddDays(-10),
+            Icon = "energy_drink_ico.png",
+            IconBackground = Color.FromArgb("#5C5C5C")
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Латте",
+            CaffeineMg = 75,
+            ConsumedAt = now.AddDays(-11),
+            Icon = "coffee_ico.png",
+            IconBackground = Colors.Black
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Фильтр-кофе",
+            CaffeineMg = 140,
+            ConsumedAt = now.AddDays(-12),
+            Icon = "coffee_ico.png",
+            IconBackground = Colors.Black
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Раф",
+            CaffeineMg = 90,
+            ConsumedAt = now.AddDays(-13),
+            Icon = "coffee_ico.png",
+            IconBackground = Colors.Black
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Мокка",
+            CaffeineMg = 100,
+            ConsumedAt = now.AddDays(-14),
+            Icon = "coffee_ico.png",
+            IconBackground = Colors.Black
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Cold Brew",
+            CaffeineMg = 150,
+            ConsumedAt = now.AddDays(-15),
+            Icon = "coffee_ico.png",
+            IconBackground = Colors.Black
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Чай улун",
+            CaffeineMg = 40,
+            ConsumedAt = now.AddDays(-16),
+            Icon = "tea_ico.png",
+            IconBackground = Color.FromArgb("#777777")
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Кофе с молоком",
+            CaffeineMg = 85,
+            ConsumedAt = now.AddDays(-17),
+            Icon = "coffee_ico.png",
+            IconBackground = Colors.Black
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Какао",
+            CaffeineMg = 20,
+            ConsumedAt = now.AddDays(-18),
+            Icon = "tea_ico.png",
+            IconBackground = Color.FromArgb("#777777")
+        });
+        Consumptions.Add(new CaffeineConsumption
+        {
+            Name = "Лунго",
+            CaffeineMg = 75,
+            ConsumedAt = now.AddDays(-19),
+            Icon = "coffee_ico.png",
+            IconBackground = Colors.Black
+        });
     }
 }

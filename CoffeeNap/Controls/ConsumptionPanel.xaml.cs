@@ -11,12 +11,6 @@ public partial class ConsumptionPanel : ContentView
         Expanded
     }
 
-    private enum GestureOwner
-    {
-        None,
-        Panel
-    }
-
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
         nameof(ItemsSource), typeof(IEnumerable), typeof(ConsumptionPanel));
 
@@ -31,6 +25,8 @@ public partial class ConsumptionPanel : ContentView
     private const uint SnapAnimationDuration = 200;
     private const double SnapDistanceThreshold = 64;
     private const double SnapVelocityThreshold = 600;
+    private const double DragActivationThreshold = 4;
+    private const double ComfortableBottomSpacing = 20;
 
     private double expandedTranslationY;
     private double collapsedTranslationY;
@@ -38,19 +34,18 @@ public partial class ConsumptionPanel : ContentView
     private double gestureDistanceY;
     private double gestureVelocityY;
     private double lastSampleTranslationY;
+    private double lastAllocatedHeight;
     private long lastSampleTimestamp;
     private int animationGeneration;
     private bool hasMeasured;
     private bool isDragging;
+    private bool isDragActivated;
     private bool isAnimating;
-    private bool isListAtTop = true;
-    private GestureOwner gestureOwner = GestureOwner.None;
     private ConsumptionPanelState panelState = ConsumptionPanelState.Collapsed;
 
     public ConsumptionPanel()
     {
         InitializeComponent();
-        UpdateInteractionState();
     }
 
     public IEnumerable? ItemsSource
@@ -73,10 +68,18 @@ public partial class ConsumptionPanel : ContentView
             return;
         }
 
+        if (Math.Abs(height - lastAllocatedHeight) < 0.5)
+        {
+            hasMeasured = true;
+            return;
+        }
+
+        lastAllocatedHeight = height;
         RecalculatePositions(height);
         if (!isDragging && !isAnimating)
         {
             TranslationY = GetTranslationForState(panelState);
+            UpdateScrollableBottomInset();
         }
 
         hasMeasured = true;
@@ -85,7 +88,7 @@ public partial class ConsumptionPanel : ContentView
     private static void OnCollapsedTopInsetChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var panel = (ConsumptionPanel)bindable;
-        if (panel.Height <= 0)
+        if (panel.Height <= 0 || Math.Abs((double)newValue - (double)oldValue) < 0.5)
         {
             return;
         }
@@ -94,6 +97,7 @@ public partial class ConsumptionPanel : ContentView
         if (!panel.isDragging && !panel.isAnimating)
         {
             panel.TranslationY = panel.GetTranslationForState(panel.panelState);
+            panel.UpdateScrollableBottomInset();
         }
     }
 
@@ -113,14 +117,6 @@ public partial class ConsumptionPanel : ContentView
         ProcessPanelPan(e);
     }
 
-    private void OnCollapsedListPanUpdated(object? sender, PanUpdatedEventArgs e)
-    {
-        if (panelState == ConsumptionPanelState.Collapsed || isDragging)
-        {
-            ProcessPanelPan(e);
-        }
-    }
-
     private void ProcessPanelPan(PanUpdatedEventArgs e)
     {
         if (!hasMeasured)
@@ -133,12 +129,12 @@ public partial class ConsumptionPanel : ContentView
             case GestureStatus.Started:
                 BeginPanelDrag();
                 break;
-            case GestureStatus.Running when gestureOwner == GestureOwner.Panel:
+            case GestureStatus.Running when isDragging:
                 UpdatePanelDrag(e.TotalY);
                 break;
             case GestureStatus.Completed:
             case GestureStatus.Canceled:
-                if (gestureOwner == GestureOwner.Panel)
+                if (isDragging)
                 {
                     CompletePanelDrag();
                 }
@@ -149,20 +145,31 @@ public partial class ConsumptionPanel : ContentView
 
     private void BeginPanelDrag()
     {
-        CancelSnapAnimation();
-        gestureOwner = GestureOwner.Panel;
         isDragging = true;
+        CancelSnapAnimation();
         gestureStartTranslationY = TranslationY;
         gestureDistanceY = 0;
         gestureVelocityY = 0;
+        isDragActivated = false;
         lastSampleTranslationY = TranslationY;
         lastSampleTimestamp = Stopwatch.GetTimestamp();
     }
 
     private void UpdatePanelDrag(double totalY)
     {
+        if (!isDragActivated)
+        {
+            if (Math.Abs(totalY) < DragActivationThreshold)
+            {
+                return;
+            }
+
+            isDragActivated = true;
+        }
+
+        var effectiveTotalY = totalY - Math.CopySign(DragActivationThreshold, totalY);
         var nextTranslation = Math.Clamp(
-            gestureStartTranslationY + totalY,
+            gestureStartTranslationY + effectiveTotalY,
             expandedTranslationY,
             collapsedTranslationY);
 
@@ -175,14 +182,17 @@ public partial class ConsumptionPanel : ContentView
             lastSampleTimestamp = now;
         }
 
-        TranslationY = nextTranslation;
-        gestureDistanceY = nextTranslation - gestureStartTranslationY;
+        if (Math.Abs(nextTranslation - TranslationY) >= 0.35)
+        {
+            TranslationY = nextTranslation;
+        }
+
+        gestureDistanceY = TranslationY - gestureStartTranslationY;
     }
 
     private async void CompletePanelDrag()
     {
         isDragging = false;
-        gestureOwner = GestureOwner.None;
 
         var targetState = ResolveSnapState();
         await SnapToStateAsync(targetState);
@@ -206,42 +216,16 @@ public partial class ConsumptionPanel : ContentView
             : ConsumptionPanelState.Collapsed;
     }
 
-    private async void OnDragHandleTapped(object? sender, TappedEventArgs e)
-    {
-        if (!hasMeasured || isDragging)
-        {
-            return;
-        }
-
-        var targetState = panelState == ConsumptionPanelState.Collapsed
-            ? ConsumptionPanelState.Expanded
-            : ConsumptionPanelState.Collapsed;
-        await SnapToStateAsync(targetState);
-    }
-
-    private void OnConsumptionListScrolled(object? sender, ItemsViewScrolledEventArgs e)
-    {
-        isListAtTop = e.FirstVisibleItemIndex <= 0 && e.VerticalOffset <= 1;
-    }
-
-    private async void OnConsumptionListSwipedDown(object? sender, SwipedEventArgs e)
-    {
-        if (panelState == ConsumptionPanelState.Expanded && isListAtTop && !isDragging)
-        {
-            await SnapToStateAsync(ConsumptionPanelState.Collapsed);
-        }
-    }
-
     private async Task SnapToStateAsync(ConsumptionPanelState targetState)
     {
         CancelSnapAnimation();
         panelState = targetState;
-        UpdateInteractionState();
 
         var targetTranslation = GetTranslationForState(targetState);
         if (Math.Abs(TranslationY - targetTranslation) < 0.5)
         {
             TranslationY = targetTranslation;
+            UpdateScrollableBottomInset();
             return;
         }
 
@@ -267,6 +251,7 @@ public partial class ConsumptionPanel : ContentView
         {
             TranslationY = targetTranslation;
             isAnimating = false;
+            UpdateScrollableBottomInset();
         }
     }
 
@@ -277,15 +262,15 @@ public partial class ConsumptionPanel : ContentView
         isAnimating = false;
     }
 
-    private void UpdateInteractionState()
-    {
-        CollapsedListGestureLayer.IsVisible = panelState == ConsumptionPanelState.Collapsed;
-    }
-
     private double GetTranslationForState(ConsumptionPanelState state)
     {
         return state == ConsumptionPanelState.Expanded
             ? expandedTranslationY
             : collapsedTranslationY;
+    }
+
+    private void UpdateScrollableBottomInset()
+    {
+        BottomScrollSpacer.HeightRequest = GetTranslationForState(panelState) + ComfortableBottomSpacing;
     }
 }
