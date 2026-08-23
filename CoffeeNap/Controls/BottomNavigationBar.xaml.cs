@@ -4,6 +4,8 @@ namespace CoffeeNap.Controls;
 
 public partial class BottomNavigationBar : ContentView
 {
+    // BindableProperty позволяет передавать команды из ViewModel родительской
+    // страницы, не связывая переиспользуемую панель с конкретной навигацией.
     public static readonly BindableProperty AddCommandProperty = BindableProperty.Create(
         nameof(AddCommand),
         typeof(ICommand),

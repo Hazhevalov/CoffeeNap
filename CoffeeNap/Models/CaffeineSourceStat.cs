@@ -22,8 +22,10 @@ public sealed class CaffeineSourceStat
 
     public string PercentageDisplay => $"{Ratio:P0}";
 
+    // В слишком узком сегменте процент не поместится, поэтому скрываем подпись.
     public bool IsPercentageVisible => Ratio >= 0.08;
 
+    // Star-ширина превращает долю источника в пропорциональный сегмент диаграммы.
     public GridLength SegmentWidth => Ratio == 0
         ? new GridLength(0)
         : new GridLength(Ratio, GridUnitType.Star);

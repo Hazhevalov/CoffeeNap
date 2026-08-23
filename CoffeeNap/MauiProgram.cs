@@ -6,6 +6,7 @@ namespace CoffeeNap
     {
         public static MauiApp CreateMauiApp()
         {
+            // Здесь собираются общие зависимости и ресурсы приложения до запуска.
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()

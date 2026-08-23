@@ -5,6 +5,7 @@ namespace CoffeeNap.Controls;
 
 public partial class ConsumptionPanel : ContentView
 {
+    // Панель фиксируется только в двух устойчивых положениях.
     private enum ConsumptionPanelState
     {
         Collapsed,
@@ -23,6 +24,7 @@ public partial class ConsumptionPanel : ContentView
 
     private const string SnapAnimationName = "ConsumptionPanelSnap";
     private const uint SnapAnimationDuration = 200;
+    // Расстояние и скорость, после которых жест однозначно считается свайпом.
     private const double SnapDistanceThreshold = 64;
     private const double SnapVelocityThreshold = 600;
     private const double DragActivationThreshold = 4;
@@ -68,6 +70,8 @@ public partial class ConsumptionPanel : ContentView
             return;
         }
 
+        // MAUI может несколько раз сообщить почти одинаковый размер.
+        // Игнорируем такие вызовы, чтобы панель не дёргалась при раскладке.
         if (Math.Abs(height - lastAllocatedHeight) < 0.5)
         {
             hasMeasured = true;
@@ -103,6 +107,8 @@ public partial class ConsumptionPanel : ContentView
 
     private void RecalculatePositions(double availableHeight)
     {
+        // Координаты вычисляются относительно высоты экрана, но ограничиваются,
+        // чтобы панель оставалась удобной и на маленьких, и на больших устройствах.
         expandedTranslationY = Math.Clamp(availableHeight * 0.06, 20, 48);
         var minimumVisibleHeight = Math.Clamp(availableHeight * 0.22, 120, 220);
         var lowestAllowedTop = Math.Max(expandedTranslationY, availableHeight - minimumVisibleHeight);
@@ -157,6 +163,8 @@ public partial class ConsumptionPanel : ContentView
 
     private void UpdatePanelDrag(double totalY)
     {
+        // Небольшое начальное движение игнорируется: обычное касание ручки
+        // не должно случайно сдвигать панель.
         if (!isDragActivated)
         {
             if (Math.Abs(totalY) < DragActivationThreshold)
@@ -173,6 +181,8 @@ public partial class ConsumptionPanel : ContentView
             expandedTranslationY,
             collapsedTranslationY);
 
+        // Скорость берём по двум последним замерам. Она нужна, чтобы быстрый
+        // короткий свайп сработал даже без прохождения порога расстояния.
         var now = Stopwatch.GetTimestamp();
         var elapsedSeconds = (now - lastSampleTimestamp) / (double)Stopwatch.Frequency;
         if (elapsedSeconds > 0.008)
@@ -200,6 +210,7 @@ public partial class ConsumptionPanel : ContentView
 
     private ConsumptionPanelState ResolveSnapState()
     {
+        // Сначала учитываем явно направленный свайп, затем — ближайшее положение.
         if (gestureVelocityY <= -SnapVelocityThreshold || gestureDistanceY <= -SnapDistanceThreshold)
         {
             return ConsumptionPanelState.Expanded;
@@ -230,6 +241,8 @@ public partial class ConsumptionPanel : ContentView
         }
 
         isAnimating = true;
+        // Номер поколения не даёт завершившейся старой анимации перезаписать
+        // состояние, если пользователь уже начал новый жест.
         var generation = animationGeneration;
         var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         var animation = new Animation(
@@ -271,6 +284,8 @@ public partial class ConsumptionPanel : ContentView
 
     private void UpdateScrollableBottomInset()
     {
+        // Дополнительное место внизу позволяет прокрутить последний элемент
+        // выше нижней границы панели и не прижимать его к навигации.
         BottomScrollSpacer.HeightRequest = GetTranslationForState(panelState) + ComfortableBottomSpacing;
     }
 }

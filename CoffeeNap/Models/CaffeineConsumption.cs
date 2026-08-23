@@ -28,6 +28,8 @@ public sealed class CaffeineConsumption : ObservableObject
 
     private static string FormatRelativeTime(TimeSpan elapsed)
     {
+        // Выбираем наиболее крупную подходящую единицу времени, чтобы подпись
+        // оставалась короткой и естественно читалась в списке.
         if (elapsed.TotalMinutes < 1)
         {
             return "только что";
@@ -51,6 +53,8 @@ public sealed class CaffeineConsumption : ObservableObject
 
     private static string GetWordForm(int value, string singular, string paucal, string plural)
     {
+        // Числа от 11 до 14 — исключение из обычного правила,
+        // основанного на последней цифре числа.
         var lastTwoDigits = value % 100;
         if (lastTwoDigits is >= 11 and <= 14)
         {

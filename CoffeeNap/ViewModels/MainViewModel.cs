@@ -9,6 +9,8 @@ namespace CoffeeNap.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
+    // Храним подписанные элементы отдельно, чтобы при изменении коллекции
+    // можно было безопасно отписаться от старых обработчиков событий.
     private readonly HashSet<CaffeineConsumption> subscribedConsumptions = [];
     private double currentCaffeine = 120;
     private double dailyCaffeineLimit = 300;
@@ -87,6 +89,8 @@ public partial class MainViewModel : ObservableObject
 
     private void LoadConsumptions()
     {
+        // Временные данные для демонстрации интерфейса. Позже этот массив можно
+        // заменить загрузкой из базы данных или внешнего сервиса.
         var now = DateTimeOffset.Now;
         var testConsumptions = new[]
         {
@@ -102,6 +106,8 @@ public partial class MainViewModel : ObservableObject
             CreateConsumption("Энергетик (500мл)", 160, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink)
         };
 
+        // Во время пакетного заполнения не пересчитываем статистику после
+        // каждого Add: одного пересчёта в конце загрузки достаточно.
         isLoadingConsumptions = true;
         try
         {
@@ -160,6 +166,8 @@ public partial class MainViewModel : ObservableObject
 
     private void SynchronizeConsumptionSubscriptions()
     {
+        // ObservableCollection сообщает о добавлении и удалении элементов,
+        // но не об изменении их свойств. Поэтому подписываемся на каждый элемент.
         foreach (var consumption in subscribedConsumptions)
         {
             consumption.PropertyChanged -= OnConsumptionPropertyChanged;
@@ -175,6 +183,7 @@ public partial class MainViewModel : ObservableObject
 
     private void OnConsumptionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        // На распределение по источникам влияет только тип напитка.
         if (e.PropertyName == nameof(CaffeineConsumption.Type))
         {
             RecalculateSourceStatistics();
@@ -183,6 +192,8 @@ public partial class MainViewModel : ObservableObject
 
     private void RecalculateSourceStatistics()
     {
+        // Создаём запись для каждого значения enum заранее, включая типы,
+        // которых пока нет в истории употреблений.
         var counts = Enum
             .GetValues<CaffeineConsumptionType>()
             .ToDictionary(type => type, _ => 0);

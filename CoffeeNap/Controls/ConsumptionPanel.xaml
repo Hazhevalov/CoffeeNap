@@ -25,6 +25,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
+            <!-- Жест обрабатывается только в области ручки, чтобы не мешать прокрутке списка. -->
             <Grid x:Name="DragHandleArea" Grid.Row="0" BackgroundColor="Transparent">
                 <Grid.GestureRecognizers>
                     <PanGestureRecognizer PanUpdated="OnDragHandlePanUpdated" />
@@ -73,6 +74,7 @@
             </Grid>
 
             <Grid Grid.Row="2">
+                <!-- Список получает данные снаружи через ItemsSource самого контрола. -->
                 <CollectionView
                     x:Name="ConsumptionList"
                     Margin="0,1,0,0"
@@ -141,6 +143,7 @@
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
+                    <!-- Высота футера меняется из code-behind с учётом положения панели. -->
                     <CollectionView.Footer>
                         <BoxView
                             x:Name="BottomScrollSpacer"

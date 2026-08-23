@@ -22,6 +22,7 @@
             BackgroundColor="{StaticResource PageBackgroundColor}"
             IsClippedToBounds="True">
 
+            <!-- Неподвижная верхняя часть: профиль, дневная норма и статистика. -->
             <VerticalStackLayout
                 x:Name="FixedTopContent"
                 Padding="0,0,0,12"
@@ -303,6 +304,7 @@
                 </Border>
             </VerticalStackLayout>
 
+            <!-- Панель накладывается поверх контента и раскрывается жестом вверх. -->
             <controls:ConsumptionPanel
                 x:Name="ConsumptionPanel"
                 ZIndex="10"
@@ -310,6 +312,7 @@
                 ItemsSource="{Binding Consumptions}" />
         </Grid>
 
+        <!-- Нижняя навигация вынесена в отдельный переиспользуемый контрол. -->
         <controls:BottomNavigationBar
             Grid.Row="1"
             ZIndex="20"
