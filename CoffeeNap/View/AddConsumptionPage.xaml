@@ -3,12 +3,13 @@
     x:Class="CoffeeNap.AddConsumptionPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:CoffeeNap.Controls"
     Title="Добавление употребления"
     BackgroundColor="{StaticResource PageBackgroundColor}"
     Shell.NavBarIsVisible="False">
 
     <!-- Вся страница -->
-    <Grid RowDefinitions="Auto, *" VerticalOptions="Fill">
+    <Grid RowDefinitions="Auto, *, Auto" VerticalOptions="Fill">
 
         <!-- Верхний header -->
         <Grid
@@ -199,7 +200,7 @@
                 <!--Сетка с карточками выбора-->
                 <Grid Grid.Row="1"
                       ColumnDefinitions="*,*,*"
-                      ColumnSpacing="12">
+                      ColumnSpacing="8">
 
                     <!--Карточка с кофе-->
                     <Border
@@ -349,5 +350,20 @@
                             FontAttributes="Bold"/>
             </Border>
         </Grid>
+
+        <!-- Нижняя навигация вынесена в отдельный переиспользуемый контрол. -->
+        <controls:BottomNavigationBar Grid.Row="2"
+                                      VerticalOptions="End"
+                                      ZIndex="20"
+                                      AddCommand="{Binding OpenAddConsumptionCommand}"
+                                      CalendarCommand="{Binding OpenCalendarCommand}">
+
+            <controls:BottomNavigationBar.Shadow>
+                <Shadow Brush="#40000000"
+                        Offset="0,-6"
+                        Radius="14"
+                        Opacity="0.45" />
+            </controls:BottomNavigationBar.Shadow>
+        </controls:BottomNavigationBar>
     </Grid>
 </ContentPage>
