@@ -147,12 +147,12 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ProgressBar
+                            <controls:RoundedProgressBar
                                 HeightRequest="15"
                                 VerticalOptions="Center"
-                                BackgroundColor="{StaticResource ProgressTrackColor}"
                                 Progress="{Binding DailyProgress}"
-                                ProgressColor="{Binding DailyProgressColor}" />
+                                ProgressColor="{Binding DailyProgressColor}"
+                                TrackColor="{StaticResource ProgressTrackColor}" />
                             
                             <Label
                                 Grid.Column="1"
@@ -261,13 +261,16 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Coffee line -->
-                                <Grid Grid.Column="0" BackgroundColor="{Binding CoffeeSource.Color}">
+                                <Grid Grid.Column="0" BackgroundColor="{Binding CoffeeSource.Color}" IsClippedToBounds="True">
                                     <Label
-                                        Padding="10,0"
+                                        Margin="0"
+                                        Padding="0"
                                         FontFamily="Inter"
                                         FontSize="9"
-                                        HorizontalTextAlignment="End"
+                                        HorizontalTextAlignment="Center"
                                         IsVisible="{Binding CoffeeSource.IsPercentageVisible}"
+                                        LineBreakMode="NoWrap"
+                                        MaxLines="1"
                                         Text="{Binding CoffeeSource.PercentageDisplay}"
                                         TextColor="{StaticResource SurfaceColor}"
                                         VerticalTextAlignment="Center" />
@@ -275,13 +278,16 @@
                                 </Grid>
                                 
                                 <!-- Tea line -->
-                                <Grid Grid.Column="1" BackgroundColor="{Binding TeaSource.Color}">
+                                <Grid Grid.Column="1" BackgroundColor="{Binding TeaSource.Color}" IsClippedToBounds="True">
                                     <Label
-                                        Padding="10,0"
+                                        Margin="0"
+                                        Padding="0"
                                         FontFamily="Inter"
                                         FontSize="9"
-                                        HorizontalTextAlignment="End"
+                                        HorizontalTextAlignment="Center"
                                         IsVisible="{Binding TeaSource.IsPercentageVisible}"
+                                        LineBreakMode="NoWrap"
+                                        MaxLines="1"
                                         Text="{Binding TeaSource.PercentageDisplay}"
                                         TextColor="{StaticResource SurfaceColor}"
                                         VerticalTextAlignment="Center" />
@@ -289,13 +295,16 @@
                                 </Grid>
 
                                 <!-- EnergyDrinkSource line -->
-                                <Grid Grid.Column="2" BackgroundColor="{Binding EnergyDrinkSource.Color}">
+                                <Grid Grid.Column="2" BackgroundColor="{Binding EnergyDrinkSource.Color}" IsClippedToBounds="True">
                                     <Label
-                                        Padding="10,0"
+                                        Margin="0"
+                                        Padding="0"
                                         FontFamily="Inter"
                                         FontSize="9"
-                                        HorizontalTextAlignment="End"
+                                        HorizontalTextAlignment="Center"
                                         IsVisible="{Binding EnergyDrinkSource.IsPercentageVisible}"
+                                        LineBreakMode="NoWrap"
+                                        MaxLines="1"
                                         Text="{Binding EnergyDrinkSource.PercentageDisplay}"
                                         TextColor="{StaticResource SurfaceColor}"
                                         VerticalTextAlignment="Center" />

@@ -188,8 +188,8 @@ public partial class MainViewModel : ObservableObject
         var yesterday = now.AddDays(-1);
         var testConsumptions = new[]
         {
-            CreateConsumption("Капучино", 800, GetTodayTimestamp(now, TimeSpan.FromMinutes(5)), CaffeineConsumptionType.Coffee),
-            CreateConsumption("Энергетик (500мл)", 160, GetTodayTimestamp(now, TimeSpan.FromMinutes(58)), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Капучино", 7, GetTodayTimestamp(now, TimeSpan.FromMinutes(5)), CaffeineConsumptionType.Coffee),
+            CreateConsumption("Энергетик (500мл)", 60, GetTodayTimestamp(now, TimeSpan.FromMinutes(58)), CaffeineConsumptionType.EnergyDrink),
             CreateConsumption("Эспрессо", 65, yesterday, CaffeineConsumptionType.Coffee),
             CreateConsumption("Американо", 95, now.AddDays(-2), CaffeineConsumptionType.Coffee),
             CreateConsumption("Флэт уайт", 110, now.AddDays(-3), CaffeineConsumptionType.Coffee),
