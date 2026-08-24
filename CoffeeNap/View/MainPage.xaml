@@ -33,65 +33,10 @@
                 Spacing="0"
                 VerticalOptions="Start">
 
-                <Grid
+                <controls:MainHeaderView
                     HeightRequest="86"
-                    Padding="10,13"
-                    BackgroundColor="{StaticResource SurfaceColor}"
-                    ColumnSpacing="9">
-                    
-                    <!-- Шапка: аватар, приветствие и переход к настройкам. -->
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="44" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="44" />
-                    </Grid.ColumnDefinitions>
-
-                    <Border
-                        Grid.Column="0"
-                        WidthRequest="44"
-                        HeightRequest="44"
-                        Padding="11"
-                        BackgroundColor="{StaticResource InkColor}"
-                        StrokeThickness="0"
-                        VerticalOptions="Center">
-                        
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="22" />
-                        </Border.StrokeShape>
-                        
-                        <Image Source="profile_ico.png" Aspect="AspectFit" />
-                    </Border>
-
-                    <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
-                        
-                        <Label
-                            FontFamily="Inter"
-                            FontSize="12"
-                            Text="Добро пожаловать,"
-                            TextColor="{StaticResource SecondaryTextColor}" />
-                        
-                        <Label
-                            FontFamily="Inter"
-                            FontSize="14"
-                            FontAttributes="Bold"
-                            LineBreakMode="TailTruncation"
-                            MaxLines="1"
-                            Text="{Binding UserName}"
-                            TextColor="{StaticResource InkColor}" />
-                        
-                    </VerticalStackLayout>
-
-                    <Button
-                        Grid.Column="2"
-                        WidthRequest="44"
-                        HeightRequest="44"
-                        Padding="11"
-                        VerticalOptions="Center"
-                        BackgroundColor="{StaticResource InkColor}"
-                        Command="{Binding OpenSettingsCommand}"
-                        CornerRadius="22"
-                        ImageSource="settings_ico.png" />
-                </Grid>
+                    SettingsCommand="{Binding OpenSettingsCommand}"
+                    UserName="{Binding UserName}" />
 
                 <Border
                     Margin="8,10,8,10"
