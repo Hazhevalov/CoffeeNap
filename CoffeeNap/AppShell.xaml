@@ -14,20 +14,11 @@
 
     <!-- Корневые элементы скрыты от UI; нужный выбирается до показа первого окна. -->
     <FlyoutItem
-        x:Name="WelcomeShellItem"
-        Route="WelcomeRoot">
+        x:Name="OnboardingShellItem"
+        Route="OnboardingPage">
         <ShellContent
-            Route="WelcomeContent"
-            ContentTemplate="{DataTemplate local:WelcomePage}" />
-    </FlyoutItem>
-
-    <!-- Используется только для восстановления состояния «флаг есть, имени нет». -->
-    <FlyoutItem
-        x:Name="NameRecoveryShellItem"
-        Route="NameRecoveryRoot">
-        <ShellContent
-            Route="NameRecoveryContent"
-            ContentTemplate="{DataTemplate local:NameSetupPage}" />
+            Route="OnboardingContent"
+            ContentTemplate="{DataTemplate local:OnboardingPage}" />
     </FlyoutItem>
 
     <FlyoutItem

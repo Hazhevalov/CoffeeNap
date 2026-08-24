@@ -1,23 +1,36 @@
+using System.Text.RegularExpressions;
 using CoffeeNap.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Text.RegularExpressions;
 
 namespace CoffeeNap.ViewModels;
 
-/// <summary>Проверяет и сохраняет имя на втором шаге onboarding.</summary>
-public partial class NameSetupViewModel : ObservableObject
+public enum OnboardingStep
 {
-    private string? name = string.Empty;
+    Welcome,
+    NameSetup
+}
+
+/// <summary>Единая модель двух последовательных состояний onboarding.</summary>
+public partial class OnboardingViewModel : ObservableObject
+{
+    private OnboardingStep currentStep = OnboardingStep.Welcome;
+    private string? userName = string.Empty;
     private bool hasValidationError;
     private string validationMessage = string.Empty;
 
-    public string? Name
+    public OnboardingStep CurrentStep
     {
-        get => name;
+        get => currentStep;
+        private set => SetProperty(ref currentStep, value);
+    }
+
+    public string? UserName
+    {
+        get => userName;
         set
         {
-            if (SetProperty(ref name, value) && HasValidationError)
+            if (SetProperty(ref userName, value) && HasValidationError)
             {
                 HasValidationError = false;
                 ValidationMessage = string.Empty;
@@ -37,10 +50,22 @@ public partial class NameSetupViewModel : ObservableObject
         private set => SetProperty(ref validationMessage, value);
     }
 
+    [RelayCommand]
+    private void Start()
+    {
+        if (CurrentStep == OnboardingStep.Welcome)
+        {
+            CurrentStep = OnboardingStep.NameSetup;
+        }
+    }
+
+    [RelayCommand]
+    private void ReturnToWelcome() => CurrentStep = OnboardingStep.Welcome;
+
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task ConfirmNameAsync()
     {
-        var trimmedName = Name?.Trim() ?? string.Empty;
+        var trimmedName = UserName?.Trim() ?? string.Empty;
         var validationError = GetNameValidationError(trimmedName);
         if (validationError is not null)
         {
@@ -49,13 +74,13 @@ public partial class NameSetupViewModel : ObservableObject
             return;
         }
 
-        Name = trimmedName;
+        UserName = trimmedName;
 
-        // Порядок важен: флаг завершения выставляется только после сохранения имени.
+        // Завершение записывается только после успешной проверки и сохранения имени.
         UserPreferencesService.SetUserName(trimmedName);
         UserPreferencesService.SetOnboardingCompleted();
 
-        // Абсолютный маршрут очищает onboarding из активного navigation stack.
+        // Абсолютный маршрут не оставляет onboarding доступным через Back.
         await Shell.Current.GoToAsync("//MainPage/MainContent", true);
     }
 
