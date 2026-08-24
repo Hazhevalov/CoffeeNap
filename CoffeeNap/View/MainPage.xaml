@@ -32,66 +32,12 @@
                 Padding="0,0,0,12"
                 Spacing="0"
                 VerticalOptions="Start">
-                
-                <!-- Шапка: аватар, приветствие и переход к настройкам. -->
-                <Grid
+
+                <controls:MainHeaderView
                     HeightRequest="86"
-                    Padding="10,13"
-                    BackgroundColor="{StaticResource SurfaceColor}"
-                    ColumnSpacing="9">
-                   
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="44" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="44" />
-                    </Grid.ColumnDefinitions>
+                    SettingsCommand="{Binding OpenSettingsCommand}"
+                    UserName="{Binding UserName}" />
 
-                    <Border
-                        Grid.Column="0"
-                        WidthRequest="44"
-                        HeightRequest="44"
-                        Padding="11"
-                        BackgroundColor="{StaticResource InkColor}"
-                        StrokeThickness="0"
-                        VerticalOptions="Center">
-                        
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="22" />
-                        </Border.StrokeShape>
-                        
-                        <Image Source="profile_ico.png" Aspect="AspectFit" />
-                    </Border>
-
-                    <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
-                        
-                        <Label
-                            FontFamily="Inter"
-                            FontSize="12"
-                            Text="Добро пожаловать,"
-                            TextColor="{StaticResource SecondaryTextColor}" />
-                        
-                        <Label
-                            FontFamily="Inter"
-                            FontSize="14"
-                            FontAttributes="Bold"
-                            Text="Mr. Kwim"
-                            TextColor="{StaticResource InkColor}" />
-                        
-                    </VerticalStackLayout>
-
-                    <Button
-                        Grid.Column="2"
-                        WidthRequest="44"
-                        HeightRequest="44"
-                        Padding="11"
-                        VerticalOptions="Center"
-                        BackgroundColor="{StaticResource InkColor}"
-                        Command="{Binding OpenSettingsCommand}"
-                        CornerRadius="22"
-                        ImageSource="settings_ico.png" />
-                </Grid>
-
-                <!-- Карточка дневной нормы. Тёмный фон выделяет главный показатель. -->
                 <Border
                     Margin="8,10,8,10"
                     MinimumHeightRequest="150"
@@ -264,10 +210,10 @@
                                 <Grid Grid.Column="0" BackgroundColor="{Binding CoffeeSource.Color}" IsClippedToBounds="True">
                                     <Label
                                         Margin="0"
-                                        Padding="0"
+                                        Padding="3"
                                         FontFamily="Inter"
                                         FontSize="9"
-                                        HorizontalTextAlignment="Center"
+                                        HorizontalTextAlignment="End"
                                         IsVisible="{Binding CoffeeSource.IsPercentageVisible}"
                                         LineBreakMode="NoWrap"
                                         MaxLines="1"
@@ -281,10 +227,10 @@
                                 <Grid Grid.Column="1" BackgroundColor="{Binding TeaSource.Color}" IsClippedToBounds="True">
                                     <Label
                                         Margin="0"
-                                        Padding="0"
+                                        Padding="3"
                                         FontFamily="Inter"
                                         FontSize="9"
-                                        HorizontalTextAlignment="Center"
+                                        HorizontalTextAlignment="End"
                                         IsVisible="{Binding TeaSource.IsPercentageVisible}"
                                         LineBreakMode="NoWrap"
                                         MaxLines="1"
@@ -298,10 +244,10 @@
                                 <Grid Grid.Column="2" BackgroundColor="{Binding EnergyDrinkSource.Color}" IsClippedToBounds="True">
                                     <Label
                                         Margin="0"
-                                        Padding="0"
+                                        Padding="3"
                                         FontFamily="Inter"
                                         FontSize="9"
-                                        HorizontalTextAlignment="Center"
+                                        HorizontalTextAlignment="End"
                                         IsVisible="{Binding EnergyDrinkSource.IsPercentageVisible}"
                                         LineBreakMode="NoWrap"
                                         MaxLines="1"

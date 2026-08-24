@@ -15,6 +15,11 @@
             Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
             Routing.RegisterRoute(nameof(AddConsumptionPage), typeof(AddConsumptionPage));
             Routing.RegisterRoute(nameof(CalendarPage), typeof(CalendarPage));
+
+            var hasName = Services.UserPreferencesService.GetUserName() is not null;
+            CurrentItem = Services.UserPreferencesService.IsOnboardingCompleted() && hasName
+                ? MainShellItem
+                : OnboardingShellItem;
         }
     }
 }

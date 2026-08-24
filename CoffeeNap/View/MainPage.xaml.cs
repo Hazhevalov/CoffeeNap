@@ -23,6 +23,7 @@ namespace CoffeeNap
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            viewModel.RefreshUserName();
             viewModel.StartPeriodicUpdates();
         }
 
