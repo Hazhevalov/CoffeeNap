@@ -29,11 +29,17 @@
     <Color x:Key="DividerColor">#E7E7E7</Color>
     <Color x:Key="ProgressTrackColor">#303030</Color>
     <Color x:Key="ProgressAccentColor">#B7FF17</Color>
+    
     <!-- Цвета четырёх диапазонов заполнения дневной нормы. -->
     <Color x:Key="CaffeineProgressLow">#B7FF17</Color>
     <Color x:Key="CaffeineProgressMedium">#FFD60A</Color>
     <Color x:Key="CaffeineProgressHigh">#FF9500</Color>
     <Color x:Key="CaffeineProgressLimit">#FF3B30</Color>
+    
+    <!--Цвета для карточек в Quizz-->
+    <Color x:Key="CaffeeIcoFill">#000000</Color>
+    <Color x:Key="EnergyDrinkIcoFill">#535353</Color>
+    <Color x:Key="TeaIcoFill">#939393</Color>
     <SolidColorBrush x:Key="CardShadowBrush" Color="#22000000" />
 
     <!-- Шкала серого: номер растёт от светлого оттенка к тёмному. -->

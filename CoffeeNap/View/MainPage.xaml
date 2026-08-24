@@ -32,14 +32,14 @@
                 Padding="0,0,0,12"
                 Spacing="0"
                 VerticalOptions="Start">
-
+                
+                <!-- Шапка: аватар, приветствие и переход к настройкам. -->
                 <Grid
                     HeightRequest="86"
                     Padding="10,13"
                     BackgroundColor="{StaticResource SurfaceColor}"
                     ColumnSpacing="9">
-                    
-                    <!-- Шапка: аватар, приветствие и переход к настройкам. -->
+                   
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="44" />
                         <ColumnDefinition Width="*" />
@@ -91,6 +91,7 @@
                         ImageSource="settings_ico.png" />
                 </Grid>
 
+                <!-- Карточка дневной нормы. Тёмный фон выделяет главный показатель. -->
                 <Border
                     Margin="8,10,8,10"
                     MinimumHeightRequest="150"
@@ -98,7 +99,6 @@
                     BackgroundColor="{StaticResource InkColor}"
                     StrokeThickness="0">
                     
-                    <!-- Карточка дневной нормы. Тёмный фон выделяет главный показатель. -->
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="16" />
                     </Border.StrokeShape>
@@ -191,6 +191,7 @@
                     </Grid>
                 </Border>
 
+                <!-- Карточка распределения всех записей по типам напитка. -->
                 <Border
                     Margin="8,0"
                     Padding="13,11,13,12"
@@ -198,7 +199,6 @@
                     Stroke="{StaticResource DividerColor}"
                     StrokeThickness="1">
                     
-                    <!-- Карточка распределения всех записей по типам напитка. -->
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="16" />
                     </Border.StrokeShape>
