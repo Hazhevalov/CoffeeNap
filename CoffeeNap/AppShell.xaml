@@ -12,12 +12,30 @@
     Shell.NavBarIsVisible="False"
     Shell.TabBarIsVisible="False">
 
-    <!--
-        Shell используется как навигационный стек без видимых flyout и tab bar.
-        MainPage — единственный корневой маршрут; остальные регистрируются в code-behind.
-    -->
-    <ShellContent
-        Route="MainPage"
-        ContentTemplate="{DataTemplate local:MainPage}" />
+    <!-- Корневые элементы скрыты от UI; нужный выбирается до показа первого окна. -->
+    <FlyoutItem
+        x:Name="WelcomeShellItem"
+        Route="WelcomeRoot">
+        <ShellContent
+            Route="WelcomeContent"
+            ContentTemplate="{DataTemplate local:WelcomePage}" />
+    </FlyoutItem>
+
+    <!-- Используется только для восстановления состояния «флаг есть, имени нет». -->
+    <FlyoutItem
+        x:Name="NameRecoveryShellItem"
+        Route="NameRecoveryRoot">
+        <ShellContent
+            Route="NameRecoveryContent"
+            ContentTemplate="{DataTemplate local:NameSetupPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem
+        x:Name="MainShellItem"
+        Route="MainPage">
+        <ShellContent
+            Route="MainContent"
+            ContentTemplate="{DataTemplate local:MainPage}" />
+    </FlyoutItem>
 
 </Shell>

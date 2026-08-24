@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using CoffeeNap.Models;
+using CoffeeNap.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -33,6 +34,7 @@ public partial class MainViewModel : ObservableObject
     private CaffeineSourceStat teaSource = null!;
     private CaffeineSourceStat energyDrinkSource = null!;
     private bool isLoadingConsumptions;
+    private string userName = "Пользователь";
 
     /// <summary>
     /// Создаёт коллекции, подключает наблюдение за историей и загружает
@@ -44,8 +46,20 @@ public partial class MainViewModel : ObservableObject
         Consumptions = new ObservableCollection<CaffeineConsumption>();
         Consumptions.CollectionChanged += OnConsumptionsCollectionChanged;
 
+        RefreshUserName();
         LoadConsumptions();
     }
+
+    /// <summary>Имя в верхней панели, загруженное из локальных Preferences.</summary>
+    public string UserName
+    {
+        get => userName;
+        private set => SetProperty(ref userName, value);
+    }
+
+    /// <summary>Повторно загружает имя, чтобы будущая смена в Settings сразу отражалась в UI.</summary>
+    public void RefreshUserName() =>
+        UserName = UserPreferencesService.GetUserName() ?? "Пользователь";
 
     /// <summary>
     /// Суммарное количество кофеина за текущий локальный день, в миллиграммах.
@@ -195,6 +209,46 @@ public partial class MainViewModel : ObservableObject
             CreateConsumption("Флэт уайт", 110, now.AddDays(-3), CaffeineConsumptionType.Coffee),
             CreateConsumption("Латте на кокосовом", 120, now.AddDays(-4), CaffeineConsumptionType.Coffee),
             CreateConsumption("Зелёный чай", 35, now.AddDays(-5), CaffeineConsumptionType.Tea),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
             CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
             CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
             CreateConsumption("Энергетик #3", 120, now.AddDays(-8), CaffeineConsumptionType.EnergyDrink)

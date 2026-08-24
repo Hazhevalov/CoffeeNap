@@ -27,6 +27,7 @@
     <Color x:Key="SecondaryTextColor">#3E3E3E</Color>
     <Color x:Key="MutedTextColor">#A2A2A2</Color>
     <Color x:Key="DividerColor">#E7E7E7</Color>
+    <Color x:Key="ValidationErrorColor">#C62828</Color>
     <Color x:Key="ProgressTrackColor">#303030</Color>
     <Color x:Key="ProgressAccentColor">#B7FF17</Color>
     <!-- Цвета четырёх диапазонов заполнения дневной нормы. -->

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CoffeeNap.NameSetupPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:CoffeeNap.Controls"
+    xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
+    x:DataType="viewModels:NameSetupViewModel"
+    BackgroundColor="{StaticResource PageBackgroundColor}"
+    SafeAreaEdges="All"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False">
+
+    <Grid
+        x:Name="NamePageContent"
+        Padding="12,20,12,25"
+        Opacity="0"
+        RowSpacing="0"
+        TranslationX="64">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+            <BoxView
+                WidthRequest="8"
+                HeightRequest="8"
+                BackgroundColor="#D0D0D0"
+                CornerRadius="4" />
+            <BoxView
+                WidthRequest="8"
+                HeightRequest="8"
+                BackgroundColor="{StaticResource InkColor}"
+                CornerRadius="4" />
+        </HorizontalStackLayout>
+
+        <VerticalStackLayout
+            Grid.Row="1"
+            Spacing="11"
+            VerticalOptions="Center">
+            <Label
+                FontAttributes="Bold"
+                FontFamily="Inter"
+                FontSize="27"
+                Text="Как Вас зовут?"
+                TextColor="{StaticResource InkColor}" />
+
+            <Border
+                x:Name="NameEntryBorder"
+                HeightRequest="55"
+                Padding="10,0"
+                BackgroundColor="{StaticResource SurfaceColor}"
+                Stroke="#E1E1E1"
+                StrokeThickness="1">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="18" />
+                </Border.StrokeShape>
+                <Border.Triggers>
+                    <DataTrigger
+                        TargetType="Border"
+                        Binding="{Binding HasValidationError}"
+                        Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource ValidationErrorColor}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <controls:BorderlessEntry
+                    MaxLength="15"
+                    BackgroundColor="Transparent"
+                    ClearButtonVisibility="WhileEditing"
+                    FontFamily="Inter"
+                    FontSize="13"
+                    Keyboard="Text"
+                    Placeholder="Имя"
+                    PlaceholderColor="#B7B7B7"
+                    ReturnCommand="{Binding ConfirmNameCommand}"
+                    ReturnType="Done"
+                    Text="{Binding Name, Mode=TwoWay}"
+                    TextColor="{StaticResource InkColor}" />
+            </Border>
+
+            <Label
+                Margin="10,-5,0,0"
+                FontFamily="Inter"
+                FontSize="12"
+                IsVisible="{Binding HasValidationError}"
+                Text="{Binding ValidationMessage}"
+                TextColor="{StaticResource ValidationErrorColor}" />
+        </VerticalStackLayout>
+
+        <Button
+            Grid.Row="2"
+            WidthRequest="157"
+            HeightRequest="46"
+            Padding="18,0"
+            HorizontalOptions="Center"
+            BackgroundColor="{StaticResource InkColor}"
+            Command="{Binding ConfirmNameCommand}"
+            CornerRadius="18"
+            FontFamily="Inter"
+            FontSize="13"
+            Text="Подтвердить"
+            TextColor="{StaticResource SurfaceColor}" />
+    </Grid>
+</ContentPage>

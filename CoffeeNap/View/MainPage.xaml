@@ -74,7 +74,9 @@
                             FontFamily="Inter"
                             FontSize="14"
                             FontAttributes="Bold"
-                            Text="Mr. Kwim"
+                            LineBreakMode="TailTruncation"
+                            MaxLines="1"
+                            Text="{Binding UserName}"
                             TextColor="{StaticResource InkColor}" />
                         
                     </VerticalStackLayout>
@@ -264,10 +266,10 @@
                                 <Grid Grid.Column="0" BackgroundColor="{Binding CoffeeSource.Color}" IsClippedToBounds="True">
                                     <Label
                                         Margin="0"
-                                        Padding="0"
+                                        Padding="3"
                                         FontFamily="Inter"
                                         FontSize="9"
-                                        HorizontalTextAlignment="Center"
+                                        HorizontalTextAlignment="End"
                                         IsVisible="{Binding CoffeeSource.IsPercentageVisible}"
                                         LineBreakMode="NoWrap"
                                         MaxLines="1"
@@ -281,10 +283,10 @@
                                 <Grid Grid.Column="1" BackgroundColor="{Binding TeaSource.Color}" IsClippedToBounds="True">
                                     <Label
                                         Margin="0"
-                                        Padding="0"
+                                        Padding="3"
                                         FontFamily="Inter"
                                         FontSize="9"
-                                        HorizontalTextAlignment="Center"
+                                        HorizontalTextAlignment="End"
                                         IsVisible="{Binding TeaSource.IsPercentageVisible}"
                                         LineBreakMode="NoWrap"
                                         MaxLines="1"
@@ -298,10 +300,10 @@
                                 <Grid Grid.Column="2" BackgroundColor="{Binding EnergyDrinkSource.Color}" IsClippedToBounds="True">
                                     <Label
                                         Margin="0"
-                                        Padding="0"
+                                        Padding="3"
                                         FontFamily="Inter"
                                         FontSize="9"
-                                        HorizontalTextAlignment="Center"
+                                        HorizontalTextAlignment="End"
                                         IsVisible="{Binding EnergyDrinkSource.IsPercentageVisible}"
                                         LineBreakMode="NoWrap"
                                         MaxLines="1"

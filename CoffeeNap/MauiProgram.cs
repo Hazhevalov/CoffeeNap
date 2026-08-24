@@ -25,6 +25,20 @@ namespace CoffeeNap
                     fonts.AddFont("InterVariableFont.ttf", "OpenSansSemibold");
                 });
 
+#if ANDROID
+            // Android EditText рисует собственный underline через native Background.
+            // Убираем его только у BorderlessEntry; остальные Entry не затрагиваются.
+            Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(
+                nameof(Controls.BorderlessEntry),
+                static (handler, view) =>
+                {
+                    if (view is Controls.BorderlessEntry)
+                    {
+                        handler.PlatformView.Background = null;
+                    }
+                });
+#endif
+
 #if DEBUG
 			// Debug-провайдер пишет диагностические сообщения в окно Output IDE.
     		builder.Logging.AddDebug();
