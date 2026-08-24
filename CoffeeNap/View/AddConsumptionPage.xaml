@@ -12,60 +12,10 @@
     <Grid RowDefinitions="Auto, *, Auto" VerticalOptions="Fill">
 
         <!-- Верхний header -->
-        <Grid
-            Grid.Row="0"
+        <controls:MainHeaderView
             HeightRequest="86"
-            Padding="10,13"
-            BackgroundColor="{StaticResource SurfaceColor}"
-            ColumnSpacing="9"
-            ColumnDefinitions="44,*,44">
-
-            <Border
-                Grid.Column="0"
-                WidthRequest="44"
-                HeightRequest="44"
-                Padding="11"
-                BackgroundColor="{StaticResource InkColor}"
-                StrokeThickness="0"
-                VerticalOptions="Center">
-
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="22" />
-                </Border.StrokeShape>
-
-                <Image Source="profile_ico.png" Aspect="AspectFit" />
-            </Border>
-
-            <VerticalStackLayout
-                Grid.Column="1"
-                Spacing="1"
-                VerticalOptions="Center">
-
-                <Label
-                    FontFamily="Inter"
-                    FontSize="12"
-                    Text="Добро пожаловать,"
-                    TextColor="{StaticResource SecondaryTextColor}" />
-
-                <Label
-                    FontFamily="Inter"
-                    FontSize="14"
-                    FontAttributes="Bold"
-                    Text="Mr. Kwim"
-                    TextColor="{StaticResource InkColor}" />
-            </VerticalStackLayout>
-
-            <Button
-                Grid.Column="2"
-                WidthRequest="44"
-                HeightRequest="44"
-                Padding="11"
-                VerticalOptions="Center"
-                BackgroundColor="{StaticResource InkColor}"
-                Command="{Binding OpenSettingsCommand}"
-                CornerRadius="22"
-                ImageSource="settings_ico.png" />
-        </Grid>
+            SettingsCommand="{Binding OpenSettingsCommand}"
+            UserName="{Binding UserName}" />
 
         <!-- Контент под header'ом -->
         <Grid RowDefinitions="Auto,*,Auto"
