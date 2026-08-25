@@ -1,6 +1,6 @@
 namespace CoffeeNap.Services;
 
-/// <summary>Централизованные ключи локальных настроек пользователя.</summary>
+/// <summary>Legacy-ключи, используемые только для one-time миграции в SQLite.</summary>
 public static class PreferenceKeys
 {
     public const string UserName = "coffee_nap.user_name";

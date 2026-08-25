@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using System.Text.RegularExpressions;
+using CoffeeNap.Models;
 using CoffeeNap.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -14,10 +16,16 @@ public enum OnboardingStep
 /// <summary>Единая модель двух последовательных состояний onboarding.</summary>
 public partial class OnboardingViewModel : ObservableObject
 {
+    private readonly IAppDataService dataService;
     private OnboardingStep currentStep = OnboardingStep.Welcome;
     private string? userName = string.Empty;
     private bool hasValidationError;
     private string validationMessage = string.Empty;
+
+    public OnboardingViewModel(IAppDataService dataService)
+    {
+        this.dataService = dataService;
+    }
 
     public OnboardingStep CurrentStep
     {
@@ -76,9 +84,24 @@ public partial class OnboardingViewModel : ObservableObject
 
         UserName = trimmedName;
 
-        // Завершение записывается только после успешной проверки и сохранения имени.
-        UserPreferencesService.SetUserName(trimmedName);
-        UserPreferencesService.SetOnboardingCompleted();
+        // Профиль и флаг onboarding сохраняются одной SQLite-row до навигации.
+        try
+        {
+            await dataService.SaveUserProfileAsync(new UserProfile
+            {
+                UserName = trimmedName,
+                OnboardingCompleted = true
+            });
+        }
+        catch (Exception exception)
+        {
+            ValidationMessage = "Не удалось сохранить профиль. Попробуйте ещё раз";
+            HasValidationError = true;
+#if DEBUG
+            Debug.WriteLine($"Profile save failed: {exception}");
+#endif
+            return;
+        }
 
         // Абсолютный маршрут не оставляет onboarding доступным через Back.
         await Shell.Current.GoToAsync("//MainPage/MainContent", true);

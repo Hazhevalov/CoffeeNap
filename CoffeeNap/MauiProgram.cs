@@ -44,6 +44,15 @@ namespace CoffeeNap
     		builder.Logging.AddDebug();
 #endif
 
+            builder.Services.AddSingleton<Data.AppDatabase>();
+            builder.Services.AddSingleton<Services.IAppDataService, Services.AppDataService>();
+            builder.Services.AddSingleton<Services.AppStartupState>();
+            builder.Services.AddSingleton<AppShell>();
+            builder.Services.AddSingleton<ViewModels.MainViewModel>();
+            builder.Services.AddTransient<ViewModels.OnboardingViewModel>();
+            builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddTransient<OnboardingPage>();
+
             return builder.Build();
         }
     }

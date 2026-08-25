@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using CoffeeNap.Models;
 using CoffeeNap.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,62 +10,42 @@ using CommunityToolkit.Mvvm.Input;
 namespace CoffeeNap.ViewModels;
 
 /// <summary>
-/// Главная модель представления приложения. Хранит историю употреблений,
-/// рассчитывает дневную дозу и распределение по источникам, а также предоставляет
-/// команды навигации, к которым привязаны кнопки <see cref="MainPage"/>.
+/// Runtime-состояние главного экрана. Persistent-данные загружаются и изменяются
+/// только через IAppDataService, а статистика рассчитывается в памяти.
 /// </summary>
 public partial class MainViewModel : ObservableObject
 {
-    // Храним подписанные элементы отдельно, чтобы при изменении коллекции
-    // можно было безопасно отписаться от старых обработчиков событий.
+    private readonly IAppDataService dataService;
+    private readonly SemaphoreSlim operationLock = new(1, 1);
     private readonly HashSet<CaffeineConsumption> subscribedConsumptions = [];
-
-    // Источник отмены существует только пока MainPage видима. Он останавливает
-    // фоновый таймер и не позволяет запустить второй таймер параллельно.
     private CancellationTokenSource? periodicUpdateCancellation;
-
-    // Дата последнего обновления нужна для обнаружения перехода через полночь.
     private DateTime currentLocalDate = DateTime.Today;
-
-    // Поля ниже являются хранилищем для observable-свойств. SetProperty
-    // автоматически отправляет UI уведомление PropertyChanged.
     private double currentCaffeine;
-    private double dailyCaffeineLimit = 300;
+    private double dailyCaffeineLimit;
     private CaffeineSourceStat coffeeSource = null!;
     private CaffeineSourceStat teaSource = null!;
     private CaffeineSourceStat energyDrinkSource = null!;
     private bool isLoadingConsumptions;
+    private bool isInitialized;
+    private bool isBusy;
+    private string? initializationError;
     private string userName = "Пользователь";
 
-    /// <summary>
-    /// Создаёт коллекции, подключает наблюдение за историей и загружает
-    /// демонстрационные записи. Экземпляр создаётся в code-behind MainPage.
-    /// </summary>
-    public MainViewModel()
+    public MainViewModel(IAppDataService dataService)
     {
-        SourceStats = new ObservableCollection<CaffeineSourceStat>();
-        Consumptions = new ObservableCollection<CaffeineConsumption>();
+        this.dataService = dataService;
+        SourceStats = [];
+        Consumptions = [];
         Consumptions.CollectionChanged += OnConsumptionsCollectionChanged;
-
-        RefreshUserName();
-        LoadConsumptions();
+        RecalculateSourceStatistics();
     }
 
-    /// <summary>Имя в верхней панели, загруженное из локальных Preferences.</summary>
     public string UserName
     {
         get => userName;
         private set => SetProperty(ref userName, value);
     }
 
-    /// <summary>Повторно загружает имя, чтобы будущая смена в Settings сразу отражалась в UI.</summary>
-    public void RefreshUserName() =>
-        UserName = UserPreferencesService.GetUserName() ?? "Пользователь";
-
-    /// <summary>
-    /// Суммарное количество кофеина за текущий локальный день, в миллиграммах.
-    /// Изменяется только внутренними расчётами модели представления.
-    /// </summary>
     public double CurrentCaffeine
     {
         get => currentCaffeine;
@@ -72,20 +53,16 @@ public partial class MainViewModel : ObservableObject
         {
             if (SetProperty(ref currentCaffeine, value))
             {
-                // Оба вычисляемых свойства зависят от текущей дозы и сами не имеют setter.
                 OnPropertyChanged(nameof(DailyProgress));
                 OnPropertyChanged(nameof(DailyProgressColor));
             }
         }
     }
 
-    /// <summary>
-    /// Настраиваемая дневная норма кофеина в миллиграммах.
-    /// </summary>
     public double DailyCaffeineLimit
     {
         get => dailyCaffeineLimit;
-        set
+        private set
         {
             if (SetProperty(ref dailyCaffeineLimit, value))
             {
@@ -95,39 +72,46 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    /// <summary>Статистика для записей типа «кофе».</summary>
     public CaffeineSourceStat CoffeeSource
     {
         get => coffeeSource;
         private set => SetProperty(ref coffeeSource, value);
     }
 
-    /// <summary>Статистика для записей типа «чай».</summary>
     public CaffeineSourceStat TeaSource
     {
         get => teaSource;
         private set => SetProperty(ref teaSource, value);
     }
 
-    /// <summary>Статистика для записей типа «энергетик».</summary>
     public CaffeineSourceStat EnergyDrinkSource
     {
         get => energyDrinkSource;
         private set => SetProperty(ref energyDrinkSource, value);
     }
 
-    /// <summary>
-    /// Заполнение индикатора дневной нормы в диапазоне от 0 до 1.
-    /// Значение ограничено единицей, даже когда норма превышена.
-    /// </summary>
+    public bool IsInitialized
+    {
+        get => isInitialized;
+        private set => SetProperty(ref isInitialized, value);
+    }
+
+    public bool IsBusy
+    {
+        get => isBusy;
+        private set => SetProperty(ref isBusy, value);
+    }
+
+    public string? InitializationError
+    {
+        get => initializationError;
+        private set => SetProperty(ref initializationError, value);
+    }
+
     public double DailyProgress => DailyCaffeineLimit <= 0
         ? 0
         : Math.Clamp(CurrentCaffeine / DailyCaffeineLimit, 0, 1);
 
-    /// <summary>
-    /// Цвет индикатора нормы: от безопасного зелёного до красного при достижении лимита.
-    /// Пороговые цвета берутся из глобального словаря ресурсов.
-    /// </summary>
     public Color DailyProgressColor
     {
         get
@@ -143,33 +127,141 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    /// <summary>
-    /// Полный набор сегментов диаграммы источников. Сейчас XAML обращается к трём
-    /// именованным свойствам выше, но коллекция пригодна для будущего списка/легенды.
-    /// </summary>
     public ObservableCollection<CaffeineSourceStat> SourceStats { get; }
 
-    /// <summary>
-    /// Наблюдаемая история употреблений. CollectionView обновляется автоматически
-    /// при добавлении и удалении записей.
-    /// </summary>
     public ObservableCollection<CaffeineConsumption> Consumptions { get; }
 
-    // Атрибут RelayCommand генерирует публичное свойство OpenSettingsCommand.
+    /// <summary>Загружает профиль, settings и историю ровно один раз.</summary>
+    public async Task InitializeAsync()
+    {
+        if (IsInitialized)
+        {
+            return;
+        }
+
+        await operationLock.WaitAsync();
+        try
+        {
+            if (IsInitialized)
+            {
+                return;
+            }
+
+            IsBusy = true;
+            InitializationError = null;
+            await dataService.InitializeAsync();
+
+            var profile = await dataService.GetUserProfileAsync();
+            var settings = await dataService.GetSettingsAsync();
+            var consumptions = await dataService.GetConsumptionsAsync();
+
+            UserName = string.IsNullOrWhiteSpace(profile?.UserName)
+                ? "Пользователь"
+                : profile.UserName;
+            DailyCaffeineLimit = settings.DailyCaffeineLimit;
+            ReplaceConsumptions(consumptions);
+            IsInitialized = true;
+        }
+        catch (Exception exception)
+        {
+            InitializationError = "Не удалось загрузить данные";
+#if DEBUG
+            Debug.WriteLine($"MainViewModel initialization failed: {exception}");
+#endif
+        }
+        finally
+        {
+            IsBusy = false;
+            operationLock.Release();
+        }
+    }
+
+    /// <summary>Сохраняет новую запись до добавления её в UI-коллекцию.</summary>
+    public async Task AddConsumptionAsync(CaffeineConsumption consumption)
+    {
+        await InitializeAsync();
+        if (!IsInitialized)
+        {
+            throw new InvalidOperationException("Application data is not initialized.");
+        }
+
+        await operationLock.WaitAsync();
+        try
+        {
+            await dataService.AddConsumptionAsync(consumption);
+            InsertInChronologicalOrder(consumption);
+        }
+        finally
+        {
+            operationLock.Release();
+        }
+    }
+
+    /// <summary>Сохраняет изменённую запись и затем обновляет её позицию/статистику.</summary>
+    public async Task UpdateConsumptionAsync(CaffeineConsumption consumption)
+    {
+        await InitializeAsync();
+        await operationLock.WaitAsync();
+        try
+        {
+            await dataService.UpdateConsumptionAsync(consumption);
+            ReorderConsumption(consumption);
+            RecalculateSourceStatistics();
+            RecalculateDailyCaffeine(DateTimeOffset.Now);
+        }
+        finally
+        {
+            operationLock.Release();
+        }
+    }
+
+    /// <summary>Удаляет запись из SQLite до удаления из UI-коллекции.</summary>
+    public async Task DeleteConsumptionAsync(int id)
+    {
+        await InitializeAsync();
+        await operationLock.WaitAsync();
+        try
+        {
+            await dataService.DeleteConsumptionAsync(id);
+            var consumption = Consumptions.FirstOrDefault(item => item.Id == id);
+            if (consumption is not null)
+            {
+                Consumptions.Remove(consumption);
+            }
+        }
+        finally
+        {
+            operationLock.Release();
+        }
+    }
+
+    /// <summary>Сохраняет настройку до обновления отображаемого значения.</summary>
+    public async Task SaveDailyCaffeineLimitAsync(double limit)
+    {
+        var settings = await dataService.GetSettingsAsync();
+        settings.DailyCaffeineLimit = limit;
+        await dataService.SaveSettingsAsync(settings);
+        DailyCaffeineLimit = limit;
+    }
+
+    /// <summary>Перечитывает небольшую profile-row после будущего Settings UI.</summary>
+    public async Task RefreshUserProfileAsync()
+    {
+        var profile = await dataService.GetUserProfileAsync();
+        UserName = string.IsNullOrWhiteSpace(profile?.UserName)
+            ? "Пользователь"
+            : profile.UserName;
+    }
+
     [RelayCommand]
     private Task OpenSettingsAsync() => Shell.Current.GoToAsync(nameof(SettingsPage));
 
-    // Переходы используют маршруты, зарегистрированные в AppShell.
     [RelayCommand]
     private Task OpenAddConsumptionAsync() => Shell.Current.GoToAsync(nameof(AddConsumptionPage));
 
     [RelayCommand]
     private Task OpenCalendarAsync() => Shell.Current.GoToAsync(nameof(CalendarPage));
 
-    /// <summary>
-    /// Запускает обновление относительных подписей времени раз в 30 секунд.
-    /// Повторный вызов безопасен: второй цикл не создаётся.
-    /// </summary>
     public void StartPeriodicUpdates()
     {
         if (periodicUpdateCancellation is { IsCancellationRequested: false })
@@ -182,10 +274,6 @@ public partial class MainViewModel : ObservableObject
         _ = RunPeriodicUpdatesAsync(periodicUpdateCancellation.Token);
     }
 
-    /// <summary>
-    /// Останавливает и освобождает периодический таймер. Вызывается, когда
-    /// главная страница перестаёт быть видимой.
-    /// </summary>
     public void StopPeriodicUpdates()
     {
         var cancellation = periodicUpdateCancellation;
@@ -194,72 +282,13 @@ public partial class MainViewModel : ObservableObject
         cancellation?.Dispose();
     }
 
-    private void LoadConsumptions()
+    private void ReplaceConsumptions(IEnumerable<CaffeineConsumption> consumptions)
     {
-        // Временные данные для демонстрации интерфейса. Позже этот массив можно
-        // заменить загрузкой из базы данных или внешнего сервиса.
-        var now = DateTimeOffset.Now;
-        var yesterday = now.AddDays(-1);
-        var testConsumptions = new[]
-        {
-            CreateConsumption("Капучино", 7, GetTodayTimestamp(now, TimeSpan.FromMinutes(5)), CaffeineConsumptionType.Coffee),
-            CreateConsumption("Энергетик (500мл)", 60, GetTodayTimestamp(now, TimeSpan.FromMinutes(58)), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Эспрессо", 65, yesterday, CaffeineConsumptionType.Coffee),
-            CreateConsumption("Американо", 95, now.AddDays(-2), CaffeineConsumptionType.Coffee),
-            CreateConsumption("Флэт уайт", 110, now.AddDays(-3), CaffeineConsumptionType.Coffee),
-            CreateConsumption("Латте на кокосовом", 120, now.AddDays(-4), CaffeineConsumptionType.Coffee),
-            CreateConsumption("Зелёный чай", 35, now.AddDays(-5), CaffeineConsumptionType.Tea),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
-            CreateConsumption("Энергетик #3", 120, now.AddDays(-8), CaffeineConsumptionType.EnergyDrink)
-        };
-
-        // Во время пакетного заполнения не пересчитываем статистику после
-        // каждого Add: одного пересчёта в конце загрузки достаточно.
         isLoadingConsumptions = true;
         try
         {
-            foreach (var consumption in testConsumptions)
+            Consumptions.Clear();
+            foreach (var consumption in consumptions.OrderByDescending(item => item.ConsumedAt))
             {
                 Consumptions.Add(consumption);
             }
@@ -271,53 +300,32 @@ public partial class MainViewModel : ObservableObject
 
         SynchronizeConsumptionSubscriptions();
         RecalculateSourceStatistics();
-        RecalculateDailyCaffeine(now);
+        RecalculateDailyCaffeine(DateTimeOffset.Now);
     }
 
-    private static DateTimeOffset GetTodayTimestamp(DateTimeOffset now, TimeSpan age)
+    private void InsertInChronologicalOrder(CaffeineConsumption consumption)
     {
-        // Демонстрационная запись должна остаться внутри текущего дня даже при
-        // запуске приложения сразу после полуночи.
-        var localNow = now.ToLocalTime();
-        var startOfToday = new DateTimeOffset(
-            localNow.Date,
-            TimeZoneInfo.Local.GetUtcOffset(localNow.Date));
-        var requested = localNow - age;
-        return requested >= startOfToday ? requested : startOfToday;
-    }
-
-    private static CaffeineConsumption CreateConsumption(
-        string name,
-        int caffeineMg,
-        DateTimeOffset consumedAt,
-        CaffeineConsumptionType type)
-    {
-        // Фабрика централизует соответствие типа напитка его иконке и цвету.
-        var isEnergyDrink = type == CaffeineConsumptionType.EnergyDrink;
-        var isTea = type == CaffeineConsumptionType.Tea;
-
-        return new CaffeineConsumption
+        var index = 0;
+        while (index < Consumptions.Count && Consumptions[index].ConsumedAt > consumption.ConsumedAt)
         {
-            Name = name,
-            CaffeineMg = caffeineMg,
-            ConsumedAt = consumedAt,
-            Type = type,
-            Icon = isEnergyDrink
-                ? "energy_drink_ico.png"
-                : isTea
-                    ? "tea_ico.png"
-                    : "coffee_ico.png",
-            IconBackground = isEnergyDrink
-                ? Color.FromArgb("#5C5C5C")
-                : isTea
-                    ? Color.FromArgb("#777777")
-                    : Colors.Black
-        };
+            index++;
+        }
+
+        Consumptions.Insert(index, consumption);
+    }
+
+    private void ReorderConsumption(CaffeineConsumption consumption)
+    {
+        var existingIndex = Consumptions.IndexOf(consumption);
+        if (existingIndex >= 0)
+        {
+            Consumptions.RemoveAt(existingIndex);
+            InsertInChronologicalOrder(consumption);
+        }
     }
 
     private void OnConsumptionsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        // Во время начальной пакетной загрузки расчёты выполняются один раз вручную.
         if (isLoadingConsumptions)
         {
             return;
@@ -330,8 +338,6 @@ public partial class MainViewModel : ObservableObject
 
     private void SynchronizeConsumptionSubscriptions()
     {
-        // ObservableCollection сообщает о добавлении и удалении элементов,
-        // но не об изменении их свойств. Поэтому подписываемся на каждый элемент.
         foreach (var consumption in subscribedConsumptions)
         {
             consumption.PropertyChanged -= OnConsumptionPropertyChanged;
@@ -347,7 +353,6 @@ public partial class MainViewModel : ObservableObject
 
     private void OnConsumptionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        // Пересчитываем только те показатели, которые зависят от изменённого поля.
         if (e.PropertyName == nameof(CaffeineConsumption.Type))
         {
             RecalculateSourceStatistics();
@@ -361,8 +366,6 @@ public partial class MainViewModel : ObservableObject
 
     private void RecalculateDailyCaffeine(DateTimeOffset now)
     {
-        // Граница дня строится в локальном часовом поясе пользователя. Будущие
-        // записи исключаются, отрицательная доза считается нулевой.
         var localNow = now.ToLocalTime();
         var startOfToday = new DateTimeOffset(
             localNow.Date,
@@ -377,7 +380,6 @@ public partial class MainViewModel : ObservableObject
 
     private async Task RunPeriodicUpdatesAsync(CancellationToken cancellationToken)
     {
-        // PeriodicTimer не занимает отдельный поток между срабатываниями.
         try
         {
             using var timer = new PeriodicTimer(TimeSpan.FromSeconds(30));
@@ -394,14 +396,11 @@ public partial class MainViewModel : ObservableObject
 
     private void RefreshPeriodicData()
     {
-        // RelativeTime — вычисляемое свойство, поэтому модель записи должна
-        // явно сообщить интерфейсу, что текст пора запросить заново.
         foreach (var consumption in Consumptions)
         {
             consumption.RefreshRelativeTime();
         }
 
-        // В полночь вчерашние записи перестают входить в дневную сумму.
         var now = DateTimeOffset.Now;
         var today = now.ToLocalTime().Date;
         if (today != currentLocalDate)
@@ -411,19 +410,13 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    private static Color GetResourceColor(string key, Color fallback)
-    {
-        // Fallback сохраняет работоспособность ViewModel в preview/тестах,
-        // где Application.Current или словарь ресурсов могут отсутствовать.
-        return Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
+    private static Color GetResourceColor(string key, Color fallback) =>
+        Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
             ? color
             : fallback;
-    }
 
     private void RecalculateSourceStatistics()
     {
-        // Создаём запись для каждого значения enum заранее, включая типы,
-        // которых пока нет в истории употреблений.
         var counts = Enum
             .GetValues<CaffeineConsumptionType>()
             .ToDictionary(type => type, _ => 0);
@@ -434,8 +427,6 @@ public partial class MainViewModel : ObservableObject
         }
 
         var totalCount = Consumptions.Count;
-        // Создаём новые immutable-объекты: это проще, чем вручную уведомлять UI
-        // об изменении каждого поля существующей статистики.
         CoffeeSource = new CaffeineSourceStat(
             "Кофе",
             counts[CaffeineConsumptionType.Coffee],
@@ -452,7 +443,6 @@ public partial class MainViewModel : ObservableObject
             totalCount,
             Color.FromArgb("#686868"));
 
-        // Поддерживаем коллекцию в том же порядке, что и сегменты диаграммы в XAML.
         SourceStats.Clear();
         SourceStats.Add(CoffeeSource);
         SourceStats.Add(TeaSource);

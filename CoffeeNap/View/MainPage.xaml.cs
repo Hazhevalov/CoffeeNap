@@ -10,26 +10,32 @@ namespace CoffeeNap
     {
         // Сохраняем типизированную ссылку отдельно от BindingContext, чтобы управлять таймером.
         private readonly MainViewModel viewModel;
+        private bool isPageVisible;
 
         /// <summary>Создаёт ViewModel и делает её источником всех XAML-привязок страницы.</summary>
-        public MainPage()
+        public MainPage(MainViewModel viewModel)
         {
             InitializeComponent();
-            viewModel = new MainViewModel();
+            this.viewModel = viewModel;
             BindingContext = viewModel;
         }
 
         /// <summary>Запускает обновление динамических подписей, когда страница видима.</summary>
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
-            viewModel.RefreshUserName();
-            viewModel.StartPeriodicUpdates();
+            isPageVisible = true;
+            await viewModel.InitializeAsync();
+            if (isPageVisible)
+            {
+                viewModel.StartPeriodicUpdates();
+            }
         }
 
         /// <summary>Останавливает обновления, когда пользователь уходит со страницы.</summary>
         protected override void OnDisappearing()
         {
+            isPageVisible = false;
             viewModel.StopPeriodicUpdates();
             base.OnDisappearing();
         }

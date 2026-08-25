@@ -8,10 +8,10 @@ public partial class OnboardingPage : ContentPage
     private const uint EnterDuration = 180;
     private bool isTransitioning;
 
-    public OnboardingPage()
+    public OnboardingPage(OnboardingViewModel viewModel)
     {
         InitializeComponent();
-        BindingContext = new OnboardingViewModel();
+        BindingContext = viewModel;
     }
 
     protected override void OnAppearing()

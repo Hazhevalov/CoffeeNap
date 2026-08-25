@@ -17,6 +17,7 @@
         x:Name="OnboardingShellItem"
         Route="OnboardingPage">
         <ShellContent
+            x:Name="OnboardingShellContent"
             Route="OnboardingContent"
             ContentTemplate="{DataTemplate local:OnboardingPage}" />
     </FlyoutItem>
@@ -25,6 +26,7 @@
         x:Name="MainShellItem"
         Route="MainPage">
         <ShellContent
+            x:Name="MainShellContent"
             Route="MainContent"
             ContentTemplate="{DataTemplate local:MainPage}" />
     </FlyoutItem>
