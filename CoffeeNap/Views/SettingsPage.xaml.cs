@@ -1,4 +1,4 @@
-namespace CoffeeNap;
+namespace CoffeeNap.Views;
 
 /// <summary>
 /// Заготовка экрана настроек. Сейчас содержимое статично и задаётся в SettingsPage.xaml.

@@ -1,5 +1,5 @@
 using CoffeeNap.Services;
-using Microsoft.Extensions.DependencyInjection;
+using CoffeeNap.Views;
 using Microsoft.Extensions.Logging;
 
 namespace CoffeeNap;
@@ -7,22 +7,19 @@ namespace CoffeeNap;
 /// <summary>Создаёт окно и завершает startup data flow до показа AppShell.</summary>
 public partial class App : Application
 {
-    private readonly IAppDataService dataService;
-    private readonly AppStartupState startupState;
-    private readonly IServiceProvider services;
-    private readonly ILogger<App> logger;
+    private readonly IAppDataService _dataService;
+    private readonly AppPageFactory _pageFactory;
+    private readonly ILogger<App> _logger;
 
     public App(
         IAppDataService dataService,
-        AppStartupState startupState,
-        IServiceProvider services,
+        AppPageFactory pageFactory,
         ILogger<App> logger)
     {
         InitializeComponent();
-        this.dataService = dataService;
-        this.startupState = startupState;
-        this.services = services;
-        this.logger = logger;
+        _dataService = dataService;
+        _pageFactory = pageFactory;
+        _logger = logger;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
@@ -36,15 +33,18 @@ public partial class App : Application
     {
         try
         {
-            await dataService.InitializeAsync();
-            startupState.UserProfile = await dataService.GetUserProfileAsync() ?? new();
+            await _dataService.InitializeAsync();
+            var profile = await _dataService.GetUserProfileAsync() ?? new();
 
             await MainThread.InvokeOnMainThreadAsync(() =>
-                window.Page = services.GetRequiredService<AppShell>());
+                window.Page = new AppShell(
+                    profile,
+                    _pageFactory.CreateOnboardingPage(),
+                    _pageFactory.CreateMainPage()));
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Application data initialization failed.");
+            _logger.LogError(exception, "Application data initialization failed.");
             await MainThread.InvokeOnMainThreadAsync(() =>
                 window.Page = CreateStartupErrorPage());
         }

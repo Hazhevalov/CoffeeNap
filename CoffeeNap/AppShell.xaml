@@ -3,7 +3,6 @@
     x:Class="CoffeeNap.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:CoffeeNap"
     Title="CoffeeNap"
     Shell.TabBarForegroundColor="#000"
     Shell.TabBarUnselectedColor="#AAAAAA"
@@ -18,8 +17,7 @@
         Route="OnboardingPage">
         <ShellContent
             x:Name="OnboardingShellContent"
-            Route="OnboardingContent"
-            ContentTemplate="{DataTemplate local:OnboardingPage}" />
+            Route="OnboardingContent" />
     </FlyoutItem>
 
     <FlyoutItem
@@ -27,8 +25,7 @@
         Route="MainPage">
         <ShellContent
             x:Name="MainShellContent"
-            Route="MainContent"
-            ContentTemplate="{DataTemplate local:MainPage}" />
+            Route="MainContent" />
     </FlyoutItem>
 
 </Shell>

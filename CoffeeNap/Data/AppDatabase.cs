@@ -9,17 +9,14 @@ namespace CoffeeNap.Data;
 /// </summary>
 public sealed class AppDatabase
 {
-    public const int CurrentDatabaseVersion = 1;
-    public const string DatabaseFileName = "caffeine_app.db3";
-
-    private readonly SemaphoreSlim initializationLock = new(1, 1);
-    private readonly SQLiteAsyncConnection connection;
-    private bool isInitialized;
+    private readonly SemaphoreSlim _initializationLock = new(1, 1);
+    private readonly SQLiteAsyncConnection _connection;
+    private bool _isInitialized;
 
     public AppDatabase()
     {
-        DatabasePath = Path.Combine(FileSystem.AppDataDirectory, DatabaseFileName);
-        connection = new SQLiteAsyncConnection(
+        DatabasePath = Path.Combine(FileSystem.AppDataDirectory, DatabaseConstants.FileName);
+        _connection = new SQLiteAsyncConnection(
             DatabasePath,
             SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
     }
@@ -28,68 +25,68 @@ public sealed class AppDatabase
 
     public async Task InitializeAsync()
     {
-        if (isInitialized)
+        if (_isInitialized)
         {
             return;
         }
 
-        await initializationLock.WaitAsync();
+        await _initializationLock.WaitAsync();
         try
         {
-            if (isInitialized)
+            if (_isInitialized)
             {
                 return;
             }
 
-            var databaseVersion = await connection.ExecuteScalarAsync<int>("PRAGMA user_version");
-            if (databaseVersion > CurrentDatabaseVersion)
+            var databaseVersion = await _connection.ExecuteScalarAsync<int>("PRAGMA user_version");
+            if (databaseVersion > DatabaseConstants.Version)
             {
                 throw new InvalidOperationException(
-                    $"Database version {databaseVersion} is newer than supported version {CurrentDatabaseVersion}.");
+                    $"Database version {databaseVersion} is newer than supported version {DatabaseConstants.Version}.");
             }
 
-            await connection.CreateTableAsync<UserProfile>();
-            await connection.CreateTableAsync<AppSettings>();
-            await connection.CreateTableAsync<CaffeineConsumption>();
-            await connection.ExecuteAsync(
+            await _connection.CreateTableAsync<UserProfile>();
+            await _connection.CreateTableAsync<AppSettings>();
+            await _connection.CreateTableAsync<CaffeineConsumption>();
+            await _connection.ExecuteAsync(
                 "CREATE INDEX IF NOT EXISTS IX_CaffeineConsumptions_ConsumedAt " +
                 "ON CaffeineConsumptions (ConsumedAt)");
 
-            if (databaseVersion < CurrentDatabaseVersion)
+            if (databaseVersion < DatabaseConstants.Version)
             {
                 // Новые миграции добавляются сюда последовательно, без DropTable.
-                await connection.ExecuteAsync($"PRAGMA user_version = {CurrentDatabaseVersion}");
+                await _connection.ExecuteAsync($"PRAGMA user_version = {DatabaseConstants.Version}");
             }
 
-            isInitialized = true;
+            _isInitialized = true;
         }
         finally
         {
-            initializationLock.Release();
+            _initializationLock.Release();
         }
     }
 
     public async Task<UserProfile?> GetUserProfileAsync() =>
-        await connection.FindAsync<UserProfile>(UserProfile.SingletonId);
+        await _connection.FindAsync<UserProfile>(DatabaseConstants.UserProfileId);
 
     public Task<int> SaveUserProfileAsync(UserProfile profile) =>
-        connection.InsertOrReplaceAsync(profile);
+        _connection.InsertOrReplaceAsync(profile);
 
     public async Task<AppSettings?> GetSettingsAsync() =>
-        await connection.FindAsync<AppSettings>(AppSettings.SingletonId);
+        await _connection.FindAsync<AppSettings>(DatabaseConstants.SettingsId);
 
     public Task<int> SaveSettingsAsync(AppSettings settings) =>
-        connection.InsertOrReplaceAsync(settings);
+        _connection.InsertOrReplaceAsync(settings);
 
     public Task<List<CaffeineConsumption>> GetConsumptionsAsync() =>
-        connection.Table<CaffeineConsumption>()
+        _connection.Table<CaffeineConsumption>()
             .OrderByDescending(consumption => consumption.ConsumedAt)
             .ToListAsync();
 
     public Task<List<CaffeineConsumption>> GetConsumptionsBetweenAsync(
         DateTimeOffset fromInclusive,
         DateTimeOffset toExclusive) =>
-        connection.Table<CaffeineConsumption>()
+        _connection.Table<CaffeineConsumption>()
             .Where(consumption =>
                 consumption.ConsumedAt >= fromInclusive &&
                 consumption.ConsumedAt < toExclusive)
@@ -97,11 +94,11 @@ public sealed class AppDatabase
             .ToListAsync();
 
     public Task<int> InsertConsumptionAsync(CaffeineConsumption consumption) =>
-        connection.InsertAsync(consumption);
+        _connection.InsertAsync(consumption);
 
     public Task<int> UpdateConsumptionAsync(CaffeineConsumption consumption) =>
-        connection.UpdateAsync(consumption);
+        _connection.UpdateAsync(consumption);
 
     public Task<int> DeleteConsumptionAsync(int id) =>
-        connection.DeleteAsync<CaffeineConsumption>(id);
+        _connection.DeleteAsync<CaffeineConsumption>(id);
 }

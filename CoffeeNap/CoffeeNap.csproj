@@ -74,18 +74,4 @@
 	  <Folder Include="Models\" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <!-- Связывает code-behind альтернативной страницы с её XAML в IDE. -->
-	  <Compile Update="View\SecondPage.xaml.cs">
-	    <DependentUpon>SecondPage.xaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <!-- Передаёт SecondPage.xaml компилятору MAUI XAML. -->
-	  <MauiXaml Update="View\SecondPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	</ItemGroup>
-
 </Project>

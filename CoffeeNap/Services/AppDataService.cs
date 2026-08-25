@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using CoffeeNap.Data;
 using CoffeeNap.Models;
+using Microsoft.Extensions.Logging;
 
 namespace CoffeeNap.Services;
 
@@ -8,41 +8,53 @@ namespace CoffeeNap.Services;
 /// Централизует инициализацию, legacy-миграцию, defaults и нормализацию данных
 /// перед записью в SQLite.
 /// </summary>
-public sealed class AppDataService(AppDatabase database) : IAppDataService
+public sealed class AppDataService : IAppDataService
 {
-    private readonly SemaphoreSlim initializationLock = new(1, 1);
-    private bool isInitialized;
+    private const string LegacyUserNameKey = "coffee_nap.user_name";
+    private const string LegacyOnboardingCompletedKey = "coffee_nap.onboarding_completed";
+    private readonly AppDatabase _database;
+    private readonly SemaphoreSlim _initializationLock = new(1, 1);
+    private readonly ILogger<AppDataService> _logger;
+    private bool _isInitialized;
+
+    public AppDataService(
+        AppDatabase database,
+        ILogger<AppDataService> logger)
+    {
+        _database = database;
+        _logger = logger;
+    }
 
     public async Task InitializeAsync()
     {
-        if (isInitialized)
+        if (_isInitialized)
         {
             return;
         }
 
-        await initializationLock.WaitAsync();
+        await _initializationLock.WaitAsync();
         try
         {
-            if (isInitialized)
+            if (_isInitialized)
             {
                 return;
             }
 
-            await database.InitializeAsync();
+            await _database.InitializeAsync();
             await MigrateLegacyPreferencesAsync();
             await EnsureDefaultSettingsAsync();
-            isInitialized = true;
+            _isInitialized = true;
         }
         finally
         {
-            initializationLock.Release();
+            _initializationLock.Release();
         }
     }
 
     public async Task<UserProfile?> GetUserProfileAsync()
     {
         await InitializeAsync();
-        return await database.GetUserProfileAsync();
+        return await _database.GetUserProfileAsync();
     }
 
     public async Task SaveUserProfileAsync(UserProfile profile)
@@ -50,15 +62,15 @@ public sealed class AppDataService(AppDatabase database) : IAppDataService
         ArgumentNullException.ThrowIfNull(profile);
         await InitializeAsync();
 
-        profile.Id = UserProfile.SingletonId;
+        profile.Id = DatabaseConstants.UserProfileId;
         profile.UserName = profile.UserName.Trim();
-        await database.SaveUserProfileAsync(profile);
+        await _database.SaveUserProfileAsync(profile);
     }
 
     public async Task<AppSettings> GetSettingsAsync()
     {
         await InitializeAsync();
-        return await database.GetSettingsAsync() ?? CreateDefaultSettings();
+        return await _database.GetSettingsAsync() ?? CreateDefaultSettings();
     }
 
     public async Task SaveSettingsAsync(AppSettings settings)
@@ -73,14 +85,14 @@ public sealed class AppDataService(AppDatabase database) : IAppDataService
                 "Daily caffeine limit must be greater than zero.");
         }
 
-        settings.Id = AppSettings.SingletonId;
-        await database.SaveSettingsAsync(settings);
+        settings.Id = DatabaseConstants.SettingsId;
+        await _database.SaveSettingsAsync(settings);
     }
 
     public async Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsAsync()
     {
         await InitializeAsync();
-        return await database.GetConsumptionsAsync();
+        return await _database.GetConsumptionsAsync();
     }
 
     public async Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsForDateAsync(DateTime date)
@@ -104,7 +116,7 @@ public sealed class AppDataService(AppDatabase database) : IAppDataService
         }
 
         await InitializeAsync();
-        return await database.GetConsumptionsBetweenAsync(
+        return await _database.GetConsumptionsBetweenAsync(
             fromInclusive.ToUniversalTime(),
             toExclusive.ToUniversalTime());
     }
@@ -116,7 +128,7 @@ public sealed class AppDataService(AppDatabase database) : IAppDataService
 
         consumption.Id = 0;
         consumption.ConsumedAt = consumption.ConsumedAt.ToUniversalTime();
-        await database.InsertConsumptionAsync(consumption);
+        await _database.InsertConsumptionAsync(consumption);
     }
 
     public async Task UpdateConsumptionAsync(CaffeineConsumption consumption)
@@ -129,7 +141,7 @@ public sealed class AppDataService(AppDatabase database) : IAppDataService
 
         await InitializeAsync();
         consumption.ConsumedAt = consumption.ConsumedAt.ToUniversalTime();
-        var updatedRows = await database.UpdateConsumptionAsync(consumption);
+        var updatedRows = await _database.UpdateConsumptionAsync(consumption);
         if (updatedRows == 0)
         {
             throw new InvalidOperationException($"Consumption with Id {consumption.Id} was not found.");
@@ -144,50 +156,52 @@ public sealed class AppDataService(AppDatabase database) : IAppDataService
         }
 
         await InitializeAsync();
-        await database.DeleteConsumptionAsync(id);
+        await _database.DeleteConsumptionAsync(id);
     }
 
     private async Task MigrateLegacyPreferencesAsync()
     {
-        if (await database.GetUserProfileAsync() is not null)
+        if (await _database.GetUserProfileAsync() is not null)
         {
             return;
         }
 
         var legacyName = Preferences.Default
-            .Get(PreferenceKeys.UserName, string.Empty)
+            .Get(LegacyUserNameKey, string.Empty)
             .Trim();
         var legacyOnboardingCompleted = Preferences.Default
-            .Get(PreferenceKeys.OnboardingCompleted, false);
+            .Get(LegacyOnboardingCompletedKey, false);
 
         var profile = new UserProfile
         {
+            Id = DatabaseConstants.UserProfileId,
             UserName = legacyName,
             OnboardingCompleted = legacyOnboardingCompleted && !string.IsNullOrEmpty(legacyName)
         };
 
-        await database.SaveUserProfileAsync(profile);
+        await _database.SaveUserProfileAsync(profile);
 
         // Удаляем legacy user data только после успешной записи одной profile-row.
-        Preferences.Default.Remove(PreferenceKeys.UserName);
-        Preferences.Default.Remove(PreferenceKeys.OnboardingCompleted);
-#if DEBUG
+        Preferences.Default.Remove(LegacyUserNameKey);
+        Preferences.Default.Remove(LegacyOnboardingCompletedKey);
         if (!string.IsNullOrEmpty(legacyName) || legacyOnboardingCompleted)
         {
-            Debug.WriteLine("Legacy onboarding Preferences migrated to SQLite.");
+            _logger.LogInformation("Legacy onboarding Preferences migrated to SQLite.");
         }
-#endif
     }
 
     private async Task EnsureDefaultSettingsAsync()
     {
-        if (await database.GetSettingsAsync() is null)
+        if (await _database.GetSettingsAsync() is null)
         {
-            await database.SaveSettingsAsync(CreateDefaultSettings());
+            await _database.SaveSettingsAsync(CreateDefaultSettings());
         }
     }
 
-    private static AppSettings CreateDefaultSettings() => new();
+    private static AppSettings CreateDefaultSettings() => new()
+    {
+        Id = DatabaseConstants.SettingsId
+    };
 
     private static void ValidateConsumption(CaffeineConsumption consumption)
     {

@@ -4,7 +4,7 @@
     x:Name="Panel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:models="clr-namespace:CoffeeNap.Models"
+    xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     BackgroundColor="Transparent">
 
     <!-- Белая карточка занимает всю высоту контрола; её положение меняет code-behind. -->
@@ -53,28 +53,6 @@
                     FontAttributes="Bold"
                     Text="Ваши употребления"
                     TextColor="{StaticResource InkColor}" />
-                <!--<Border
-                    Grid.Column="1"
-                    WidthRequest="18"
-                    HeightRequest="18"
-                    HorizontalOptions="End"
-                    VerticalOptions="Center"
-                    BackgroundColor="Transparent"
-                    Stroke="{StaticResource InkColor}"
-                    StrokeThickness="2">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="9" />
-                    </Border.StrokeShape>
-                    <Label
-                        FontFamily="Inter"
-                        FontSize="12"
-                        FontAttributes="Bold"
-                        HorizontalTextAlignment="Center"
-                        Text="i"
-                        TextColor="{StaticResource InkColor}"
-                        VerticalTextAlignment="Center" />
-                </Border>-->
-
                 <Image Source="info_ico.png" 
                        WidthRequest="24" 
                        HeightRequest="24"
@@ -94,7 +72,7 @@
                     VerticalScrollBarVisibility="Never">
                     <CollectionView.ItemTemplate>
                         <!-- x:DataType включает проверку привязок элемента при компиляции. -->
-                        <DataTemplate x:DataType="models:CaffeineConsumption">
+                        <DataTemplate x:DataType="viewModels:ConsumptionItemViewModel">
                             <Border
                                 Margin="10,3"
                                 MinimumHeightRequest="64"

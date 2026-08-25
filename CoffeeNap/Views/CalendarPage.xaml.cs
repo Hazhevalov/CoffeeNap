@@ -1,4 +1,4 @@
-namespace CoffeeNap;
+namespace CoffeeNap.Views;
 
 /// <summary>
 /// Заготовка экрана календаря истории. Сейчас содержит только статический placeholder.

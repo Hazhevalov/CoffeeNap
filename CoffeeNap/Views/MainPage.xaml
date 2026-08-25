@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="CoffeeNap.MainPage"
+    x:Class="CoffeeNap.Views.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:CoffeeNap.Controls"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
-    x:DataType="viewModels:MainViewModel"
+    x:DataType="viewModels:MainPageViewModel"
     BackgroundColor="{StaticResource PageBackgroundColor}"
     SafeAreaEdges="All"
     Shell.NavBarIsVisible="False">
 
     <!--
-        x:DataType включает компилируемые привязки к MainViewModel.
+        x:DataType включает компилируемые привязки к MainPageViewModel.
         Корневая сетка отделяет растягиваемую область страницы от нижней навигации.
     -->
     <Grid RowSpacing="0">

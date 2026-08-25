@@ -1,0 +1,48 @@
+using CoffeeNap.Models;
+
+namespace CoffeeNap.ViewModels;
+
+public sealed class CaffeineSourceStatViewModel
+{
+    public CaffeineSourceStatViewModel(
+        CaffeineConsumptionType type,
+        int count,
+        int totalCount)
+    {
+        Type = type;
+        Count = Math.Max(0, count);
+        TotalCount = Math.Max(0, totalCount);
+    }
+
+    public CaffeineConsumptionType Type { get; }
+
+    public int Count { get; }
+
+    public int TotalCount { get; }
+
+    public string Name => Type switch
+    {
+        CaffeineConsumptionType.Coffee => "Кофе",
+        CaffeineConsumptionType.Tea => "Чай",
+        CaffeineConsumptionType.EnergyDrink => "Энергетики",
+        _ => string.Empty
+    };
+
+    public Color Color => Type switch
+    {
+        CaffeineConsumptionType.Coffee => Color.FromArgb("#111111"),
+        CaffeineConsumptionType.Tea => Color.FromArgb("#B8B8B8"),
+        CaffeineConsumptionType.EnergyDrink => Color.FromArgb("#686868"),
+        _ => Colors.Transparent
+    };
+
+    public double Ratio => TotalCount == 0 ? 0 : (double)Count / TotalCount;
+
+    public string PercentageDisplay => $"{Ratio:P0}";
+
+    public bool IsPercentageVisible => Ratio >= 0.08;
+
+    public GridLength SegmentWidth => Ratio == 0
+        ? new GridLength(0)
+        : new GridLength(Ratio, GridUnitType.Star);
+}

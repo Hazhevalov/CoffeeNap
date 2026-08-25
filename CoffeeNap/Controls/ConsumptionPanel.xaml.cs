@@ -39,26 +39,26 @@ public partial class ConsumptionPanel : ContentView
     private const double ComfortableBottomSpacing = 20;
 
     // Допустимые координаты TranslationY. Меньшее значение находится выше на экране.
-    private double expandedTranslationY;
-    private double collapsedTranslationY;
+    private double _expandedTranslationY;
+    private double _collapsedTranslationY;
 
     // Снимок текущего жеста: начальная позиция, пройденный путь и последняя скорость.
-    private double gestureStartTranslationY;
-    private double gestureDistanceY;
-    private double gestureVelocityY;
-    private double lastSampleTranslationY;
-    private double lastAllocatedHeight;
-    private long lastSampleTimestamp;
+    private double _gestureStartTranslationY;
+    private double _gestureDistanceY;
+    private double _gestureVelocityY;
+    private double _lastSampleTranslationY;
+    private double _lastAllocatedHeight;
+    private long _lastSampleTimestamp;
 
     // Счётчик поколений позволяет отличить актуальную анимацию от уже отменённой.
-    private int animationGeneration;
+    private int _animationGeneration;
 
     // Флаги разделяют этапы измерения, жеста и анимации и защищают их от конфликтов.
-    private bool hasMeasured;
-    private bool isDragging;
-    private bool isDragActivated;
-    private bool isAnimating;
-    private ConsumptionPanelState panelState = ConsumptionPanelState.Collapsed;
+    private bool _hasMeasured;
+    private bool _isDragging;
+    private bool _isDragActivated;
+    private bool _isAnimating;
+    private ConsumptionPanelState _panelState = ConsumptionPanelState.Collapsed;
 
     /// <summary>Создаёт контрол и загружает его визуальное дерево из XAML.</summary>
     public ConsumptionPanel()
@@ -96,21 +96,21 @@ public partial class ConsumptionPanel : ContentView
 
         // MAUI может несколько раз сообщить почти одинаковый размер.
         // Игнорируем такие вызовы, чтобы панель не дёргалась при раскладке.
-        if (Math.Abs(height - lastAllocatedHeight) < 0.5)
+        if (Math.Abs(height - _lastAllocatedHeight) < 0.5)
         {
-            hasMeasured = true;
+            _hasMeasured = true;
             return;
         }
 
-        lastAllocatedHeight = height;
+        _lastAllocatedHeight = height;
         RecalculatePositions(height);
-        if (!isDragging && !isAnimating)
+        if (!_isDragging && !_isAnimating)
         {
-            TranslationY = GetTranslationForState(panelState);
+            TranslationY = GetTranslationForState(_panelState);
             UpdateScrollableBottomInset();
         }
 
-        hasMeasured = true;
+        _hasMeasured = true;
     }
 
     private static void OnCollapsedTopInsetChanged(BindableObject bindable, object oldValue, object newValue)
@@ -124,9 +124,9 @@ public partial class ConsumptionPanel : ContentView
         }
 
         panel.RecalculatePositions(panel.Height);
-        if (!panel.isDragging && !panel.isAnimating)
+        if (!panel._isDragging && !panel._isAnimating)
         {
-            panel.TranslationY = panel.GetTranslationForState(panel.panelState);
+            panel.TranslationY = panel.GetTranslationForState(panel._panelState);
             panel.UpdateScrollableBottomInset();
         }
     }
@@ -135,25 +135,31 @@ public partial class ConsumptionPanel : ContentView
     {
         // Координаты вычисляются относительно высоты экрана, но ограничиваются,
         // чтобы панель оставалась удобной и на маленьких, и на больших устройствах.
-        expandedTranslationY = Math.Clamp(availableHeight * 0.06, 20, 48);
+        _expandedTranslationY = Math.Clamp(availableHeight * 0.06, 20, 48);
         var minimumVisibleHeight = Math.Clamp(availableHeight * 0.22, 120, 220);
-        var lowestAllowedTop = Math.Max(expandedTranslationY, availableHeight - minimumVisibleHeight);
-        collapsedTranslationY = Math.Clamp(
+        var lowestAllowedTop = Math.Max(_expandedTranslationY, availableHeight - minimumVisibleHeight);
+        _collapsedTranslationY = Math.Clamp(
             CollapsedTopInset,
-            expandedTranslationY,
+            _expandedTranslationY,
             lowestAllowedTop);
     }
 
-    private void OnDragHandlePanUpdated(object? sender, PanUpdatedEventArgs e)
+    private async void OnDragHandlePanUpdated(object? sender, PanUpdatedEventArgs e)
     {
-        // Event handler оставлен тонким, чтобы автомат состояний жеста был отдельно.
-        ProcessPanelPan(e);
+        try
+        {
+            await ProcessPanelPanAsync(e);
+        }
+        catch (Exception exception)
+        {
+            Debug.WriteLine($"Consumption panel gesture failed: {exception}");
+        }
     }
 
-    private void ProcessPanelPan(PanUpdatedEventArgs e)
+    private async Task ProcessPanelPanAsync(PanUpdatedEventArgs e)
     {
         // До первого layout неизвестны безопасные границы перемещения.
-        if (!hasMeasured)
+        if (!_hasMeasured)
         {
             return;
         }
@@ -164,14 +170,14 @@ public partial class ConsumptionPanel : ContentView
             case GestureStatus.Started:
                 BeginPanelDrag();
                 break;
-            case GestureStatus.Running when isDragging:
+            case GestureStatus.Running when _isDragging:
                 UpdatePanelDrag(e.TotalY);
                 break;
             case GestureStatus.Completed:
             case GestureStatus.Canceled:
-                if (isDragging)
+                if (_isDragging)
                 {
-                    CompletePanelDrag();
+                    await CompletePanelDragAsync();
                 }
 
                 break;
@@ -181,46 +187,46 @@ public partial class ConsumptionPanel : ContentView
     private void BeginPanelDrag()
     {
         // Новый жест становится источником истины и прерывает текущую snap-анимацию.
-        isDragging = true;
+        _isDragging = true;
         CancelSnapAnimation();
-        gestureStartTranslationY = TranslationY;
-        gestureDistanceY = 0;
-        gestureVelocityY = 0;
-        isDragActivated = false;
-        lastSampleTranslationY = TranslationY;
-        lastSampleTimestamp = Stopwatch.GetTimestamp();
+        _gestureStartTranslationY = TranslationY;
+        _gestureDistanceY = 0;
+        _gestureVelocityY = 0;
+        _isDragActivated = false;
+        _lastSampleTranslationY = TranslationY;
+        _lastSampleTimestamp = Stopwatch.GetTimestamp();
     }
 
     private void UpdatePanelDrag(double totalY)
     {
         // Небольшое начальное движение игнорируется: обычное касание ручки
         // не должно случайно сдвигать панель.
-        if (!isDragActivated)
+        if (!_isDragActivated)
         {
             if (Math.Abs(totalY) < DragActivationThreshold)
             {
                 return;
             }
 
-            isDragActivated = true;
+            _isDragActivated = true;
         }
 
         // Вычитаем уже пройденную «мёртвую зону», чтобы при активации не было скачка.
         var effectiveTotalY = totalY - Math.CopySign(DragActivationThreshold, totalY);
         var nextTranslation = Math.Clamp(
-            gestureStartTranslationY + effectiveTotalY,
-            expandedTranslationY,
-            collapsedTranslationY);
+            _gestureStartTranslationY + effectiveTotalY,
+            _expandedTranslationY,
+            _collapsedTranslationY);
 
         // Скорость берём по двум последним замерам. Она нужна, чтобы быстрый
         // короткий свайп сработал даже без прохождения порога расстояния.
         var now = Stopwatch.GetTimestamp();
-        var elapsedSeconds = (now - lastSampleTimestamp) / (double)Stopwatch.Frequency;
+        var elapsedSeconds = (now - _lastSampleTimestamp) / (double)Stopwatch.Frequency;
         if (elapsedSeconds > 0.008)
         {
-            gestureVelocityY = (nextTranslation - lastSampleTranslationY) / elapsedSeconds;
-            lastSampleTranslationY = nextTranslation;
-            lastSampleTimestamp = now;
+            _gestureVelocityY = (nextTranslation - _lastSampleTranslationY) / elapsedSeconds;
+            _lastSampleTranslationY = nextTranslation;
+            _lastSampleTimestamp = now;
         }
 
         // Субпиксельные изменения не видны, но создают лишние обновления layout.
@@ -229,14 +235,12 @@ public partial class ConsumptionPanel : ContentView
             TranslationY = nextTranslation;
         }
 
-        gestureDistanceY = TranslationY - gestureStartTranslationY;
+        _gestureDistanceY = TranslationY - _gestureStartTranslationY;
     }
 
-    private async void CompletePanelDrag()
+    private async Task CompletePanelDragAsync()
     {
-        // Обработчик события имеет void-сигнатуру; асинхронно ждём завершения
-        // анимации перед окончательной фиксацией позиции.
-        isDragging = false;
+        _isDragging = false;
 
         var targetState = ResolveSnapState();
         await SnapToStateAsync(targetState);
@@ -245,18 +249,18 @@ public partial class ConsumptionPanel : ContentView
     private ConsumptionPanelState ResolveSnapState()
     {
         // Сначала учитываем явно направленный свайп, затем — ближайшее положение.
-        if (gestureVelocityY <= -SnapVelocityThreshold || gestureDistanceY <= -SnapDistanceThreshold)
+        if (_gestureVelocityY <= -SnapVelocityThreshold || _gestureDistanceY <= -SnapDistanceThreshold)
         {
             return ConsumptionPanelState.Expanded;
         }
 
-        if (gestureVelocityY >= SnapVelocityThreshold || gestureDistanceY >= SnapDistanceThreshold)
+        if (_gestureVelocityY >= SnapVelocityThreshold || _gestureDistanceY >= SnapDistanceThreshold)
         {
             return ConsumptionPanelState.Collapsed;
         }
 
         // Без выраженного свайпа выбираем ближайшую к текущей позиции границу.
-        var midpoint = expandedTranslationY + ((collapsedTranslationY - expandedTranslationY) / 2);
+        var midpoint = _expandedTranslationY + ((_collapsedTranslationY - _expandedTranslationY) / 2);
         return TranslationY <= midpoint
             ? ConsumptionPanelState.Expanded
             : ConsumptionPanelState.Collapsed;
@@ -266,7 +270,7 @@ public partial class ConsumptionPanel : ContentView
     {
         // В каждый момент должна работать не более чем одна анимация панели.
         CancelSnapAnimation();
-        panelState = targetState;
+        _panelState = targetState;
 
         var targetTranslation = GetTranslationForState(targetState);
         if (Math.Abs(TranslationY - targetTranslation) < 0.5)
@@ -276,10 +280,10 @@ public partial class ConsumptionPanel : ContentView
             return;
         }
 
-        isAnimating = true;
+        _isAnimating = true;
         // Номер поколения не даёт завершившейся старой анимации перезаписать
         // состояние, если пользователь уже начал новый жест.
-        var generation = animationGeneration;
+        var generation = _animationGeneration;
         // MAUI Animation сообщает о завершении callback-ом. TaskCompletionSource
         // преобразует его в Task, чтобы продолжение читалось как обычный async-код.
         var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -300,10 +304,10 @@ public partial class ConsumptionPanel : ContentView
             (_, wasCanceled) => completion.TrySetResult(!wasCanceled));
 
         await completion.Task;
-        if (generation == animationGeneration)
+        if (generation == _animationGeneration)
         {
             TranslationY = targetTranslation;
-            isAnimating = false;
+            _isAnimating = false;
             UpdateScrollableBottomInset();
         }
     }
@@ -311,23 +315,23 @@ public partial class ConsumptionPanel : ContentView
     private void CancelSnapAnimation()
     {
         // Инкремент делает continuation предыдущей анимации устаревшим.
-        animationGeneration++;
+        _animationGeneration++;
         this.AbortAnimation(SnapAnimationName);
-        isAnimating = false;
+        _isAnimating = false;
     }
 
     private double GetTranslationForState(ConsumptionPanelState state)
     {
         // TranslationY отсчитывается вниз: раскрытая панель имеет меньшее значение.
         return state == ConsumptionPanelState.Expanded
-            ? expandedTranslationY
-            : collapsedTranslationY;
+            ? _expandedTranslationY
+            : _collapsedTranslationY;
     }
 
     private void UpdateScrollableBottomInset()
     {
         // Дополнительное место внизу позволяет прокрутить последний элемент
         // выше нижней границы панели и не прижимать его к навигации.
-        BottomScrollSpacer.HeightRequest = GetTranslationForState(panelState) + ComfortableBottomSpacing;
+        BottomScrollSpacer.HeightRequest = GetTranslationForState(_panelState) + ComfortableBottomSpacing;
     }
 }

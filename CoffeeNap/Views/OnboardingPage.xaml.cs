@@ -1,12 +1,12 @@
 using CoffeeNap.ViewModels;
 
-namespace CoffeeNap;
+namespace CoffeeNap.Views;
 
 public partial class OnboardingPage : ContentPage
 {
     private const uint ExitDuration = 100;
     private const uint EnterDuration = 180;
-    private bool isTransitioning;
+    private bool _isTransitioning;
 
     public OnboardingPage(OnboardingViewModel viewModel)
     {
@@ -27,7 +27,7 @@ public partial class OnboardingPage : ContentPage
     {
         if (BindingContext is OnboardingViewModel { CurrentStep: OnboardingStep.NameSetup })
         {
-            if (!isTransitioning)
+            if (!_isTransitioning)
             {
                 _ = ShowWelcomeStepAsync();
             }
@@ -40,12 +40,12 @@ public partial class OnboardingPage : ContentPage
 
     private async void OnStartButtonClicked(object? sender, EventArgs e)
     {
-        if (isTransitioning || BindingContext is not OnboardingViewModel viewModel)
+        if (_isTransitioning || BindingContext is not OnboardingViewModel viewModel)
         {
             return;
         }
 
-        isTransitioning = true;
+        _isTransitioning = true;
         WelcomeStepContainer.InputTransparent = true;
         try
         {
@@ -63,18 +63,18 @@ public partial class OnboardingPage : ContentPage
         }
         finally
         {
-            isTransitioning = false;
+            _isTransitioning = false;
         }
     }
 
     private async Task ShowWelcomeStepAsync()
     {
-        if (isTransitioning || BindingContext is not OnboardingViewModel viewModel)
+        if (_isTransitioning || BindingContext is not OnboardingViewModel viewModel)
         {
             return;
         }
 
-        isTransitioning = true;
+        _isTransitioning = true;
         NameStepContainer.InputTransparent = true;
         try
         {
@@ -92,7 +92,7 @@ public partial class OnboardingPage : ContentPage
         }
         finally
         {
-            isTransitioning = false;
+            _isTransitioning = false;
         }
     }
 
@@ -127,6 +127,6 @@ public partial class OnboardingPage : ContentPage
         NameStepContainer.InputTransparent = isWelcome;
         NameStepContainer.TranslationX = 0;
         NameStepContainer.Opacity = isWelcome ? 0 : 1;
-        isTransitioning = false;
+        _isTransitioning = false;
     }
 }

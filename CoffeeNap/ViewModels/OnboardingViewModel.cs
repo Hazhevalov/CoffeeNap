@@ -1,9 +1,9 @@
-using System.Diagnostics;
-using System.Text.RegularExpressions;
+using CoffeeNap.Helpers;
 using CoffeeNap.Models;
 using CoffeeNap.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 
 namespace CoffeeNap.ViewModels;
 
@@ -16,29 +16,33 @@ public enum OnboardingStep
 /// <summary>Единая модель двух последовательных состояний onboarding.</summary>
 public partial class OnboardingViewModel : ObservableObject
 {
-    private readonly IAppDataService dataService;
-    private OnboardingStep currentStep = OnboardingStep.Welcome;
-    private string? userName = string.Empty;
-    private bool hasValidationError;
-    private string validationMessage = string.Empty;
+    private readonly IAppDataService _dataService;
+    private readonly ILogger<OnboardingViewModel> _logger;
+    private OnboardingStep _currentStep = OnboardingStep.Welcome;
+    private string? _userName = string.Empty;
+    private bool _hasValidationError;
+    private string _validationMessage = string.Empty;
 
-    public OnboardingViewModel(IAppDataService dataService)
+    public OnboardingViewModel(
+        IAppDataService dataService,
+        ILogger<OnboardingViewModel> logger)
     {
-        this.dataService = dataService;
+        _dataService = dataService;
+        _logger = logger;
     }
 
     public OnboardingStep CurrentStep
     {
-        get => currentStep;
-        private set => SetProperty(ref currentStep, value);
+        get => _currentStep;
+        private set => SetProperty(ref _currentStep, value);
     }
 
     public string? UserName
     {
-        get => userName;
+        get => _userName;
         set
         {
-            if (SetProperty(ref userName, value) && HasValidationError)
+            if (SetProperty(ref _userName, value) && HasValidationError)
             {
                 HasValidationError = false;
                 ValidationMessage = string.Empty;
@@ -48,14 +52,14 @@ public partial class OnboardingViewModel : ObservableObject
 
     public bool HasValidationError
     {
-        get => hasValidationError;
-        private set => SetProperty(ref hasValidationError, value);
+        get => _hasValidationError;
+        private set => SetProperty(ref _hasValidationError, value);
     }
 
     public string ValidationMessage
     {
-        get => validationMessage;
-        private set => SetProperty(ref validationMessage, value);
+        get => _validationMessage;
+        private set => SetProperty(ref _validationMessage, value);
     }
 
     [RelayCommand]
@@ -74,7 +78,7 @@ public partial class OnboardingViewModel : ObservableObject
     private async Task ConfirmNameAsync()
     {
         var trimmedName = UserName?.Trim() ?? string.Empty;
-        var validationError = GetNameValidationError(trimmedName);
+        var validationError = UserNameValidator.GetValidationError(trimmedName);
         if (validationError is not null)
         {
             ValidationMessage = validationError;
@@ -84,10 +88,9 @@ public partial class OnboardingViewModel : ObservableObject
 
         UserName = trimmedName;
 
-        // Профиль и флаг onboarding сохраняются одной SQLite-row до навигации.
         try
         {
-            await dataService.SaveUserProfileAsync(new UserProfile
+            await _dataService.SaveUserProfileAsync(new UserProfile
             {
                 UserName = trimmedName,
                 OnboardingCompleted = true
@@ -97,38 +100,11 @@ public partial class OnboardingViewModel : ObservableObject
         {
             ValidationMessage = "Не удалось сохранить профиль. Попробуйте ещё раз";
             HasValidationError = true;
-#if DEBUG
-            Debug.WriteLine($"Profile save failed: {exception}");
-#endif
+            _logger.LogError(exception, "Profile save failed during onboarding.");
             return;
         }
 
         // Абсолютный маршрут не оставляет onboarding доступным через Back.
-        await Shell.Current.GoToAsync("//MainPage/MainContent", true);
+        await Shell.Current.GoToAsync(AppShell.MainAbsoluteRoute, true);
     }
-
-    private static string? GetNameValidationError(string name)
-    {
-        if (string.IsNullOrEmpty(name))
-        {
-            return "Введите имя";
-        }
-
-        if (name.Length < 3)
-        {
-            return "Имя должно содержать минимум 3 символа";
-        }
-
-        if (name.Length > 15)
-        {
-            return "Имя должно содержать не более 15 символов";
-        }
-
-        return AllowedNameRegex().IsMatch(name)
-            ? null
-            : "Используйте только латинские буквы и цифры";
-    }
-
-    [GeneratedRegex("^[a-zA-Z0-9]+$", RegexOptions.CultureInvariant)]
-    private static partial Regex AllowedNameRegex();
 }

@@ -1,4 +1,4 @@
-namespace CoffeeNap;
+namespace CoffeeNap.Views;
 
 /// <summary>
 /// Заготовка формы добавления употребления. Поля формы пока не реализованы.

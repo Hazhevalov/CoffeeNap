@@ -1,59 +1,50 @@
-﻿using Microsoft.Extensions.Logging;
+using CoffeeNap.Data;
+using CoffeeNap.Services;
+using CoffeeNap.ViewModels;
+using CoffeeNap.Views;
+using Microsoft.Extensions.Logging;
 
-namespace CoffeeNap
+namespace CoffeeNap;
+
+public static class MauiProgram
 {
-    /// <summary>
-    /// Общая точка сборки MAUI-приложения для всех платформ. Android, iOS,
-    /// Mac Catalyst и Windows вызывают один и тот же метод <see cref="CreateMauiApp"/>.
-    /// </summary>
-    public static class MauiProgram
+    public static MauiApp CreateMauiApp()
     {
-        /// <summary>Регистрирует App, шрифты, логирование и будущие DI-сервисы.</summary>
-        public static MauiApp CreateMauiApp()
-        {
-            // Здесь собираются общие зависимости и ресурсы приложения до запуска.
-            var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    // Один variable-font зарегистрирован под тремя псевдонимами.
-                    // Inter используется текущей разметкой; OpenSans оставлены для
-                    // совместимости со стандартными стилями шаблона MAUI.
-                    fonts.AddFont("InterVariableFont.ttf", "Inter");
-                    fonts.AddFont("InterVariableFont.ttf", "OpenSansRegular");
-                    fonts.AddFont("InterVariableFont.ttf", "OpenSansSemibold");
-                });
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("InterVariableFont.ttf", "Inter");
+                fonts.AddFont("InterVariableFont.ttf", "OpenSansRegular");
+                fonts.AddFont("InterVariableFont.ttf", "OpenSansSemibold");
+            });
 
 #if ANDROID
-            // Android EditText рисует собственный underline через native Background.
-            // Убираем его только у BorderlessEntry; остальные Entry не затрагиваются.
-            Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(
-                nameof(Controls.BorderlessEntry),
-                static (handler, view) =>
+        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(
+            nameof(Controls.BorderlessEntry),
+            static (handler, view) =>
+            {
+                if (view is Controls.BorderlessEntry)
                 {
-                    if (view is Controls.BorderlessEntry)
-                    {
-                        handler.PlatformView.Background = null;
-                    }
-                });
+                    handler.PlatformView.Background = null;
+                }
+            });
 #endif
 
 #if DEBUG
-			// Debug-провайдер пишет диагностические сообщения в окно Output IDE.
-    		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
-            builder.Services.AddSingleton<Data.AppDatabase>();
-            builder.Services.AddSingleton<Services.IAppDataService, Services.AppDataService>();
-            builder.Services.AddSingleton<Services.AppStartupState>();
-            builder.Services.AddSingleton<AppShell>();
-            builder.Services.AddSingleton<ViewModels.MainViewModel>();
-            builder.Services.AddTransient<ViewModels.OnboardingViewModel>();
-            builder.Services.AddSingleton<MainPage>();
-            builder.Services.AddTransient<OnboardingPage>();
+        builder.Services.AddSingleton<AppDatabase>();
 
-            return builder.Build();
-        }
+        builder.Services.AddSingleton<IAppDataService, AppDataService>();
+
+        builder.Services.AddSingleton<MainPageViewModel>();
+        builder.Services.AddSingleton<OnboardingViewModel>();
+
+        builder.Services.AddSingleton<AppPageFactory>();
+
+        return builder.Build();
     }
 }

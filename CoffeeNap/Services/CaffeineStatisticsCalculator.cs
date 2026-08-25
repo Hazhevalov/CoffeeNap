@@ -1,0 +1,40 @@
+using CoffeeNap.Models;
+
+namespace CoffeeNap.Services;
+
+public static class CaffeineStatisticsCalculator
+{
+    public static double CalculateDailyCaffeine(
+        IEnumerable<CaffeineConsumption> consumptions,
+        DateTimeOffset now)
+    {
+        var localNow = now.ToLocalTime();
+        var startOfToday = new DateTimeOffset(
+            localNow.Date,
+            TimeZoneInfo.Local.GetUtcOffset(localNow.Date));
+
+        return consumptions
+            .Where(consumption =>
+                consumption.ConsumedAt.ToLocalTime() >= startOfToday &&
+                consumption.ConsumedAt <= now)
+            .Sum(consumption => Math.Max(0, consumption.CaffeineMg));
+    }
+
+    public static IReadOnlyDictionary<CaffeineConsumptionType, int> CountBySource(
+        IEnumerable<CaffeineConsumption> consumptions)
+    {
+        var counts = Enum
+            .GetValues<CaffeineConsumptionType>()
+            .ToDictionary(type => type, _ => 0);
+
+        foreach (var consumption in consumptions)
+        {
+            if (counts.ContainsKey(consumption.Type))
+            {
+                counts[consumption.Type]++;
+            }
+        }
+
+        return counts;
+    }
+}
