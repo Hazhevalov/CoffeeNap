@@ -16,6 +16,7 @@
         <!-- Верхний header -->
         <controls:MainHeaderView
             HeightRequest="86"
+            Grid.Row="0"
             BindingContext="{Binding Header}" />
 
         <!-- Контент под header'ом -->

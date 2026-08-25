@@ -35,6 +35,7 @@
 
                 <controls:MainHeaderView
                     HeightRequest="86"
+                    Grid.Row="0"
                     BindingContext="{Binding Header}" />
 
                 <Border
