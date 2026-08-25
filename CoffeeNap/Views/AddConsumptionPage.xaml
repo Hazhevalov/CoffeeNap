@@ -4,6 +4,8 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:CoffeeNap.Controls"
+    xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
+    x:DataType="viewModels:AddConsumptionPageViewModel"
     Title="Добавление употребления"
     BackgroundColor="{StaticResource PageBackgroundColor}"
     Shell.NavBarIsVisible="False">
@@ -14,8 +16,7 @@
         <!-- Верхний header -->
         <controls:MainHeaderView
             HeightRequest="86"
-            SettingsCommand="{Binding OpenSettingsCommand}"
-            UserName="{Binding UserName}" />
+            BindingContext="{Binding Header}" />
 
         <!-- Контент под header'ом -->
         <Grid RowDefinitions="Auto,*,Auto"
@@ -305,8 +306,7 @@
         <controls:BottomNavigationBar Grid.Row="2"
                                       VerticalOptions="End"
                                       ZIndex="20"
-                                      AddCommand="{Binding OpenAddConsumptionCommand}"
-                                      CalendarCommand="{Binding OpenCalendarCommand}">
+                                      BindingContext="{Binding Navigation}">
 
             <controls:BottomNavigationBar.Shadow>
                 <Shadow Brush="#40000000"

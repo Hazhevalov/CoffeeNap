@@ -43,6 +43,9 @@ public sealed class AppDataService : IAppDataService
             await _database.InitializeAsync();
             await MigrateLegacyPreferencesAsync();
             await EnsureDefaultSettingsAsync();
+#if DEBUG
+            await EnsureTestConsumptionsAsync();
+#endif
             _isInitialized = true;
         }
         finally
@@ -197,6 +200,69 @@ public sealed class AppDataService : IAppDataService
             await _database.SaveSettingsAsync(CreateDefaultSettings());
         }
     }
+// TEST TILL 266
+#if DEBUG
+    private async Task EnsureTestConsumptionsAsync()
+    {
+        // Seed выполняется только для совершенно пустой истории: существующие
+        // пользовательские записи не изменяются, а повторный запуск не создаёт дубликаты.
+        if ((await _database.GetConsumptionsAsync()).Count != 0)
+        {
+            return;
+        }
+
+        var now = DateTimeOffset.Now;
+        var testConsumptions = new[]
+        {
+            CreateTestConsumption(
+                "Капучино",
+                80,
+                GetTodayTimestamp(now, TimeSpan.FromMinutes(15)),
+                CaffeineConsumptionType.Coffee),
+            CreateTestConsumption(
+                "Энергетик (500мл)",
+                160,
+                GetTodayTimestamp(now, TimeSpan.FromMinutes(5)),
+                CaffeineConsumptionType.EnergyDrink),
+            CreateTestConsumption("Эспрессо", 65, now.AddDays(-1), CaffeineConsumptionType.Coffee),
+            CreateTestConsumption("Американо", 95, now.AddDays(-2), CaffeineConsumptionType.Coffee),
+            CreateTestConsumption("Флэт уайт", 110, now.AddDays(-3), CaffeineConsumptionType.Coffee),
+            CreateTestConsumption("Латте на кокосовом", 120, now.AddDays(-4), CaffeineConsumptionType.Coffee),
+            CreateTestConsumption("Зелёный чай", 35, now.AddDays(-5), CaffeineConsumptionType.Tea),
+            CreateTestConsumption("Энергетик #1", 80, now.AddDays(-6), CaffeineConsumptionType.EnergyDrink),
+            CreateTestConsumption("Энергетик #2", 100, now.AddDays(-7), CaffeineConsumptionType.EnergyDrink),
+            CreateTestConsumption("Энергетик #3", 120, now.AddDays(-8), CaffeineConsumptionType.EnergyDrink)
+        };
+
+        foreach (var consumption in testConsumptions)
+        {
+            await _database.InsertConsumptionAsync(consumption);
+        }
+    }
+
+    private static CaffeineConsumption CreateTestConsumption(
+        string name,
+        int caffeineMg,
+        DateTimeOffset consumedAt,
+        CaffeineConsumptionType type) => new()
+    {
+        Name = name,
+        CaffeineMg = caffeineMg,
+        ConsumedAt = consumedAt.ToUniversalTime(),
+        Type = type
+    };
+
+    private static DateTimeOffset GetTodayTimestamp(DateTimeOffset now, TimeSpan age)
+    {
+        var localNow = now.ToLocalTime();
+        var startOfToday = new DateTimeOffset(
+            localNow.Date,
+            TimeZoneInfo.Local.GetUtcOffset(localNow.Date));
+        return localNow - age >= startOfToday
+            ? localNow - age
+            : startOfToday;
+    }
+#endif
 
     private static AppSettings CreateDefaultSettings() => new()
     {

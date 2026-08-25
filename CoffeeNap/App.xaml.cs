@@ -7,17 +7,17 @@ namespace CoffeeNap;
 /// <summary>Создаёт окно и завершает startup data flow до показа AppShell.</summary>
 public partial class App : Application
 {
-    private readonly IAppDataService _dataService;
+    private readonly UserStateService _userState;
     private readonly AppPageFactory _pageFactory;
     private readonly ILogger<App> _logger;
 
     public App(
-        IAppDataService dataService,
+        UserStateService userState,
         AppPageFactory pageFactory,
         ILogger<App> logger)
     {
         InitializeComponent();
-        _dataService = dataService;
+        _userState = userState;
         _pageFactory = pageFactory;
         _logger = logger;
     }
@@ -33,12 +33,11 @@ public partial class App : Application
     {
         try
         {
-            await _dataService.InitializeAsync();
-            var profile = await _dataService.GetUserProfileAsync() ?? new();
+            await _userState.InitializeAsync();
 
             await MainThread.InvokeOnMainThreadAsync(() =>
                 window.Page = new AppShell(
-                    profile,
+                    _userState,
                     _pageFactory.CreateOnboardingPage(),
                     _pageFactory.CreateMainPage()));
         }

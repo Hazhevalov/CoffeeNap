@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView
     x:Class="CoffeeNap.Controls.MainHeaderView"
-    x:Name="Root"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:CoffeeNap.Controls"
-    x:DataType="controls:MainHeaderView">
+    xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
+    x:DataType="viewModels:MainHeaderViewModel">
 
     <Grid
         Padding="10,13"
@@ -46,7 +45,7 @@
                 FontAttributes="Bold"
                 LineBreakMode="TailTruncation"
                 MaxLines="1"
-                Text="{Binding UserName, Source={x:Reference Root}}"
+                Text="{Binding UserState.UserName}"
                 TextColor="{StaticResource InkColor}" />
         </VerticalStackLayout>
 
@@ -57,7 +56,7 @@
             Padding="11"
             VerticalOptions="Center"
             BackgroundColor="{StaticResource InkColor}"
-            Command="{Binding SettingsCommand, Source={x:Reference Root}}"
+            Command="{Binding OpenSettingsCommand}"
             CornerRadius="22"
             ImageSource="settings_ico.png" />
     </Grid>

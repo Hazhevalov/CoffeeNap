@@ -39,9 +39,20 @@ public static class MauiProgram
         builder.Services.AddSingleton<AppDatabase>();
 
         builder.Services.AddSingleton<IAppDataService, AppDataService>();
+        builder.Services.AddSingleton<UserStateService>();
 
-        builder.Services.AddSingleton<MainPageViewModel>();
-        builder.Services.AddSingleton<OnboardingViewModel>();
+        builder.Services.AddTransient<MainHeaderViewModel>();
+        builder.Services.AddTransient<BottomNavigationViewModel>();
+        builder.Services.AddTransient<MainPageViewModel>();
+        builder.Services.AddTransient<CalendarPageViewModel>();
+        builder.Services.AddTransient<AddConsumptionPageViewModel>();
+        builder.Services.AddTransient<OnboardingViewModel>();
+
+        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<CalendarPage>();
+        builder.Services.AddTransient<AddConsumptionPage>();
+        builder.Services.AddTransient<SettingsPage>();
+        builder.Services.AddTransient<OnboardingPage>();
 
         builder.Services.AddSingleton<AppPageFactory>();
 

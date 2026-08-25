@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-             x:Class="CoffeeNap.Views.CalendarPage"
+    x:Class="CoffeeNap.Views.CalendarPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:CoffeeNap.Controls"
+    xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
+    x:DataType="viewModels:CalendarPageViewModel"
     Title="Календарь"
-    BackgroundColor="{StaticResource SurfaceColor}"
-    Shell.NavBarIsVisible="True">
-    <!-- Временный placeholder будущего календаря истории употреблений. -->
-    <Label
-        FontFamily="Inter"
-        FontSize="24"
-        FontAttributes="Bold"
-        HorizontalOptions="Center"
-        Text="Календарь"
-        TextColor="{StaticResource InkColor}"
-        VerticalOptions="Center" />
+    BackgroundColor="{StaticResource PageBackgroundColor}"
+    SafeAreaEdges="All"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
+        <controls:MainHeaderView
+            Grid.Row="0"
+            HeightRequest="86"
+            BindingContext="{Binding Header}" />
+
+        <!-- Временный placeholder будущего календаря истории употреблений. -->
+        <Label
+            Grid.Row="1"
+            FontFamily="Inter"
+            FontSize="24"
+            FontAttributes="Bold"
+            HorizontalOptions="Center"
+            Text="Календарь"
+            TextColor="{StaticResource InkColor}"
+            VerticalOptions="Center" />
+
+        <controls:BottomNavigationBar
+            Grid.Row="2"
+            BindingContext="{Binding Navigation}"
+            ZIndex="20">
+            <controls:BottomNavigationBar.Shadow>
+                <Shadow
+                    Brush="#40000000"
+                    Offset="0,-6"
+                    Radius="14"
+                    Opacity="0.45" />
+            </controls:BottomNavigationBar.Shadow>
+        </controls:BottomNavigationBar>
+    </Grid>
 </ContentPage>

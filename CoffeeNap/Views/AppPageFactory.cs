@@ -1,21 +1,18 @@
 using CoffeeNap.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CoffeeNap.Views;
 
 public sealed class AppPageFactory
 {
-    private readonly MainPageViewModel _mainPageViewModel;
-    private readonly OnboardingViewModel _onboardingViewModel;
+    private readonly IServiceProvider _services;
 
-    public AppPageFactory(
-        MainPageViewModel mainPageViewModel,
-        OnboardingViewModel onboardingViewModel)
+    public AppPageFactory(IServiceProvider services)
     {
-        _mainPageViewModel = mainPageViewModel;
-        _onboardingViewModel = onboardingViewModel;
+        _services = services;
     }
 
-    public MainPage CreateMainPage() => new(_mainPageViewModel);
+    public MainPage CreateMainPage() => _services.GetRequiredService<MainPage>();
 
-    public OnboardingPage CreateOnboardingPage() => new(_onboardingViewModel);
+    public OnboardingPage CreateOnboardingPage() => _services.GetRequiredService<OnboardingPage>();
 }

@@ -2,16 +2,13 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using CoffeeNap.Models;
 using CoffeeNap.Services;
-using CoffeeNap.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 
 namespace CoffeeNap.ViewModels;
 
 public partial class MainPageViewModel : ObservableObject, IDisposable
 {
-    private const string DefaultUserName = "Пользователь";
     private const double LowProgressThreshold = 0.40;
     private const double MediumProgressThreshold = 0.70;
     private const double LimitProgressThreshold = 1.00;
@@ -42,22 +39,23 @@ public partial class MainPageViewModel : ObservableObject, IDisposable
 
     private string? _initializationError;
 
-    private string _userName = DefaultUserName;
-
     public MainPageViewModel(
         IAppDataService dataService,
-        ILogger<MainPageViewModel> logger)
+        ILogger<MainPageViewModel> logger,
+        MainHeaderViewModel header,
+        BottomNavigationViewModel navigation)
     {
         _dataService = dataService;
         _logger = logger;
+        Header = header;
+        Navigation = navigation;
+        Navigation.ActiveTab = NavigationTab.Home;
         Consumptions.CollectionChanged += OnConsumptionsCollectionChanged;
     }
 
-    public string UserName
-    {
-        get => _userName;
-        private set => SetProperty(ref _userName, value);
-    }
+    public MainHeaderViewModel Header { get; }
+
+    public BottomNavigationViewModel Navigation { get; }
 
     public double CurrentCaffeine
     {
@@ -161,13 +159,9 @@ public partial class MainPageViewModel : ObservableObject, IDisposable
             InitializationError = null;
             await _dataService.InitializeAsync();
 
-            var profile = await _dataService.GetUserProfileAsync();
             var settings = await _dataService.GetSettingsAsync();
             var consumptions = await _dataService.GetConsumptionsAsync();
 
-            UserName = string.IsNullOrWhiteSpace(profile?.UserName)
-                ? DefaultUserName
-                : profile.UserName;
             DailyCaffeineLimit = settings.DailyCaffeineLimit;
             ReplaceConsumptions(consumptions);
             IsInitialized = true;
@@ -243,23 +237,6 @@ public partial class MainPageViewModel : ObservableObject, IDisposable
         await _dataService.SaveSettingsAsync(settings);
         DailyCaffeineLimit = limit;
     }
-
-    public async Task RefreshUserProfileAsync()
-    {
-        var profile = await _dataService.GetUserProfileAsync();
-        UserName = string.IsNullOrWhiteSpace(profile?.UserName)
-            ? DefaultUserName
-            : profile.UserName;
-    }
-
-    [RelayCommand]
-    private Task OpenSettingsAsync() => Shell.Current.GoToAsync(nameof(SettingsPage));
-
-    [RelayCommand]
-    private Task OpenAddConsumptionAsync() => Shell.Current.GoToAsync(nameof(AddConsumptionPage));
-
-    [RelayCommand]
-    private Task OpenCalendarAsync() => Shell.Current.GoToAsync(nameof(CalendarPage));
 
     public void StartRelativeTimeTimer()
     {

@@ -1,5 +1,4 @@
 using CoffeeNap.Helpers;
-using CoffeeNap.Models;
 using CoffeeNap.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -16,7 +15,7 @@ public enum OnboardingStep
 /// <summary>Единая модель двух последовательных состояний onboarding.</summary>
 public partial class OnboardingViewModel : ObservableObject
 {
-    private readonly IAppDataService _dataService;
+    private readonly UserStateService _userState;
     private readonly ILogger<OnboardingViewModel> _logger;
     private OnboardingStep _currentStep = OnboardingStep.Welcome;
     private string? _userName = string.Empty;
@@ -24,10 +23,10 @@ public partial class OnboardingViewModel : ObservableObject
     private string _validationMessage = string.Empty;
 
     public OnboardingViewModel(
-        IAppDataService dataService,
+        UserStateService userState,
         ILogger<OnboardingViewModel> logger)
     {
-        _dataService = dataService;
+        _userState = userState;
         _logger = logger;
     }
 
@@ -90,11 +89,7 @@ public partial class OnboardingViewModel : ObservableObject
 
         try
         {
-            await _dataService.SaveUserProfileAsync(new UserProfile
-            {
-                UserName = trimmedName,
-                OnboardingCompleted = true
-            });
+            await _userState.CompleteOnboardingAsync(trimmedName);
         }
         catch (Exception exception)
         {

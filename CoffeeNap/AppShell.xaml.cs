@@ -1,4 +1,4 @@
-using CoffeeNap.Models;
+using CoffeeNap.Services;
 using CoffeeNap.Views;
 
 namespace CoffeeNap;
@@ -9,7 +9,7 @@ public partial class AppShell : Shell
     public const string MainAbsoluteRoute = "//MainPage/MainContent";
 
     public AppShell(
-        UserProfile profile,
+        UserStateService userState,
         OnboardingPage onboardingPage,
         MainPage mainPage)
     {
@@ -21,8 +21,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(AddConsumptionPage), typeof(AddConsumptionPage));
         Routing.RegisterRoute(nameof(CalendarPage), typeof(CalendarPage));
 
-        var hasName = !string.IsNullOrWhiteSpace(profile.UserName);
-        CurrentItem = profile.OnboardingCompleted && hasName
+        CurrentItem = userState.IsOnboardingCompleted && userState.HasUserName
             ? MainShellItem
             : OnboardingShellItem;
     }

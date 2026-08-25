@@ -35,8 +35,7 @@
 
                 <controls:MainHeaderView
                     HeightRequest="86"
-                    SettingsCommand="{Binding OpenSettingsCommand}"
-                    UserName="{Binding UserName}" />
+                    BindingContext="{Binding Header}" />
 
                 <Border
                     Margin="8,10,8,10"
@@ -338,8 +337,7 @@
         <!-- Нижняя навигация вынесена в отдельный переиспользуемый контрол. -->
         <controls:BottomNavigationBar Grid.Row="1"
                 ZIndex="20"
-                AddCommand="{Binding OpenAddConsumptionCommand}"
-                CalendarCommand="{Binding OpenCalendarCommand}">
+                BindingContext="{Binding Navigation}">
 
             <controls:BottomNavigationBar.Shadow>
                 <Shadow Brush="#40000000"
