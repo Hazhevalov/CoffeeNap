@@ -31,105 +31,124 @@
             BindingContext="{Binding Header}"
             SafeAreaEdges="Container" />
 
-        <!-- Прогресс бар -->
-        <Grid Grid.Row="1"
-                WidthRequest="150"
-                HeightRequest="50"
-                HorizontalOptions="Center"
-                VerticalOptions="Start"
-                ColumnDefinitions="15,12,15,12,15,12,15,12,15,12,15">
-                <!-- Background line -->
-                <BoxView
-                    Grid.ColumnSpan="11"
-                    Margin="7,0"
-                    HeightRequest="3"
-                    BackgroundColor="#D6D6D6"
-                    VerticalOptions="Center" />
-                <!-- Completed line -->
-                <BoxView
-                    Grid.ColumnSpan="9"
-                    Margin="7,0"
-                    HeightRequest="3"
-                    BackgroundColor="#151515"
-                    VerticalOptions="Center" />
-                <!-- Step 1 -->
-                <Border
-                    Grid.Column="0"
-                    WidthRequest="15"
-                    HeightRequest="15"
-                    BackgroundColor="White"
-                    Stroke="#151515"
-                    StrokeThickness="2"
-                    ZIndex="1">
-                    <Border.StrokeShape>
-                        <Ellipse />
-                    </Border.StrokeShape>
-                </Border>
-                <!-- Step 2 -->
-                <Border
-                    Grid.Column="2"
-                    WidthRequest="15"
-                    HeightRequest="15"
-                    BackgroundColor="White"
-                    Stroke="#151515"
-                    StrokeThickness="2"
-                    ZIndex="1">
-                    <Border.StrokeShape>
-                        <Ellipse />
-                    </Border.StrokeShape>
-                </Border>
-                <!-- Step 3 -->
-                <Border
-                    Grid.Column="4"
-                    WidthRequest="15"
-                    HeightRequest="15"
-                    BackgroundColor="White"
-                    Stroke="#151515"
-                    StrokeThickness="2"
-                    ZIndex="1">
-                    <Border.StrokeShape>
-                        <Ellipse />
-                    </Border.StrokeShape>
-                </Border>
-                <!-- Step 4 -->
-                <Border
-                    Grid.Column="6"
-                    WidthRequest="15"
-                    HeightRequest="15"
-                    BackgroundColor="White"
-                    Stroke="#151515"
-                    StrokeThickness="2"
-                    ZIndex="1">
-                    <Border.StrokeShape>
-                        <Ellipse />
-                    </Border.StrokeShape>
-                </Border>
-                <!-- Step 5 -->
-                <Border
-                    Grid.Column="8"
-                    WidthRequest="15"
-                    HeightRequest="15"
-                    BackgroundColor="White"
-                    Stroke="#151515"
-                    StrokeThickness="2"
-                    ZIndex="1">
-                    <Border.StrokeShape>
-                        <Ellipse />
-                    </Border.StrokeShape>
-                </Border>
-                <!-- Current / last step -->
-                <Border
-                    Grid.Column="10"
-                    WidthRequest="15"
-                    HeightRequest="15"
-                    BackgroundColor="White"
-                    Stroke="#D6D6D6"
-                    StrokeThickness="2"
-                    ZIndex="1">
-                    <Border.StrokeShape>
-                        <Ellipse />
-                    </Border.StrokeShape>
-                </Border>
+        <!-- Контент под header'ом -->
+        <Grid RowDefinitions="Auto,*,Auto"
+              Grid.Row="1"
+              Padding="10"
+              RowSpacing="20"
+              VerticalOptions="Fill"
+              IsVisible="True">
+
+            <!-- Кнопка назад и прогресс -->
+            <Grid Grid.Row="0">
+
+                <Button
+                    ImageSource="back_ico.png"
+                    CornerRadius="15"
+                    BackgroundColor="{StaticResource White}"
+                    Padding="15"
+                    WidthRequest="54"
+                    HeightRequest="54"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center"
+                    BorderWidth="1"
+                    BorderColor="{StaticResource DividerColor}" />
+
+                <!-- Прогресс-бар расположен в центре всего Grid -->
+                <Grid
+                    WidthRequest="150"
+                    HeightRequest="20"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    ColumnDefinitions="15,12,15,12,15,12,15,12,15,12,15">
+
+                    <!-- Серая линия -->
+                    <BoxView
+                        Grid.ColumnSpan="11"
+                        Margin="7,0"
+                        HeightRequest="3"
+                        BackgroundColor="#D6D6D6"
+                        VerticalOptions="Center" />
+
+                    <!-- Пройденная часть -->
+                    <BoxView
+                        Grid.ColumnSpan="9"
+                        Margin="7,0"
+                        HeightRequest="3"
+                        BackgroundColor="#151515"
+                        VerticalOptions="Center" />
+
+                    <Border Grid.Column="0"
+                            WidthRequest="15"
+                            HeightRequest="15"
+                            BackgroundColor="White"
+                            Stroke="#151515"
+                            StrokeThickness="2"
+                            ZIndex="1">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                    </Border>
+
+                    <Border Grid.Column="2"
+                            WidthRequest="15"
+                            HeightRequest="15"
+                            BackgroundColor="White"
+                            Stroke="#151515"
+                            StrokeThickness="2"
+                            ZIndex="1">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                    </Border>
+
+                    <Border Grid.Column="4"
+                            WidthRequest="15"
+                            HeightRequest="15"
+                            BackgroundColor="White"
+                            Stroke="#151515"
+                            StrokeThickness="2"
+                            ZIndex="1">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                    </Border>
+
+                    <Border Grid.Column="6"
+                            WidthRequest="15"
+                            HeightRequest="15"
+                            BackgroundColor="White"
+                            Stroke="#151515"
+                            StrokeThickness="2"
+                            ZIndex="1">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                    </Border>
+
+                    <Border Grid.Column="8"
+                            WidthRequest="15"
+                            HeightRequest="15"
+                            BackgroundColor="White"
+                            Stroke="#151515"
+                            StrokeThickness="2"
+                            ZIndex="1">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                    </Border>
+
+                    <Border Grid.Column="10"
+                            WidthRequest="15"
+                            HeightRequest="15"
+                            BackgroundColor="White"
+                            Stroke="#D6D6D6"
+                            StrokeThickness="2"
+                            ZIndex="1">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                    </Border>
                 </Grid>
 
         <!-- Step 1 "Какой?" -->
