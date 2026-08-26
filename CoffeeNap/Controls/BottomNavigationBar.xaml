@@ -6,95 +6,189 @@
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:BottomNavigationViewModel"
     BackgroundColor="{StaticResource SurfaceColor}"
-    HeightRequest="82">
+    SafeAreaEdges="None">
 
-    <!-- Три равные колонки соответствуют главной, добавлению и календарю. -->
-    <Grid Padding="10,10,10,12">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <!--
+        Внешний Grid занимает всю область BottomNavigationBar.
+        Safe Area НЕ применяется к фону.
+    -->
+    <Grid
+        BackgroundColor="{StaticResource SurfaceColor}"
+        SafeAreaEdges="None">
 
-        <Button
-            Grid.Row="1"
-            Grid.Column="0"
-            WidthRequest="56"
-            HeightRequest="56"
-            Padding="17"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"
-            BackgroundColor="Transparent"
-            Command="{Binding OpenAddConsumptionCommand}"
-            ImageSource="add_ico.png"
-            TextColor="{StaticResource InkColor}">
-            <Button.Triggers>
-                <DataTrigger
-                    TargetType="Button"
-                    Binding="{Binding IsAddConsumptionActive}"
-                    Value="True">
-                    <Setter Property="WidthRequest" Value="96" />
-                    <Setter Property="Padding" Value="35,17" />
-                    <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
-                    <Setter Property="CornerRadius" Value="28" />
-                    <Setter Property="ImageSource" Value="add_active_ico.png" />
-                </DataTrigger>
-            </Button.Triggers>
-        </Button>
+        <!--
+            Внутренний Grid отвечает только за расположение кнопок.
+            Safe Area применяется здесь, поэтому кнопки никогда
+            не залезут под Home Indicator / системную навигацию.
+        -->
+        <Grid
+            Padding="10,10,10,12"
+            SafeAreaEdges="Container">
 
-        <Button
-            Grid.Row="1"
-            Grid.Column="1"
-            WidthRequest="56"
-            HeightRequest="56"
-            Padding="17"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"
-            BackgroundColor="Transparent"
-            Command="{Binding OpenHomeCommand}"
-            ImageSource="home_ico.png"
-            Opacity="1">
-            <Button.Triggers>
-                <DataTrigger
-                    TargetType="Button"
-                    Binding="{Binding IsHomeActive}"
-                    Value="True">
-                    <Setter Property="WidthRequest" Value="96" />
-                    <Setter Property="Padding" Value="35,17" />
-                    <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
-                    <Setter Property="CornerRadius" Value="28" />
-                    <Setter Property="ImageSource" Value="home_active_ico.png" />
-                </DataTrigger>
-            </Button.Triggers>
-        </Button>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1" />
+                <RowDefinition Height="56" />
+            </Grid.RowDefinitions>
 
-        <Button
-            Grid.Row="1"
-            Grid.Column="2"
-            WidthRequest="56"
-            HeightRequest="56"
-            Padding="17"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"
-            BackgroundColor="Transparent"
-            Command="{Binding OpenCalendarCommand}"
-            ImageSource="calendar_ico.png">
-            <Button.Triggers>
-                <DataTrigger
-                    TargetType="Button"
-                    Binding="{Binding IsCalendarActive}"
-                    Value="True">
-                    <Setter Property="WidthRequest" Value="96" />
-                    <Setter Property="Padding" Value="35,17" />
-                    <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
-                    <Setter Property="CornerRadius" Value="28" />
-                    <Setter Property="ImageSource" Value="calendar_active_ico.png" />
-                </DataTrigger>
-            </Button.Triggers>
-        </Button>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+
+            <!-- ================================================== -->
+            <!-- ADD -->
+            <!-- ================================================== -->
+
+            <Button
+                Grid.Row="1"
+                Grid.Column="0"
+                WidthRequest="56"
+                HeightRequest="56"
+                Padding="17"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                BackgroundColor="Transparent"
+                Command="{Binding OpenAddConsumptionCommand}"
+                ImageSource="add_ico.png"
+                TextColor="{StaticResource InkColor}">
+
+                <Button.Triggers>
+
+                    <DataTrigger
+                        TargetType="Button"
+                        Binding="{Binding IsAddConsumptionActive}"
+                        Value="True">
+
+                        <Setter
+                            Property="WidthRequest"
+                            Value="96" />
+
+                        <Setter
+                            Property="Padding"
+                            Value="35,17" />
+
+                        <Setter
+                            Property="BackgroundColor"
+                            Value="{StaticResource InkColor}" />
+
+                        <Setter
+                            Property="CornerRadius"
+                            Value="28" />
+
+                        <Setter
+                            Property="ImageSource"
+                            Value="add_active_ico.png" />
+
+                    </DataTrigger>
+
+                </Button.Triggers>
+
+            </Button>
+
+
+            <!-- ================================================== -->
+            <!-- HOME -->
+            <!-- ================================================== -->
+
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                WidthRequest="56"
+                HeightRequest="56"
+                Padding="17"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                BackgroundColor="Transparent"
+                Command="{Binding OpenHomeCommand}"
+                ImageSource="home_ico.png">
+
+                <Button.Triggers>
+
+                    <DataTrigger
+                        TargetType="Button"
+                        Binding="{Binding IsHomeActive}"
+                        Value="True">
+
+                        <Setter
+                            Property="WidthRequest"
+                            Value="96" />
+
+                        <Setter
+                            Property="Padding"
+                            Value="35,17" />
+
+                        <Setter
+                            Property="BackgroundColor"
+                            Value="{StaticResource InkColor}" />
+
+                        <Setter
+                            Property="CornerRadius"
+                            Value="28" />
+
+                        <Setter
+                            Property="ImageSource"
+                            Value="home_active_ico.png" />
+
+                    </DataTrigger>
+
+                </Button.Triggers>
+
+            </Button>
+
+
+            <!-- ================================================== -->
+            <!-- CALENDAR -->
+            <!-- ================================================== -->
+
+            <Button
+                Grid.Row="1"
+                Grid.Column="2"
+                WidthRequest="56"
+                HeightRequest="56"
+                Padding="17"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                BackgroundColor="Transparent"
+                Command="{Binding OpenCalendarCommand}"
+                ImageSource="calendar_ico.png">
+
+                <Button.Triggers>
+
+                    <DataTrigger
+                        TargetType="Button"
+                        Binding="{Binding IsCalendarActive}"
+                        Value="True">
+
+                        <Setter
+                            Property="WidthRequest"
+                            Value="96" />
+
+                        <Setter
+                            Property="Padding"
+                            Value="35,17" />
+
+                        <Setter
+                            Property="BackgroundColor"
+                            Value="{StaticResource InkColor}" />
+
+                        <Setter
+                            Property="CornerRadius"
+                            Value="28" />
+
+                        <Setter
+                            Property="ImageSource"
+                            Value="calendar_active_ico.png" />
+
+                    </DataTrigger>
+
+                </Button.Triggers>
+
+            </Button>
+
+        </Grid>
+
     </Grid>
+
 </ContentView>
