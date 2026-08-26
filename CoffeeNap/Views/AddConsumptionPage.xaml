@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
+
 <ContentPage
-             x:Class="CoffeeNap.Views.AddConsumptionPage"
+    x:Class="CoffeeNap.Views.AddConsumptionPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:CoffeeNap.Controls"
@@ -8,23 +9,35 @@
     x:DataType="viewModels:AddConsumptionPageViewModel"
     Title="Добавление употребления"
     BackgroundColor="{StaticResource PageBackgroundColor}"
+    SafeAreaEdges="None"
     Shell.NavBarIsVisible="False">
 
-    <!-- Вся страница -->
-    <Grid RowDefinitions="Auto, *, Auto" VerticalOptions="Fill">
+    <Grid
+        BackgroundColor="{StaticResource PageBackgroundColor}"
+        SafeAreaEdges="None"
+        RowSpacing="0">
 
-        <!-- Верхний header -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Top Bar -->
         <controls:MainHeaderView
-            HeightRequest="86"
             Grid.Row="0"
-            BindingContext="{Binding Header}" />
+            HorizontalOptions="Fill"
+            VerticalOptions="Start"
+            BindingContext="{Binding Header}"
+            SafeAreaEdges="Container" />
 
         <!-- Контент под header'ом -->
         <Grid RowDefinitions="Auto,*,Auto"
               Grid.Row="1"
               Padding="10"
               RowSpacing="20"
-              VerticalOptions="Fill">
+              VerticalOptions="Fill"
+              IsVisible="True">
 
             <!-- Кнопка назад и прогресс -->
             <Grid Grid.Row="0">
@@ -137,46 +150,45 @@
                         </Border.StrokeShape>
                     </Border>
                 </Grid>
-            </Grid>
 
-            <!-- Step 1 "Какой?" -->
-            <!-- Сетка всего контента (Без Нав/Топ бара) -->
-            <Grid IsVisible="False"
+        <!-- Step 1 "Какой?" -->
+        <!-- Сетка всего контента (Без Нав/Топ бара) -->
+        <Grid IsVisible="False"
             Grid.Row="1"
             Padding="10"
             RowSpacing="20"
             VerticalOptions="Fill">
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-                <!-- Бокс: Опрос и кнопка -->
-                <Grid Grid.Row="0"
+            <!-- Бокс: Опрос и кнопка -->
+            <Grid Grid.Row="0"
                 VerticalOptions="Fill">
 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Сетка: Опрос и Кнопка -->
+                <Grid IsVisible="True" Grid.Row="1" VerticalOptions="Fill">
+
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Сетка: Опрос и Кнопка -->
-                    <Grid IsVisible="True" Grid.Row="1" VerticalOptions="Fill">
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Блок выбора напитка -->
-                        <Grid Grid.Row="0"
+                    <!-- Блок выбора напитка -->
+                    <Grid Grid.Row="0"
                         RowDefinitions="Auto,Auto"
                         RowSpacing="20"
                         HorizontalOptions="Fill"
                         VerticalOptions="Center">
 
-                            <!-- Заголовок -->
-                            <Label Grid.Row="0"
+                        <!-- Заголовок -->
+                        <Label Grid.Row="0"
                             Text="Какой напиток&#10;вы пили?"
                             TextColor="{StaticResource InkColor}"
                             FontSize="32"
@@ -184,91 +196,91 @@
                             HorizontalOptions="Start"
                             VerticalOptions="Start" />
 
-                            <!-- Карточки -->
-                            <Grid Grid.Row="1"
+                        <!-- Карточки -->
+                        <Grid Grid.Row="1"
                                 ColumnDefinitions="*,*,*"
                                 ColumnSpacing="5"
                                 HorizontalOptions="Fill"
                                 VerticalOptions="Start">
 
-                                <!-- Кофе -->
-                                <Border
+                            <!-- Кофе -->
+                            <Border
                                 Grid.Column="0"
                                 Padding="16"
                                 BackgroundColor="{StaticResource White}"
                                 Stroke="{StaticResource DividerColor}"
                                 StrokeThickness="1">
 
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="20" />
-                                    </Border.StrokeShape>
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
 
-                                    <VerticalStackLayout
+                                <VerticalStackLayout
                                     Spacing="10"
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center">
 
-                                        <Border
+                                    <Border
                                         WidthRequest="56"
                                         HeightRequest="56"
                                         BackgroundColor="{StaticResource CaffeeIcoFill}"
                                         StrokeThickness="0">
 
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="28" />
-                                            </Border.StrokeShape>
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="28" />
+                                        </Border.StrokeShape>
 
-                                            <Image
+                                        <Image
                                             Source="coffee_ico.png"
                                             WidthRequest="32"
                                             HeightRequest="32"
                                             Aspect="AspectFit" />
-                                        </Border>
+                                    </Border>
 
-                                        <Label
+                                    <Label
                                         Text="Кофе"
                                         FontSize="16"
                                         FontAttributes="Bold"
                                         TextColor="{StaticResource InkColor}"
                                         HorizontalTextAlignment="Center" />
-                                    </VerticalStackLayout>
-                                </Border>
+                                </VerticalStackLayout>
+                            </Border>
 
-                                <!-- Энергетик -->
-                                <Border
+                            <!-- Энергетик -->
+                            <Border
                                 Grid.Column="1"
                                 Padding="16"
                                 BackgroundColor="{StaticResource White}"
                                 Stroke="{StaticResource DividerColor}"
                                 StrokeThickness="1">
 
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="20" />
-                                    </Border.StrokeShape>
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
 
-                                    <VerticalStackLayout
+                                <VerticalStackLayout
                                     Spacing="10"
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center">
 
-                                        <Border
+                                    <Border
                                         WidthRequest="56"
                                         HeightRequest="56"
                                         BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
                                         StrokeThickness="0">
 
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="28" />
-                                            </Border.StrokeShape>
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="28" />
+                                        </Border.StrokeShape>
 
-                                            <Image
+                                        <Image
                                             Source="energy_drink_ico.png"
                                             WidthRequest="32"
                                             HeightRequest="32"
                                             Aspect="AspectFit" />
-                                        </Border>
+                                    </Border>
 
-                                        <Label
+                                    <Label
                                         Text="Энергетик"
                                         FontSize="16"
                                         FontAttributes="Bold"
@@ -276,65 +288,65 @@
                                         HorizontalTextAlignment="Center"
                                         LineBreakMode="TailTruncation"
                                         MaxLines="1" />
-                                    </VerticalStackLayout>
-                                </Border>
+                                </VerticalStackLayout>
+                            </Border>
 
-                                <!-- Чай -->
-                                <Border
+                            <!-- Чай -->
+                            <Border
                                 Grid.Column="2"
                                 Padding="16"
                                 BackgroundColor="{StaticResource White}"
                                 Stroke="{StaticResource DividerColor}"
                                 StrokeThickness="1">
 
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="20" />
-                                    </Border.StrokeShape>
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
 
-                                    <VerticalStackLayout
+                                <VerticalStackLayout
                                     Spacing="10"
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center">
 
-                                        <Border
+                                    <Border
                                         WidthRequest="56"
                                         HeightRequest="56"
                                         BackgroundColor="{StaticResource TeaIcoFill}"
                                         StrokeThickness="0">
 
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="28" />
-                                            </Border.StrokeShape>
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="28" />
+                                        </Border.StrokeShape>
 
-                                            <Image
+                                        <Image
                                             Source="tea_ico.png"
                                             WidthRequest="32"
                                             HeightRequest="32"
                                             Aspect="AspectFit" />
-                                        </Border>
+                                    </Border>
 
-                                        <Label
+                                    <Label
                                         Text="Чай"
                                         FontSize="16"
                                         FontAttributes="Bold"
                                         TextColor="{StaticResource InkColor}"
                                         HorizontalTextAlignment="Center" />
-                                    </VerticalStackLayout>
-                                </Border>
-                            </Grid>
+                                </VerticalStackLayout>
+                            </Border>
                         </Grid>
+                    </Grid>
 
-                        <!-- Кнопка старого рецепта -->
-                        <Border Grid.Row="1"
+                    <!-- Кнопка старого рецепта -->
+                    <Border Grid.Row="1"
                             StrokeThickness="1"
                             Stroke="{StaticResource DividerColor}"
                             VerticalOptions="End">
 
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20" />
-                            </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
 
-                            <Button
+                        <Button
                             Text="Использовать старый рецепт"
                             TextColor="{StaticResource InkColor}"
                             BackgroundColor="{StaticResource White}"
@@ -343,29 +355,29 @@
                             FontAttributes="Bold"
                             HorizontalOptions="Fill"
                             VerticalOptions="Center" />
-                        </Border>
-                    </Grid>
+                    </Border>
                 </Grid>
             </Grid>
+        </Grid>
 
-            <!-- Step 2 "Где?"-->
-            <Grid IsVisible="False"
+        <!-- Step 2 "Где?"-->
+        <Grid IsVisible="False"
             Grid.Row="1"
             Padding="10"
             RowSpacing="20"
             VerticalOptions="Fill">
 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <Label Grid.Row="0"
+                <Label Grid.Row="0"
                     Text="Где вы пили кофе?"
                     TextColor="{StaticResource InkColor}"
                     FontAttributes="Bold"
@@ -373,867 +385,869 @@
                     HorizontalOptions="Start"
                     VerticalOptions="Start"/>
 
-                    <Grid Grid.Row="1" RowSpacing="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <Grid Grid.Row="1" RowSpacing="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                        <!-- Home -->
-                        <Border
+                    <!-- Home -->
+                    <Border
                         Grid.Column="0"
                         Padding="16"
                         BackgroundColor="{StaticResource White}"
                         Stroke="{StaticResource DividerColor}"
                         StrokeThickness="1">
 
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20" />
-                            </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
 
-                            <VerticalStackLayout
+                        <VerticalStackLayout
                                 Spacing="10"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center">
-
-                                <Border
+                            
+                            <Border
                                 WidthRequest="56"
                                 HeightRequest="56"
                                 BackgroundColor="{StaticResource CaffeeIcoFill}"
                                 StrokeThickness="0">
 
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="28" />
-                                    </Border.StrokeShape>
-
-                                    <Image
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="28" />
+                                </Border.StrokeShape>
+                                
+                                <Image
                                     Source="home_active_ico.png"
                                     WidthRequest="32"
                                     HeightRequest="32"
                                     Aspect="AspectFit" />
 
-                                </Border>
+                            </Border>
 
-                                <Label
+                            <Label
                                 Text="Дома"
                                 FontSize="16"
                                 FontAttributes="Bold"
                                 TextColor="{StaticResource InkColor}"
                                 HorizontalTextAlignment="Center" />
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <!-- Cafe -->
-                        <Border
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Cafe -->
+                    <Border
                         Grid.Column="1"
                         Padding="16"
                         BackgroundColor="{StaticResource White}"
                         Stroke="{StaticResource DividerColor}"
                         StrokeThickness="1">
 
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20" />
-                            </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
 
-                            <VerticalStackLayout
+                        <VerticalStackLayout
                                 Spacing="10"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center">
 
-                                <Border
+                            <Border
                                 WidthRequest="56"
                                 HeightRequest="56"
                                 BackgroundColor="{StaticResource TeaIcoFill}"
                                 StrokeThickness="0">
 
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="28" />
-                                    </Border.StrokeShape>
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="28" />
+                                </Border.StrokeShape>
 
-                                    <Image
+                                <Image
                                     Source="cafe_ico.png"
                                     WidthRequest="32"
                                     HeightRequest="32"
                                     Aspect="AspectFit" />
-                                </Border>
+                            </Border>
 
-                                <Label
+                            <Label
                                 Text="В кафе"
                                 FontSize="16"
                                 FontAttributes="Bold"
                                 TextColor="{StaticResource InkColor}"
                                 HorizontalTextAlignment="Center" />
-                            </VerticalStackLayout>
-                        </Border>
-                    </Grid>
+                        </VerticalStackLayout>
+                    </Border>
                 </Grid>
             </Grid>
+        </Grid>
 
-            <!-- Home Option 1 "Как заваривали?" -->
-            <Grid IsVisible="False"
+        <!-- Home Option 1 "Как заваривали?" -->
+        <Grid IsVisible="False"
                 Grid.Row="1"
                 Padding="10,10,10,0"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" VerticalOptions="End" RowSpacing="20">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="450"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" VerticalOptions="End" RowSpacing="20">
+                <!-- Заголовки -->
+                <Grid Grid.Row="0" RowSpacing="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="450"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Заголовки -->
-                    <Grid Grid.Row="0" RowSpacing="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <Label Grid.Row="0" 
+                    <Label Grid.Row="0" 
                             Text="Домашний кофе" 
                             TextColor="{StaticResource MutedTextColor}"
                             FontSize="16"/>
 
-                        <Label Grid.Row="1"
+                    <Label Grid.Row="1"
                             Text="Как вы заваривали?"
                             TextColor="{StaticResource InkColor}"
                             FontSize="32"
                             FontAttributes="Bold"/>
 
-                        <Label Grid.Row="2"
+                    <Label Grid.Row="2"
                             Text="Это повысит нашу точность до 75%!"
                             TextColor="{StaticResource InkColor}"
                             FontSize="16"/>
-                    </Grid>
+                </Grid>
 
-                    <!-- Скроллящийся список методов приготовления -->
-                    <ScrollView Grid.Row="1">
-                        <Grid RowSpacing="5" ColumnSpacing="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+                <!-- Скроллящийся список методов приготовления -->
+                <ScrollView Grid.Row="1">
+                    <Grid RowSpacing="5" ColumnSpacing="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                            <!-- Эспрессо машина -->
-                            <Border Grid.Column="0" Grid.Row="0"
+                    <!-- Эспрессо машина -->
+                    <Border Grid.Column="0" Grid.Row="0"
                         Padding="16"
                         BackgroundColor="{StaticResource White}"
                         Stroke="{StaticResource DividerColor}"
                         StrokeThickness="1">
 
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="20" />
-                                </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
 
-                                <VerticalStackLayout
+                        <VerticalStackLayout
                                 Spacing="10"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center">
-
-                                    <Border
+                            
+                            <Border
                                 WidthRequest="56"
                                 HeightRequest="56"
                                 BackgroundColor="{StaticResource CaffeeIcoFill}"
                                 StrokeThickness="0">
 
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="28" />
-                                        </Border.StrokeShape>
-
-                                        <Image
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="28" />
+                                </Border.StrokeShape>
+                                
+                                <Image
                                     Source="espresso_machine_ico.png"
                                     WidthRequest="32"
                                     HeightRequest="32"
                                     Aspect="AspectFit" />
 
-                                    </Border>
+                            </Border>
 
-                                    <Label
+                            <Label
                                 Text="Эспрессо-машина"
                                 FontSize="16"
                                 FontAttributes="Bold"
                                 TextColor="{StaticResource InkColor}"
                                 HorizontalTextAlignment="Center" />
-                                </VerticalStackLayout>
-                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
 
-                            <!-- Cold Brew -->
-                            <Border Grid.Column="1" Grid.Row="0"
+                    <!-- Cold Brew -->
+                    <Border Grid.Column="1" Grid.Row="0"
                         Padding="16"
                         BackgroundColor="{StaticResource White}"
                         Stroke="{StaticResource DividerColor}"
                         StrokeThickness="1">
 
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="20" />
-                                </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
 
-                                <VerticalStackLayout
+                        <VerticalStackLayout
                                 Spacing="10"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center">
-
-                                    <Border
+                            
+                            <Border
                                 WidthRequest="56"
                                 HeightRequest="56"
                                 BackgroundColor="{StaticResource CaffeeIcoFill}"
                                 StrokeThickness="0">
 
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="28" />
-                                        </Border.StrokeShape>
-
-                                        <Image
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="28" />
+                                </Border.StrokeShape>
+                                
+                                <Image
                                     Source="cold_brew_ico.png"
                                     WidthRequest="32"
                                     HeightRequest="32"
                                     Aspect="AspectFit" />
 
-                                    </Border>
+                            </Border>
 
-                                    <Label
+                            <Label
                                 Text="Cold brew"
                                 FontSize="16"
                                 FontAttributes="Bold"
                                 TextColor="{StaticResource InkColor}"
                                 HorizontalTextAlignment="Center" />
-                                </VerticalStackLayout>
-                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
 
-                            <!-- Гейзер -->
-                            <Border Grid.Column="0" Grid.Row="1"
+                    <!-- Гейзер -->
+                    <Border Grid.Column="0" Grid.Row="1"
                         Padding="16"
                         BackgroundColor="{StaticResource White}"
                         Stroke="{StaticResource DividerColor}"
                         StrokeThickness="1">
 
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="20" />
-                                </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
 
-                                <VerticalStackLayout
+                        <VerticalStackLayout
                                 Spacing="10"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center">
-
-                                    <Border
+                            
+                            <Border
                                 WidthRequest="56"
                                 HeightRequest="56"
                                 BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
                                 StrokeThickness="0">
 
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="28" />
-                                        </Border.StrokeShape>
-
-                                        <Image
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="28" />
+                                </Border.StrokeShape>
+                                
+                                <Image
                                     Source="gayzer_ico.png"
                                     WidthRequest="32"
                                     HeightRequest="32"
                                     Aspect="AspectFit" />
 
-                                    </Border>
+                            </Border>
 
-                                    <Label
+                            <Label
                                 Text="Гейзер"
                                 FontSize="16"
                                 FontAttributes="Bold"
                                 TextColor="{StaticResource InkColor}"
                                 HorizontalTextAlignment="Center" />
-                                </VerticalStackLayout>
-                            </Border>
-
-                            <!-- Френч пресс -->
-                            <Border Grid.Column="1" Grid.Row="1"
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Френч пресс -->
+                    <Border Grid.Column="1" Grid.Row="1"
                         Padding="16"
                         BackgroundColor="{StaticResource White}"
                         Stroke="{StaticResource DividerColor}"
                         StrokeThickness="1">
 
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="20" />
-                                </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
 
-                                <VerticalStackLayout
+                        <VerticalStackLayout
                                 Spacing="10"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center">
-
-                                    <Border
+                            
+                            <Border
                                 WidthRequest="56"
                                 HeightRequest="56"
                                 BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
                                 StrokeThickness="0">
 
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="28" />
-                                        </Border.StrokeShape>
-
-                                        <Image
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="28" />
+                                </Border.StrokeShape>
+                                
+                                <Image
                                     Source="french_ico.png"
                                     WidthRequest="32"
                                     HeightRequest="32"
                                     Aspect="AspectFit" />
 
-                                    </Border>
+                            </Border>
 
-                                    <Label
+                            <Label
                                 Text="Френч-пресс"
                                 FontSize="16"
                                 FontAttributes="Bold"
                                 TextColor="{StaticResource InkColor}"
                                 HorizontalTextAlignment="Center" />
-                                </VerticalStackLayout>
-                            </Border>
-
-                            <!-- Турка -->
-                            <Border Grid.Column="0" Grid.Row="2"
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Турка -->
+                    <Border Grid.Column="0" Grid.Row="2"
                         Padding="16"
                         BackgroundColor="{StaticResource White}"
                         Stroke="{StaticResource DividerColor}"
                         StrokeThickness="1">
 
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="20" />
-                                </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
 
-                                <VerticalStackLayout
+                        <VerticalStackLayout
                                 Spacing="10"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center">
-
-                                    <Border
+                            
+                            <Border
                                 WidthRequest="56"
                                 HeightRequest="56"
                                 BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
                                 StrokeThickness="0">
 
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="28" />
-                                        </Border.StrokeShape>
-
-                                        <Image
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="28" />
+                                </Border.StrokeShape>
+                                
+                                <Image
                                     Source="turka_ico.png"
                                     WidthRequest="32"
                                     HeightRequest="32"
                                     Aspect="AspectFit" />
 
-                                    </Border>
+                            </Border>
 
-                                    <Label
+                            <Label
                                 Text="Турка"
                                 FontSize="16"
                                 FontAttributes="Bold"
                                 TextColor="{StaticResource InkColor}"
                                 HorizontalTextAlignment="Center" />
-                                </VerticalStackLayout>
-                            </Border>
-
-                            <!-- Воронка -->
-                            <Border Grid.Column="1" Grid.Row="2"
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Воронка -->
+                    <Border Grid.Column="1" Grid.Row="2"
                         Padding="16"
                         BackgroundColor="{StaticResource White}"
                         Stroke="{StaticResource DividerColor}"
                         StrokeThickness="1">
 
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="20" />
-                                </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
 
-                                <VerticalStackLayout
+                        <VerticalStackLayout
                                 Spacing="10"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center">
-
-                                    <Border
+                            
+                            <Border
                                 WidthRequest="56"
                                 HeightRequest="56"
                                 BackgroundColor="{StaticResource TeaIcoFill}"
                                 StrokeThickness="0">
 
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="28" />
-                                        </Border.StrokeShape>
-
-                                        <Image
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="28" />
+                                </Border.StrokeShape>
+                                
+                                <Image
                                     Source="funnel_ico.png"
                                     WidthRequest="32"
                                     HeightRequest="32"
                                     Aspect="AspectFit" />
 
-                                    </Border>
+                            </Border>
 
-                                    <Label
+                            <Label
                                 Text="Воронка"
                                 FontSize="16"
                                 FontAttributes="Bold"
                                 TextColor="{StaticResource InkColor}"
                                 HorizontalTextAlignment="Center" />
-                                </VerticalStackLayout>
-                            </Border>
-
-                            <!-- Капсульная машина -->
-                            <Border Grid.Column="0" Grid.Row="3"
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Капсульная машина -->
+                    <Border Grid.Column="0" Grid.Row="3"
                         Padding="16"
                         BackgroundColor="{StaticResource White}"
                         Stroke="{StaticResource DividerColor}"
                         StrokeThickness="1">
 
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="20" />
-                                </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
 
-                                <VerticalStackLayout
+                        <VerticalStackLayout
                                 Spacing="10"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center">
-
-                                    <Border
+                            
+                            <Border
                                 WidthRequest="56"
                                 HeightRequest="56"
                                 BackgroundColor="{StaticResource TeaIcoFill}"
                                 StrokeThickness="0">
 
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="28" />
-                                        </Border.StrokeShape>
-
-                                        <Image
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="28" />
+                                </Border.StrokeShape>
+                                
+                                <Image
                                     Source="capsul_ico.png"
                                     WidthRequest="32"
                                     HeightRequest="32"
                                     Aspect="AspectFit" />
 
-                                    </Border>
+                            </Border>
 
-                                    <Label
+                            <Label
                                 Text="Капсульная машина"
                                 FontSize="16"
                                 FontAttributes="Bold"
                                 TextColor="{StaticResource InkColor}"
                                 HorizontalTextAlignment="Center" />
-                                </VerticalStackLayout>
-                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
 
-                        </Grid>
-                    </ScrollView>
-                </Grid>
+                    </Grid>
+                </ScrollView>
             </Grid>
+        </Grid>
 
-            <!-- Home Option 2 "Сколько кофе" -->
-            <Grid IsVisible="False"
+        <!-- Home Option 2 "Сколько кофе" -->
+        <Grid IsVisible="False"
                 Grid.Row="1"
                 Padding="10,10,10,0"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
+                <!-- Заголовки -->
+                <Grid Grid.Row="0" RowSpacing="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Заголовки -->
-                    <Grid Grid.Row="0" RowSpacing="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <Label Grid.Row="0" 
+                    <Label Grid.Row="0" 
                             Text="Домашний кофе" 
                             TextColor="{StaticResource MutedTextColor}"
                             FontSize="16"/>
 
-                        <Label Grid.Row="1"
+                    <Label Grid.Row="1"
                             Text="Сколько кофе использовали?"
                             TextColor="{StaticResource InkColor}"
                             FontSize="32"
                             FontAttributes="Bold"/>
 
-                        <Label Grid.Row="2"
+                    <Label Grid.Row="2"
                             Text="Можно примерно, это не проблема"
                             TextColor="{StaticResource InkColor}"
                             FontSize="16"/>
-                    </Grid>
+                </Grid>
 
-                    <!-- Варианты выбора -->
-                    <Grid Grid.Row="1" RowSpacing="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                <!-- Варианты выбора -->
+                <Grid Grid.Row="1" RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                        <Border Grid.Row="0"
+                    <Border Grid.Row="0"
                             Stroke="{StaticResource DividerColor}"
                             StrokeThickness="1"
                             Padding="16,12"
                             BackgroundColor="{StaticResource White}">
 
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="16" />
-                            </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16" />
+                        </Border.StrokeShape>
 
-                            <Entry Placeholder="Знаю граммы"
+                        <Entry Placeholder="Знаю граммы"
                                 BackgroundColor="{StaticResource White}"
                                 FontSize="16" 
                                 Keyboard="Numeric"
                                 MaxLength="3"
                                 ClearButtonVisibility="WhileEditing"
                                 ReturnType="Next"/>
-                        </Border>
-
-                        <Border Grid.Row="1" Stroke="{StaticResource DividerColor}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20"/>
-                            </Border.StrokeShape>
-
-                            <Button Text="Одна ложка"
+                    </Border>
+                    
+                    <Border Grid.Row="1" Stroke="{StaticResource DividerColor}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        
+                        <Button Text="Одна ложка"
                             BackgroundColor="{StaticResource White}"
                             HorizontalOptions="Fill"
                             TextColor="{StaticResource InkColor}"
                             Padding="0,25"
                             FontSize="16"/>
-                        </Border>
-
-                        <Border Grid.Row="2" Stroke="{StaticResource DividerColor}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20"/>
-                            </Border.StrokeShape>
-
-                            <Button Text="Две ложки"
+                    </Border>
+                
+                    <Border Grid.Row="2" Stroke="{StaticResource DividerColor}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        
+                        <Button Text="Две ложки"
                             BackgroundColor="{StaticResource White}"
                             HorizontalOptions="Fill"
                             TextColor="{StaticResource InkColor}"
                             Padding="0,25"
                             FontSize="16"/>
-                        </Border>
+                    </Border>
 
-                        <Border Grid.Row="3" Stroke="{StaticResource DividerColor}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20"/>
-                            </Border.StrokeShape>
-
-                            <Button Text="Больше?"
+                    <Border Grid.Row="3" Stroke="{StaticResource DividerColor}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        
+                        <Button Text="Больше?"
                             BackgroundColor="{StaticResource White}"
                             HorizontalOptions="Fill"
                             TextColor="{StaticResource InkColor}"
                             Padding="0,25"
                             FontSize="16"/>
-                        </Border>
-                    </Grid>
-
+                    </Border>
                 </Grid>
-            </Grid>
 
-            <!-- Home Option 3 "Сколько чашек" -->
-            <Grid IsVisible="False"
+            </Grid>
+        </Grid>
+
+        <!-- Home Option 3 "Сколько чашек" -->
+        <Grid IsVisible="False"
                 Grid.Row="1"
                 Padding="10,10,10,0"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
+                <!-- Заголовки -->
+                <Grid Grid.Row="0" RowSpacing="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Заголовки -->
-                    <Grid Grid.Row="0" RowSpacing="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <Label Grid.Row="0" 
+                    <Label Grid.Row="0" 
                             Text="Домашний кофе" 
                             TextColor="{StaticResource MutedTextColor}"
                             FontSize="16"/>
 
-                        <Label Grid.Row="1"
+                    <Label Grid.Row="1"
                             Text="Сколько чашек получилось?"
                             TextColor="{StaticResource InkColor}"
                             FontSize="32"
                             FontAttributes="Bold"/>
 
-                        <Label Grid.Row="2"
+                    <Label Grid.Row="2"
                             Text="Он был вкусным?"
                             TextColor="{StaticResource InkColor}"
                             FontSize="16"/>
-                    </Grid>
-
-                    <!-- Варианты выбора -->
-                    <Grid Grid.Row="1" RowSpacing="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <Border Grid.Row="0" Stroke="{StaticResource DividerColor}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20"/>
-                            </Border.StrokeShape>
-
-                            <Button Text="Одна чашка"
-                            BackgroundColor="{StaticResource White}"
-                            HorizontalOptions="Fill"
-                            TextColor="{StaticResource InkColor}"
-                            Padding="0,25"
-                            FontSize="16"/>
-                        </Border>
-
-                        <Border Grid.Row="1" Stroke="{StaticResource DividerColor}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20"/>
-                            </Border.StrokeShape>
-
-                            <Button Text="Две чашки"
-                            BackgroundColor="{StaticResource White}"
-                            HorizontalOptions="Fill"
-                            TextColor="{StaticResource InkColor}"
-                            Padding="0,25"
-                            FontSize="16"/>
-                        </Border>
-
-                        <Border Grid.Row="2" Stroke="{StaticResource DividerColor}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20"/>
-                            </Border.StrokeShape>
-
-                            <Button Text="Больше?"
-                            BackgroundColor="{StaticResource White}"
-                            HorizontalOptions="Fill"
-                            TextColor="{StaticResource InkColor}"
-                            Padding="0,25"
-                            FontSize="16"/>
-                        </Border>
-                    </Grid>
-
-
                 </Grid>
-            </Grid>
 
-            <!-- Home Option 4 "Какой кофе?" -->
-            <Grid IsVisible="False"
+                <!-- Варианты выбора -->
+                <Grid Grid.Row="1" RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                
+                    <Border Grid.Row="0" Stroke="{StaticResource DividerColor}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        
+                        <Button Text="Одна чашка"
+                            BackgroundColor="{StaticResource White}"
+                            HorizontalOptions="Fill"
+                            TextColor="{StaticResource InkColor}"
+                            Padding="0,25"
+                            FontSize="16"/>
+                    </Border>
+
+                    <Border Grid.Row="1" Stroke="{StaticResource DividerColor}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        
+                        <Button Text="Две чашки"
+                            BackgroundColor="{StaticResource White}"
+                            HorizontalOptions="Fill"
+                            TextColor="{StaticResource InkColor}"
+                            Padding="0,25"
+                            FontSize="16"/>
+                    </Border>
+
+                    <Border Grid.Row="2" Stroke="{StaticResource DividerColor}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        
+                        <Button Text="Больше?"
+                            BackgroundColor="{StaticResource White}"
+                            HorizontalOptions="Fill"
+                            TextColor="{StaticResource InkColor}"
+                            Padding="0,25"
+                            FontSize="16"/>
+                    </Border>
+                </Grid>
+            
+
+            </Grid>
+        </Grid>
+
+        <!-- Home Option 4 "Какой кофе?" -->
+        <Grid IsVisible="False"
                 Grid.Row="1"
                 Padding="10,10,10,0"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
+                <!-- Заголовки -->
+                <Grid Grid.Row="0" RowSpacing="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Заголовки -->
-                    <Grid Grid.Row="0" RowSpacing="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <Label Grid.Row="0" 
+                    <Label Grid.Row="0" 
                             Text="Домашний кофе" 
                             TextColor="{StaticResource MutedTextColor}"
                             FontSize="16"/>
 
-                        <Label Grid.Row="1"
+                    <Label Grid.Row="1"
                             Text="Какой кофе?"
                             TextColor="{StaticResource InkColor}"
                             FontSize="32"
                             FontAttributes="Bold"/>
 
-                        <Label Grid.Row="2"
+                    <Label Grid.Row="2"
                             Text="Вкусный"
                             TextColor="{StaticResource InkColor}"
                             FontSize="16"/>
-                    </Grid>
-
-                    <!-- Варианты выбора -->
-                    <Grid Grid.Row="1" RowSpacing="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <Border Grid.Row="0" Stroke="{StaticResource DividerColor}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20"/>
-                            </Border.StrokeShape>
-
-                            <Button Text="Арабика"
-                            BackgroundColor="{StaticResource White}"
-                            HorizontalOptions="Fill"
-                            TextColor="{StaticResource InkColor}"
-                            Padding="0,25"
-                            FontSize="16"/>
-                        </Border>
-
-                        <Border Grid.Row="1" Stroke="{StaticResource DividerColor}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20"/>
-                            </Border.StrokeShape>
-
-                            <Button Text="Робутса"
-                            BackgroundColor="{StaticResource White}"
-                            HorizontalOptions="Fill"
-                            TextColor="{StaticResource InkColor}"
-                            Padding="0,25"
-                            FontSize="16"/>
-                        </Border>
-                    </Grid>
-
-
                 </Grid>
-            </Grid>
 
-            <!-- Результат! -->
-            <Grid IsVisible="False"
+                <!-- Варианты выбора -->
+                <Grid Grid.Row="1" RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                
+                    <Border Grid.Row="0" Stroke="{StaticResource DividerColor}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        
+                        <Button Text="Арабика"
+                            BackgroundColor="{StaticResource White}"
+                            HorizontalOptions="Fill"
+                            TextColor="{StaticResource InkColor}"
+                            Padding="0,25"
+                            FontSize="16"/>
+                    </Border>
+
+                    <Border Grid.Row="1" Stroke="{StaticResource DividerColor}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        
+                        <Button Text="Робутса"
+                            BackgroundColor="{StaticResource White}"
+                            HorizontalOptions="Fill"
+                            TextColor="{StaticResource InkColor}"
+                            Padding="0,25"
+                            FontSize="16"/>
+                    </Border>
+                </Grid>
+            
+
+            </Grid>
+        </Grid>
+
+        <!-- Результат! --> 
+        <Grid IsVisible="False"
                 Grid.Row="1"
                 Padding="10,10,10,0"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
+                <!-- Заголовки -->
+                <Grid Grid.Row="0" RowSpacing="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Заголовки -->
-                    <Grid Grid.Row="0" RowSpacing="5">
+                    <Label Grid.Row="0" 
+                            Text="Домашний кофе" 
+                            TextColor="{StaticResource MutedTextColor}"
+                            FontSize="16"/>
+
+                    <Label Grid.Row="1"
+                            Text="Результат!"
+                            TextColor="{StaticResource InkColor}"
+                            FontSize="32"
+                            FontAttributes="Bold"/>
+
+                    <Label Grid.Row="2"
+                            Text="Он вас удивил?"
+                            TextColor="{StaticResource InkColor}"
+                            FontSize="16"/>
+                </Grid>
+
+                <!-- Суммирующий блок -->
+                <Border Grid.Row="1"
+                        Background="{StaticResource White}"
+                        Stroke="{StaticResource DividerColor}"
+                        Padding="25">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+
+                    <Grid RowSpacing="20">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Row="0" 
-                            Text="Домашний кофе" 
-                            TextColor="{StaticResource MutedTextColor}"
-                            FontSize="16"/>
-
-                        <Label Grid.Row="1"
-                            Text="Результат!"
-                            TextColor="{StaticResource InkColor}"
-                            FontSize="32"
-                            FontAttributes="Bold"/>
-
-                        <Label Grid.Row="2"
-                            Text="Он вас удивил?"
-                            TextColor="{StaticResource InkColor}"
-                            FontSize="16"/>
-                    </Grid>
-
-                    <!-- Суммирующий блок -->
-                    <Border Grid.Row="1"
-                        Background="{StaticResource White}"
-                        Stroke="{StaticResource DividerColor}"
-                        Padding="25">
-
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20"/>
-                        </Border.StrokeShape>
-
-                        <Grid RowSpacing="20">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-
-                            <!-- Заголовок -->
-                            <Label Grid.Row="0"
+                        <!-- Заголовок -->
+                        <Label Grid.Row="0"
                             Text="Кофе"
                             TextColor="{StaticResource InkColor}"
                             FontAttributes="Bold"
                             FontSize="24"/>
 
-                            <!-- Список -->
-                            <VerticalStackLayout Grid.Row="1" Spacing="10">
-                                <!-- Параметр -->
-                                <Label Text="Эспрессо-машина" FontSize="16"/>
-
-                                <!-- Параметр + значение -->
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                                    <Label Grid.Column="0" Text="Одна ложка" FontSize="16"/>
-                                    <Label Grid.Column="1" Text="8г" FontSize="16" TextColor="#999999"/>
-                                </Grid>
-
-                                <!-- Параметр -->
-                                <Label Text="Одна чашка" FontSize="16"/>
-
-                                <!-- Параметр + значение -->
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                                    <Label Grid.Column="0" Text="Арабика" FontSize="16"/>
-                                    <Label Grid.Column="1" Text="×1" FontSize="16" TextColor="#999999"/>
-                                </Grid>
-                            </VerticalStackLayout>
-
-                            <!-- Итог -->
-                            <Grid Grid.Column="0" Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                                <Label Grid.Column="0" Text="Итого:" FontSize="24"/>
-                                <Label Grid.Column="1" Text="+120мг" FontSize="24"/>
+                        <!-- Список -->
+                        <VerticalStackLayout Grid.Row="1" Spacing="10"> 
+                            <!-- Параметр -->
+                            <Label Text="Эспрессо-машина" FontSize="16"/>
+                            
+                            <!-- Параметр + значение -->
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <Label Grid.Column="0" Text="Одна ложка" FontSize="16"/>
+                                <Label Grid.Column="1" Text="8г" FontSize="16" TextColor="#999999"/>
                             </Grid>
-                        </Grid>
-                    </Border>
+                            
+                            <!-- Параметр -->
+                            <Label Text="Одна чашка" FontSize="16"/>
 
-                    <!-- Изменить данные -->
-                    <Grid Grid.Row="2">
-                        <VerticalStackLayout VerticalOptions="Center" Spacing="10">
-                            <Button
+                            <!-- Параметр + значение -->
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <Label Grid.Column="0" Text="Арабика" FontSize="16"/>
+                                <Label Grid.Column="1" Text="×1" FontSize="16" TextColor="#999999"/>
+                            </Grid>
+                        </VerticalStackLayout>
+
+                        <!-- Итог -->
+                        <Grid Grid.Column="0" Grid.Row="2" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <Label Grid.Column="0" Text="Итого:" FontSize="24"/>
+                            <Label Grid.Column="1" Text="+120мг" FontSize="24"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+                
+                <!-- Изменить данные -->
+                <Grid Grid.Row="2">
+                    <VerticalStackLayout VerticalOptions="Center" Spacing="10">
+                        <Button
                             MaximumHeightRequest="56"
                             Padding="25"
+                            BackgroundColor="{StaticResource White}"
+                            TextColor="{StaticResource InkColor}"
                             FontSize="16"
                             BorderWidth="0"
                             CornerRadius="20"
                             Text="Изменить данные"
                             HorizontalOptions="Fill"/>
 
-                            <Label Text="или"
+                        <Label Text="или"
                             HorizontalOptions="Center"
                             HorizontalTextAlignment="Center"
                             FontSize="16"
                             TextColor="{StaticResource MutedTextColor}"/>
 
-                            <Button
+                        <Button
                             MaximumHeightRequest="56"
                             Padding="25"
                             BackgroundColor="{StaticResource InkColor}"
@@ -1244,63 +1258,63 @@
                             Text="Сохранить и выпить"
                             HorizontalOptions="Fill"/>
 
-                        </VerticalStackLayout>
-                    </Grid>
+                    </VerticalStackLayout>
                 </Grid>
             </Grid>
-
-            <!-- Cafe Option "Какой?" -->
-            <Grid IsVisible="False"
+        </Grid>
+        
+        <!-- Cafe Option "Какой?" -->
+        <Grid IsVisible="False"
                 Grid.Row="1"
                 Padding="10,10,10,0"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
+            <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Заголовки -->
+                <Grid Grid.Row="0" RowSpacing="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Заголовки -->
-                    <Grid Grid.Row="0" RowSpacing="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <Label Grid.Row="0" 
+                    <Label Grid.Row="0" 
                             Text="Кофе вне дома" 
                             TextColor="{StaticResource MutedTextColor}"
                             FontSize="16"/>
 
-                        <Label Grid.Row="1"
+                    <Label Grid.Row="1"
                             Text="Какой вид напитка вы пили?"
                             TextColor="{StaticResource InkColor}"
                             FontSize="32"
                             FontAttributes="Bold"/>
 
-                        <Label Grid.Row="2"
+                    <Label Grid.Row="2"
                             Text="Он вас порадовал?"
                             TextColor="{StaticResource InkColor}"
                             FontSize="16"/>
-                    </Grid>
-
-                    <!-- Блочный список видов напитка -->
-                    <FlexLayout Grid.Row="1"
+                </Grid>
+            
+                <!-- Блочный список видов напитка -->
+                <FlexLayout Grid.Row="1"
                             Wrap="Wrap"
                             Direction="Row"
                             JustifyContent="Start"
                             AlignContent="Start"
                             AlignItems="Start">
-
-                        <Button Text="Еспрессо"
+                    
+                    <Button Text="Еспрессо"
                             Margin="2"
                             CornerRadius="15"
                             BackgroundColor="{StaticResource White}"
@@ -1309,7 +1323,7 @@
                             BorderWidth="1"
                             BorderColor="{StaticResource DividerColor}"/>
 
-                        <Button Text="Макиато"
+                    <Button Text="Макиато"
                             Margin="2"
                             CornerRadius="15"
                             BackgroundColor="{StaticResource White}"
@@ -1318,7 +1332,7 @@
                             BorderWidth="1"
                             BorderColor="{StaticResource DividerColor}"/>
 
-                        <Button Text="Ристретто"
+                    <Button Text="Ристретто"
                             Margin="2"
                             CornerRadius="15"
                             BackgroundColor="{StaticResource White}"
@@ -1327,7 +1341,7 @@
                             BorderWidth="1"
                             BorderColor="{StaticResource DividerColor}"/>
 
-                        <Button Text="Американо"
+                    <Button Text="Американо"
                             Margin="2"
                             CornerRadius="15"
                             BackgroundColor="{StaticResource White}"
@@ -1336,7 +1350,7 @@
                             BorderWidth="1"
                             BorderColor="{StaticResource DividerColor}"/>
 
-                        <Button Text="Капучино"
+                    <Button Text="Капучино"
                             Margin="2"
                             CornerRadius="15"
                             BackgroundColor="{StaticResource White}"
@@ -1345,7 +1359,7 @@
                             BorderWidth="1"
                             BorderColor="{StaticResource DividerColor}"/>
 
-                        <Button Text="Латте"
+                    <Button Text="Латте"
                             Margin="2"
                             CornerRadius="15"
                             BackgroundColor="{StaticResource White}"
@@ -1354,7 +1368,7 @@
                             BorderWidth="1"
                             BorderColor="{StaticResource DividerColor}"/>
 
-                        <Button Text="Флэт-Уайт"
+                    <Button Text="Флэт-Уайт"
                             Margin="2"
                             CornerRadius="15"
                             BackgroundColor="{StaticResource White}"
@@ -1363,7 +1377,7 @@
                             BorderWidth="1"
                             BorderColor="{StaticResource DividerColor}"/>
 
-                        <Button Text="Мокко"
+                    <Button Text="Мокко"
                             Margin="2"
                             CornerRadius="15"
                             BackgroundColor="{StaticResource White}"
@@ -1372,7 +1386,7 @@
                             BorderWidth="1"
                             BorderColor="{StaticResource DividerColor}"/>
 
-                        <Button Text="Доппио"
+                    <Button Text="Доппио"
                             Margin="2"
                             CornerRadius="15"
                             BackgroundColor="{StaticResource White}"
@@ -1381,7 +1395,7 @@
                             BorderWidth="1"
                             BorderColor="{StaticResource DividerColor}"/>
 
-                        <Button Text="Аффогато"
+                    <Button Text="Аффогато"
                             Margin="2"
                             CornerRadius="15"
                             BackgroundColor="{StaticResource White}"
@@ -1390,139 +1404,139 @@
                             BorderWidth="1"
                             BorderColor="{StaticResource DividerColor}"/>
 
-                    </FlexLayout>
-                </Grid>
+                </FlexLayout>
             </Grid>
-
-            <!-- Объем -->
-            <Grid IsVisible="True"
+        </Grid>
+        
+        <!-- Объем -->
+        <Grid IsVisible="True"
                 Grid.Row="1"
                 Padding="10,10,10,0"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
+            <Grid Grid.Row="0" VerticalOptions="Center" RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Заголовки -->
+                <Grid Grid.Row="0" RowSpacing="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Заголовки -->
-                    <Grid Grid.Row="0" RowSpacing="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <Label Grid.Row="0" 
+                    <Label Grid.Row="0" 
                             Text="Кофе вне дома" 
                             TextColor="{StaticResource MutedTextColor}"
                             FontSize="16"/>
 
-                        <Label Grid.Row="1"
+                    <Label Grid.Row="1"
                             Text="Объем"
                             TextColor="{StaticResource InkColor}"
                             FontSize="32"
                             FontAttributes="Bold"/>
 
-                        <Label Grid.Row="2"
+                    <Label Grid.Row="2"
                             Text="Размер имеет значение!"
                             TextColor="{StaticResource InkColor}"
                             FontSize="16"/>
-                    </Grid>
+                </Grid>
 
-                    <!-- Варианты выбора -->
-                    <Grid Grid.Row="1" RowSpacing="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                <!-- Варианты выбора -->
+                <Grid Grid.Row="1" RowSpacing="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                        <Border Grid.Row="0"
+                    <Border Grid.Row="0"
                             Stroke="{StaticResource DividerColor}"
                             StrokeThickness="1"
                             Padding="16,12"
                             BackgroundColor="{StaticResource White}">
 
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="16" />
-                            </Border.StrokeShape>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16" />
+                        </Border.StrokeShape>
 
-                            <Entry Placeholder="Знаю миллилитры"
+                        <Entry Placeholder="Знаю миллилитры"
                                 BackgroundColor="{StaticResource White}"
                                 FontSize="16" 
                                 Keyboard="Numeric"
                                 MaxLength="3"
                                 ClearButtonVisibility="WhileEditing"
                                 ReturnType="Next"/>
-                        </Border>
-
-                        <Border Grid.Row="1" Stroke="{StaticResource DividerColor}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20"/>
-                            </Border.StrokeShape>
-
-                            <Button Text="Маленький"
+                    </Border>
+                    
+                    <Border Grid.Row="1" Stroke="{StaticResource DividerColor}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        
+                        <Button Text="Маленький"
                             BackgroundColor="{StaticResource White}"
                             HorizontalOptions="Fill"
                             TextColor="{StaticResource InkColor}"
                             Padding="0,25"
                             FontSize="16"/>
-                        </Border>
-
-                        <Border Grid.Row="2" Stroke="{StaticResource DividerColor}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20"/>
-                            </Border.StrokeShape>
-
-                            <Button Text="Средний"
+                    </Border>
+                
+                    <Border Grid.Row="2" Stroke="{StaticResource DividerColor}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        
+                        <Button Text="Средний"
                             BackgroundColor="{StaticResource White}"
                             HorizontalOptions="Fill"
                             TextColor="{StaticResource InkColor}"
                             Padding="0,25"
                             FontSize="16"/>
-                        </Border>
+                    </Border>
 
-                        <Border Grid.Row="3" Stroke="{StaticResource DividerColor}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20"/>
-                            </Border.StrokeShape>
-
-                            <Button Text="Большой"
+                    <Border Grid.Row="3" Stroke="{StaticResource DividerColor}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        
+                        <Button Text="Большой"
                             BackgroundColor="{StaticResource White}"
                             HorizontalOptions="Fill"
                             TextColor="{StaticResource InkColor}"
                             Padding="0,25"
                             FontSize="16"/>
-                        </Border>
-                    </Grid>
+                    </Border>
                 </Grid>
             </Grid>
+        </Grid>
 
-            <!-- Nav Bar -->
-            <controls:BottomNavigationBar Grid.Row="2"
+        <!-- Nav Bar -->
+        <controls:BottomNavigationBar Grid.Row="2"
             HorizontalOptions="Fill"
             VerticalOptions="End"
             BindingContext="{Binding Navigation}"
             SafeAreaEdges="Container">
 
-                <controls:BottomNavigationBar.Shadow>
-                    <Shadow
+            <controls:BottomNavigationBar.Shadow>
+                <Shadow
                     Brush="#40000000"
                     Offset="0,-6"
                     Radius="14"
                     Opacity="0.45" />
-                </controls:BottomNavigationBar.Shadow>
+            </controls:BottomNavigationBar.Shadow>
 
-            </controls:BottomNavigationBar>
-        </Grid>
+        </controls:BottomNavigationBar>
     </Grid>
+
 </ContentPage>
