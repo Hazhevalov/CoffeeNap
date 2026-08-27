@@ -111,7 +111,7 @@
                     <Button
                         Padding="0"
                         AutomationId="StartOnboardingButton"
-                        BackgroundColor="{StaticResource InkColor}"
+                        BackgroundColor="#01000000"
                         BorderWidth="0"
                         Clicked="OnStartButtonClicked"
                         CornerRadius="18"

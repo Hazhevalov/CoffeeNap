@@ -7,53 +7,36 @@
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:MainPageViewModel"
     BackgroundColor="{StaticResource PageBackgroundColor}"
-    SafeAreaEdges="None"
+    SafeAreaEdges="All"
     Shell.NavBarIsVisible="False">
 
     <!--
-        ВАЖНО:
-        Вся страница работает edge-to-edge.
-        Поэтому системный статус-бар и Home Indicator
-        становятся частью нашей визуальной области.
+        x:DataType включает компилируемые привязки к MainPageViewModel.
+        Корневая сетка отделяет растягиваемую область страницы от нижней навигации.
     -->
-    <Grid
-        SafeAreaEdges="None"
-        RowSpacing="0">
-
-        <!-- ====================================================== -->
-        <!-- ОСНОВНОЙ КОНТЕНТ                                       -->
-        <!-- ====================================================== -->
+    <Grid RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
         <Grid
             x:Name="PageContentArea"
             Grid.Row="0"
             BackgroundColor="{StaticResource PageBackgroundColor}"
-            IsClippedToBounds="True"
-            SafeAreaEdges="None">
+            IsClippedToBounds="True">
 
-            <!--
-                Неподвижная верхняя часть:
-                профиль + дневная норма + источники кофеина.
-            -->
+            <!-- Неподвижная верхняя часть: профиль, дневная норма и статистика. -->
             <VerticalStackLayout
                 x:Name="FixedTopContent"
                 Padding="0,0,0,12"
                 Spacing="0"
                 VerticalOptions="Start">
 
-                <!-- ================================================== -->
-                <!-- HEADER                                              -->
-                <!-- ================================================== -->
-
                 <controls:MainHeaderView
                     HeightRequest="86"
-                    BindingContext="{Binding Header}"
-                    SafeAreaEdges="Container" />
-
-
-                <!-- ================================================== -->
-                <!-- ДНЕВНАЯ НОРМА КОФЕИНА                               -->
-                <!-- ================================================== -->
+                    Grid.Row="0"
+                    BindingContext="{Binding Header}" />
 
                 <Border
                     Margin="8,10,8,10"
@@ -61,37 +44,29 @@
                     Padding="13"
                     BackgroundColor="{StaticResource InkColor}"
                     StrokeThickness="0">
-
+                    
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="16" />
                     </Border.StrokeShape>
-
+                    
                     <Border.Shadow>
-                        <Shadow
-                            Brush="{StaticResource CardShadowBrush}"
-                            Offset="0,2"
-                            Opacity="0.16"
-                            Radius="6" />
+                        <Shadow Brush="{StaticResource CardShadowBrush}" Offset="0,2" Opacity="0.16" Radius="6" />
                     </Border.Shadow>
 
-                    <Grid RowSpacing="20">
-
+                    <Grid RowSpacing="7">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-
-                        <!-- Заголовок -->
-
                         <Grid ColumnSpacing="8">
-
+                            
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="22" />
                             </Grid.ColumnDefinitions>
-
+                            
                             <Label
                                 FontFamily="Inter"
                                 FontSize="18"
@@ -99,7 +74,7 @@
                                 LineHeight="1.1"
                                 Text="Дневная&#10;норма кофеина"
                                 TextColor="{StaticResource SurfaceColor}" />
-
+                            
                             <Image
                                 Grid.Column="1"
                                 WidthRequest="15"
@@ -107,16 +82,12 @@
                                 HorizontalOptions="End"
                                 VerticalOptions="Center"
                                 Source="more_ico.png" />
-
+                            
                         </Grid>
 
-
-                        <!-- Progress -->
-
-                        <Grid
-                            Grid.Row="1"
-                            ColumnSpacing="7">
-
+                        <Grid Grid.Row="1" ColumnSpacing="7">
+                            
+                            <!-- Progress принимает значение 0..1; лимит справа остаётся числом в мг. -->
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
@@ -128,7 +99,7 @@
                                 Progress="{Binding DailyProgress}"
                                 ProgressColor="{Binding DailyProgressColor}"
                                 TrackColor="{StaticResource ProgressTrackColor}" />
-
+                            
                             <Label
                                 Grid.Column="1"
                                 FontFamily="Inter"
@@ -136,81 +107,66 @@
                                 Text="{Binding DailyCaffeineLimit, StringFormat='{0:0}мг'}"
                                 TextColor="{StaticResource MutedTextColor}"
                                 VerticalOptions="Center" />
-
+                            
                         </Grid>
-
-
-                        <!-- Текущее количество -->
 
                         <Label
                             Grid.Row="2"
                             FontFamily="Inter"
-                            LineHeight="1"
+                            LineHeight="3"
                             TextColor="{StaticResource SurfaceColor}"
                             VerticalTextAlignment="End">
-
+                            
+                            <!-- FormattedString позволяет оформить число и единицу разными размерами. -->
                             <Label.FormattedText>
-
                                 <FormattedString>
-
+                                    
                                     <Span
                                         FontSize="31"
                                         FontAttributes="Bold"
                                         Text="{Binding CurrentCaffeine, StringFormat='{0:0}'}" />
-
+                                    
                                     <Span
                                         FontSize="16"
                                         FontAttributes="Bold"
                                         Text=" миллиграмм" />
-
+                                    
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
                     </Grid>
                 </Border>
 
-
-                <!-- ================================================== -->
-                <!-- ИСТОЧНИКИ КОФЕИНА                                   -->
-                <!-- ================================================== -->
-
+                <!-- Карточка распределения всех записей по типам напитка. -->
                 <Border
                     Margin="8,0"
                     Padding="13,11,13,12"
                     BackgroundColor="{StaticResource SurfaceColor}"
                     Stroke="{StaticResource DividerColor}"
                     StrokeThickness="1">
-
+                    
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="16" />
                     </Border.StrokeShape>
-
+                    
                     <Border.Shadow>
-                        <Shadow
-                            Brush="{StaticResource CardShadowBrush}"
-                            Offset="0,1"
-                            Opacity="0.08"
-                            Radius="4" />
+                        <Shadow Brush="{StaticResource CardShadowBrush}" Offset="0,1" Opacity="0.08" Radius="4" />
                     </Border.Shadow>
 
-                    <Grid RowSpacing="20">
-
+                    <Grid RowSpacing="14">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="20" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-
-                        <!-- Заголовок -->
-
                         <Grid ColumnSpacing="8">
-
+                            
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="22" />
                             </Grid.ColumnDefinitions>
-
+                            
                             <Label
                                 FontFamily="Inter"
                                 FontSize="18"
@@ -218,7 +174,7 @@
                                 LineHeight="1.1"
                                 Text="Ваши&#10;источники кофеина"
                                 TextColor="{StaticResource InkColor}" />
-
+                            
                             <Image
                                 Grid.Column="1"
                                 WidthRequest="14"
@@ -226,42 +182,32 @@
                                 HorizontalOptions="End"
                                 VerticalOptions="Center"
                                 Source="more_black_ico.png" />
-
+                            
                         </Grid>
-
-
-                        <!-- Диаграмма -->
 
                         <Border
                             Grid.Row="1"
                             BackgroundColor="{StaticResource DividerColor}"
                             StrokeThickness="0">
-
+                            
+                            <!--
+                                Три Star-колонки получают относительную ширину из SegmentWidth.
+                                Вместе они образуют горизонтальную составную диаграмму.
+                            -->
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="10" />
                             </Border.StrokeShape>
-
+                            
                             <Grid ColumnSpacing="0">
-
+                                
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition
-                                        Width="{Binding CoffeeSource.SegmentWidth}" />
-
-                                    <ColumnDefinition
-                                        Width="{Binding TeaSource.SegmentWidth}" />
-
-                                    <ColumnDefinition
-                                        Width="{Binding EnergyDrinkSource.SegmentWidth}" />
+                                    <ColumnDefinition Width="{Binding CoffeeSource.SegmentWidth}" />
+                                    <ColumnDefinition Width="{Binding TeaSource.SegmentWidth}" />
+                                    <ColumnDefinition Width="{Binding EnergyDrinkSource.SegmentWidth}" />
                                 </Grid.ColumnDefinitions>
 
-
-                                <!-- Coffee -->
-
-                                <Grid
-                                    Grid.Column="0"
-                                    BackgroundColor="{Binding CoffeeSource.Color}"
-                                    IsClippedToBounds="True">
-
+                                <!-- Coffee line -->
+                                <Grid Grid.Column="0" BackgroundColor="{Binding CoffeeSource.Color}" IsClippedToBounds="True">
                                     <Label
                                         Margin="0"
                                         Padding="3"
@@ -274,17 +220,11 @@
                                         Text="{Binding CoffeeSource.PercentageDisplay}"
                                         TextColor="{StaticResource SurfaceColor}"
                                         VerticalTextAlignment="Center" />
-
+                                    
                                 </Grid>
-
-
-                                <!-- Tea -->
-
-                                <Grid
-                                    Grid.Column="1"
-                                    BackgroundColor="{Binding TeaSource.Color}"
-                                    IsClippedToBounds="True">
-
+                                
+                                <!-- Tea line -->
+                                <Grid Grid.Column="1" BackgroundColor="{Binding TeaSource.Color}" IsClippedToBounds="True">
                                     <Label
                                         Margin="0"
                                         Padding="3"
@@ -297,17 +237,11 @@
                                         Text="{Binding TeaSource.PercentageDisplay}"
                                         TextColor="{StaticResource SurfaceColor}"
                                         VerticalTextAlignment="Center" />
-
+                                    
                                 </Grid>
 
-
-                                <!-- Energy Drink -->
-
-                                <Grid
-                                    Grid.Column="2"
-                                    BackgroundColor="{Binding EnergyDrinkSource.Color}"
-                                    IsClippedToBounds="True">
-
+                                <!-- EnergyDrinkSource line -->
+                                <Grid Grid.Column="2" BackgroundColor="{Binding EnergyDrinkSource.Color}" IsClippedToBounds="True">
                                     <Label
                                         Margin="0"
                                         Padding="3"
@@ -320,86 +254,65 @@
                                         Text="{Binding EnergyDrinkSource.PercentageDisplay}"
                                         TextColor="{StaticResource SurfaceColor}"
                                         VerticalTextAlignment="Center" />
-
+                                    
                                 </Grid>
-
                             </Grid>
-
                         </Border>
 
-
-                        <!-- Легенда -->
-
-                        <Grid
-                            Grid.Row="2"
-                            ColumnSpacing="15">
-
+                        <Grid Grid.Row="2" ColumnSpacing="15">
+                            
+                            <!-- Легенда повторяет цвет каждого сегмента и его название. -->
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-
-
-                            <!-- Coffee -->
-
-                            <HorizontalStackLayout
-                                Grid.Column="0"
-                                Spacing="5">
-
+                            
+                            <HorizontalStackLayout Grid.Column="0" Spacing="5">
+                                
                                 <BoxView
                                     WidthRequest="8"
                                     HeightRequest="8"
                                     BackgroundColor="{Binding CoffeeSource.Color}"
                                     CornerRadius="4"
                                     VerticalOptions="Center" />
-
+                                
                                 <Label
                                     FontFamily="Inter"
                                     FontSize="10"
                                     Text="{Binding CoffeeSource.Name}"
                                     TextColor="{StaticResource MutedTextColor}"
                                     VerticalOptions="Center" />
-
+                                
                             </HorizontalStackLayout>
-
-
-                            <!-- Tea -->
-
-                            <HorizontalStackLayout
-                                Grid.Column="1"
-                                Spacing="5">
-
+                            
+                            <HorizontalStackLayout Grid.Column="1" Spacing="5">
+                                
                                 <BoxView
                                     WidthRequest="8"
                                     HeightRequest="8"
                                     BackgroundColor="{Binding TeaSource.Color}"
                                     CornerRadius="4"
                                     VerticalOptions="Center" />
-
+                                
                                 <Label
                                     FontFamily="Inter"
                                     FontSize="10"
                                     Text="{Binding TeaSource.Name}"
                                     TextColor="{StaticResource MutedTextColor}"
                                     VerticalOptions="Center" />
-
+                                
                             </HorizontalStackLayout>
-
-
-                            <!-- Energy -->
-
-                            <HorizontalStackLayout
-                                Grid.Column="2"
-                                Spacing="5">
-
+                            
+                            <HorizontalStackLayout Grid.Column="2" Spacing="5">
+                                
                                 <BoxView
                                     WidthRequest="8"
                                     HeightRequest="8"
                                     BackgroundColor="{Binding EnergyDrinkSource.Color}"
                                     CornerRadius="4"
                                     VerticalOptions="Center" />
-
+                                
                                 <Label
                                     FontFamily="Inter"
                                     FontSize="10"
@@ -407,61 +320,32 @@
                                     Text="{Binding EnergyDrinkSource.Name}"
                                     TextColor="{StaticResource MutedTextColor}"
                                     VerticalOptions="Center" />
-
+                                
                             </HorizontalStackLayout>
-
                         </Grid>
-
                     </Grid>
-
                 </Border>
-
             </VerticalStackLayout>
 
-
-            <!-- ====================================================== -->
-            <!-- ПАНЕЛЬ УПОТРЕБЛЕНИЙ                                    -->
-            <!-- ====================================================== -->
-
+            <!-- Панель накладывается поверх контента и раскрывается жестом вверх. -->
             <controls:ConsumptionPanel
                 x:Name="ConsumptionPanel"
                 ZIndex="10"
                 CollapsedTopInset="{Binding Source={x:Reference FixedTopContent}, Path=Height}"
                 ItemsSource="{Binding Consumptions}" />
-
         </Grid>
 
-
-        <!-- ====================================================== -->
-        <!-- BOTTOM NAVIGATION                                      -->
-        <!-- ====================================================== -->
-
-        <!--
-            Навигация больше НЕ занимает отдельную Grid.Row.
-
-            Она лежит поверх PageContentArea и прижата к низу.
-            Благодаря этому фон навигации может доходить
-            до самого нижнего края экрана.
-        -->
-
-        <controls:BottomNavigationBar
-            x:Name="BottomNavigationBar"
-            VerticalOptions="End"
-            HorizontalOptions="Fill"
-            ZIndex="20"
-            BindingContext="{Binding Navigation}"
-            SafeAreaEdges="None">
+        <!-- Нижняя навигация вынесена в отдельный переиспользуемый контрол. -->
+        <controls:BottomNavigationBar Grid.Row="1"
+                ZIndex="20"
+                BindingContext="{Binding Navigation}">
 
             <controls:BottomNavigationBar.Shadow>
-                <Shadow
-                    Brush="#40000000"
-                    Offset="0,-6"
-                    Radius="14"
-                    Opacity="0.45" />
+                <Shadow Brush="#40000000"
+                        Offset="0,-6"
+                        Radius="14"
+                        Opacity="0.45" />
             </controls:BottomNavigationBar.Shadow>
-
         </controls:BottomNavigationBar>
-
     </Grid>
-
 </ContentPage>

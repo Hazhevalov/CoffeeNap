@@ -26,7 +26,7 @@
 		<ApplicationTitle>CoffeeNap</ApplicationTitle>
 
 		<!-- Уникальный идентификатор пакета; перед публикацией companyname следует заменить. -->
-		<ApplicationId>com.companyname.coffeenap.CoffeeNapSigning</ApplicationId>
+		<ApplicationId>com.companyname.coffeenap</ApplicationId>
 
 		<!-- Публичная версия и внутренний монотонно растущий номер сборки. -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
