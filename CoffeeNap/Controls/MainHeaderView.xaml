@@ -6,58 +6,68 @@
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:MainHeaderViewModel">
 
-    <Grid
-        Padding="10,13"
-        BackgroundColor="{StaticResource SurfaceColor}"
-        ColumnSpacing="9">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="44" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="44" />
-        </Grid.ColumnDefinitions>
+    <Border StrokeThickness="1"
+            Stroke="{StaticResource DividerColor}"
+            BackgroundColor="{StaticResource White}">
 
-        <Border
-            Grid.Column="0"
-            WidthRequest="44"
-            HeightRequest="44"
-            Padding="11"
-            BackgroundColor="{StaticResource InkColor}"
-            StrokeThickness="0"
-            VerticalOptions="Center">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="22" />
-            </Border.StrokeShape>
-            <Image Source="profile_ico.png" Aspect="AspectFit" />
-        </Border>
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="1000" />
+        </Border.StrokeShape>
+        
+        <Grid
+            Padding="20"
+            BackgroundColor="{StaticResource SurfaceColor}"
+            ColumnSpacing="9">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="44" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="44" />
+            </Grid.ColumnDefinitions>
 
-        <VerticalStackLayout
-            Grid.Column="1"
-            Spacing="1"
-            VerticalOptions="Center">
-            <Label
-                FontFamily="Inter"
-                FontSize="12"
-                Text="Добро пожаловать,"
-                TextColor="{StaticResource SecondaryTextColor}" />
-            <Label
-                FontFamily="Inter"
-                FontSize="14"
-                FontAttributes="Bold"
-                LineBreakMode="TailTruncation"
-                MaxLines="1"
-                Text="{Binding UserState.UserName}"
+            <Border
+                Grid.Column="0"
+                WidthRequest="44"
+                HeightRequest="44"
+                Padding="11"
+                BackgroundColor="{StaticResource InkColor}"
+                StrokeThickness="0"
+                VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="22" />
+                </Border.StrokeShape>
+                <Image Source="profile_ico.png" Aspect="AspectFit" />
+            </Border>
+
+            <VerticalStackLayout
+                        Grid.Column="1"
+                        Spacing="1"
+                        VerticalOptions="Center">
+                <Label
+                    FontFamily="Inter"
+                    FontSize="12"
+                    Text="Добро пожаловать,"
+                    TextColor="{StaticResource SecondaryTextColor}" />
+                <Label
+                    FontFamily="Inter"
+                    FontSize="14"
+                    FontAttributes="Bold"
+                    LineBreakMode="TailTruncation"
+                    MaxLines="1"
+                    Text="{Binding UserState.UserName}"
                 TextColor="{StaticResource InkColor}" />
-        </VerticalStackLayout>
+            </VerticalStackLayout>
 
-        <Button
-            Grid.Column="2"
-            WidthRequest="44"
-            HeightRequest="44"
-            Padding="11"
-            VerticalOptions="Center"
-            BackgroundColor="{StaticResource InkColor}"
-            Command="{Binding OpenSettingsCommand}"
-            CornerRadius="22"
-            ImageSource="settings_ico.png" />
-    </Grid>
+            <Button
+                Grid.Column="2"
+                WidthRequest="44"
+                HeightRequest="44"
+                Padding="11"
+                VerticalOptions="Center"
+                BackgroundColor="{StaticResource InkColor}"
+                Command="{Binding OpenSettingsCommand}"
+                CornerRadius="22"
+                ImageSource="settings_ico.png" />
+        </Grid>
+
+    </Border>
 </ContentView>

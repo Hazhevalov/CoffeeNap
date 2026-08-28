@@ -495,7 +495,7 @@
             </Grid>
 
             <!--  Home Option 1 "Как заваривали?"  -->
-            <Grid IsVisible="True"
+            <Grid IsVisible="False"
                 Grid.Row="1"
                 Padding="10,10,10,0"
                 RowSpacing="20"
@@ -1194,7 +1194,7 @@
             </Grid>
 
             <!--  Результат!  -->
-            <Grid IsVisible="False"
+            <Grid IsVisible="True"
                 Grid.Row="1"
                 Padding="10,10,10,0"
                 RowSpacing="20"
@@ -1649,15 +1649,21 @@
         <!--  Nav Bar  -->
         <!-- Нижняя навигация вынесена в отдельный переиспользуемый контрол. -->
         <controls:BottomNavigationBar Grid.Row="2"
-                ZIndex="20"
-                BindingContext="{Binding Navigation}">
+            x:Name="BottomNavigationBar"
+            VerticalOptions="End"
+            HorizontalOptions="Center"
+            ZIndex="20"
+            BindingContext="{Binding Navigation}"
+            SafeAreaEdges="Container">
 
             <controls:BottomNavigationBar.Shadow>
-                <Shadow Brush="#40000000"
-                        Offset="0,-6"
-                        Radius="14"
-                        Opacity="0.45" />
+                <Shadow
+                    Brush="#40000000"
+                    Offset="0,-6"
+                    Radius="14"
+                    Opacity="0.45" />
             </controls:BottomNavigationBar.Shadow>
+
         </controls:BottomNavigationBar>
     </Grid>
 </ContentPage>
