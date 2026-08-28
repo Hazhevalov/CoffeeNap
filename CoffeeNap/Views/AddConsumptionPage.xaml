@@ -156,9 +156,10 @@
 
             <!--  Step 1 "Какой?"  -->
             <!--  Сетка всего контента (Без Нав/Топ бара)  -->
-            <Grid IsVisible="False"
+            <Grid
                 Grid.Row="1"
                 Padding="10"
+                IsVisible="False"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
@@ -370,9 +371,10 @@
             </Grid>
 
             <!--  Step 2 "Где?"  -->
-            <Grid IsVisible="False"
+            <Grid
                 Grid.Row="1"
                 Padding="10"
+                IsVisible="False"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
@@ -495,9 +497,10 @@
             </Grid>
 
             <!--  Home Option 1 "Как заваривали?"  -->
-            <Grid IsVisible="False"
+            <Grid
                 Grid.Row="1"
                 Padding="10,10,10,0"
+                IsVisible="False"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
@@ -878,11 +881,12 @@
             </Grid>
 
             <!--  Home Option 2 "Сколько кофе"  -->
-            <Grid IsVisible="False"
-                    Grid.Row="1"
-                    Padding="10,10,10,0"
-                    RowSpacing="20"
-                    VerticalOptions="Fill">
+            <Grid
+                Grid.Row="1"
+                Padding="10,10,10,0"
+                IsVisible="False"
+                RowSpacing="20"
+                VerticalOptions="Fill">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -952,8 +956,8 @@
                                 Keyboard="Numeric"
                                 MaxLength="3"
                                 Placeholder="Знаю граммы"
-                                ReturnType="Next" 
-                                TextColor="{StaticResource InkColor}"/>
+                                ReturnType="Next"
+                                TextColor="{StaticResource InkColor}" />
                         </Border>
 
                         <Border Grid.Row="1" Stroke="{StaticResource DividerColor}">
@@ -1003,11 +1007,12 @@
             </Grid>
 
             <!--  Home Option 3 "Сколько чашек"  -->
-            <Grid IsVisible="False"
-                    Grid.Row="1"
-                    Padding="10,10,10,0"
-                    RowSpacing="20"
-                    VerticalOptions="Fill">
+            <Grid
+                Grid.Row="1"
+                Padding="10,10,10,0"
+                IsVisible="False"
+                RowSpacing="20"
+                VerticalOptions="Fill">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -1106,11 +1111,12 @@
             </Grid>
 
             <!--  Home Option 4 "Какой кофе?"  -->
-            <Grid IsVisible="False"
-                    Grid.Row="1"
-                    Padding="10,10,10,0"
-                    RowSpacing="20"
-                    VerticalOptions="Fill">
+            <Grid
+                Grid.Row="1"
+                Padding="10,10,10,0"
+                IsVisible="False"
+                RowSpacing="20"
+                VerticalOptions="Fill">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -1194,9 +1200,10 @@
             </Grid>
 
             <!--  Результат!  -->
-            <Grid IsVisible="True"
+            <Grid
                 Grid.Row="1"
                 Padding="10,10,10,0"
+                IsVisible="True"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
@@ -1265,17 +1272,18 @@
                             <!--  Список  -->
                             <VerticalStackLayout Grid.Row="1" Spacing="10">
                                 <!--  Параметр  -->
-                                <Label FontSize="16" 
-                                       Text="Эспрессо-машина" 
-                                       TextColor="{StaticResource InkColor}"/>
+                                <Label
+                                    FontSize="16"
+                                    Text="Эспрессо-машина"
+                                    TextColor="{StaticResource InkColor}" />
 
                                 <!--  Параметр + значение  -->
                                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                                     <Label
                                         Grid.Column="0"
                                         FontSize="16"
-                                        Text="Одна ложка" 
-                                        TextColor="{StaticResource InkColor}"/>
+                                        Text="Одна ложка"
+                                        TextColor="{StaticResource InkColor}" />
                                     <Label
                                         Grid.Column="1"
                                         FontSize="16"
@@ -1284,9 +1292,10 @@
                                 </Grid>
 
                                 <!--  Параметр  -->
-                                <Label FontSize="16" 
-                                       Text="Одна чашка" 
-                                       TextColor="{StaticResource InkColor}"/>
+                                <Label
+                                    FontSize="16"
+                                    Text="Одна чашка"
+                                    TextColor="{StaticResource InkColor}" />
 
                                 <!--  Параметр + значение  -->
                                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
@@ -1359,9 +1368,10 @@
             </Grid>
 
             <!--  Cafe Option 1 "Какой?"  -->
-            <Grid IsVisible="False"
+            <Grid
                 Grid.Row="1"
                 Padding="10,10,10,0"
+                IsVisible="False"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
@@ -1521,9 +1531,10 @@
             </Grid>
 
             <!--  Cafe Option 1 "Объем"  -->
-            <Grid IsVisible="False"
+            <Grid
                 Grid.Row="1"
                 Padding="10,10,10,0"
+                IsVisible="False"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 
@@ -1596,8 +1607,8 @@
                                 Keyboard="Numeric"
                                 MaxLength="3"
                                 Placeholder="Знаю миллилитры"
-                                ReturnType="Next" 
-                                TextColor="{StaticResource InkColor}"/>
+                                ReturnType="Next"
+                                TextColor="{StaticResource InkColor}" />
                         </Border>
 
                         <Border Grid.Row="1" Stroke="{StaticResource DividerColor}">
@@ -1645,23 +1656,25 @@
                 </Grid>
             </Grid>
         </Grid>
-        
+
         <!--  Nav Bar  -->
-        <!-- Нижняя навигация вынесена в отдельный переиспользуемый контрол. -->
-        <controls:BottomNavigationBar Grid.Row="2"
+        <!--  Нижняя навигация вынесена в отдельный переиспользуемый контрол.  -->
+        <controls:BottomNavigationBar
             x:Name="BottomNavigationBar"
-            VerticalOptions="End"
-            HorizontalOptions="Center"
-            ZIndex="20"
+            Grid.Row="2"
             BindingContext="{Binding Navigation}"
-            SafeAreaEdges="Container">
+            HorizontalOptions="Center"
+            MinimumHeightRequest="78"
+            SafeAreaEdges="Container"
+            VerticalOptions="End"
+            ZIndex="20">
 
             <controls:BottomNavigationBar.Shadow>
                 <Shadow
                     Brush="#40000000"
-                    Offset="0,-6"
+                    Opacity="0.45"
                     Radius="14"
-                    Opacity="0.45" />
+                    Offset="0,-6" />
             </controls:BottomNavigationBar.Shadow>
 
         </controls:BottomNavigationBar>

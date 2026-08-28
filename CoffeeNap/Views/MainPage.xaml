@@ -445,7 +445,7 @@
         -->
 
         <controls:BottomNavigationBar
-            HeightRequest="50"
+            MinimumHeightRequest="78"
             x:Name="BottomNavigationBar"
             VerticalOptions="End"
             HorizontalOptions="Center"
