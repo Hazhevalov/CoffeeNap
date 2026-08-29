@@ -22,10 +22,16 @@
 
     <FlyoutItem
         x:Name="MainShellItem"
-        Route="MainPage">
+        Route="AppTabs">
         <ShellContent
             x:Name="MainShellContent"
-            Route="MainContent" />
+            Route="MainPage" />
+        <ShellContent
+            x:Name="AddConsumptionShellContent"
+            Route="AddConsumptionPage" />
+        <ShellContent
+            x:Name="CalendarShellContent"
+            Route="CalendarPage" />
     </FlyoutItem>
 
 </Shell>

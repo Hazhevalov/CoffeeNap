@@ -1,4 +1,3 @@
-using CoffeeNap.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -40,10 +39,10 @@ public partial class BottomNavigationViewModel : ObservableObject
     [RelayCommand(AllowConcurrentExecutions = false)]
     private Task OpenAddConsumptionAsync() => ActiveTab == NavigationTab.AddConsumption
         ? Task.CompletedTask
-        : Shell.Current.GoToAsync(nameof(AddConsumptionPage));
+        : Shell.Current.GoToAsync(AppShell.AddConsumptionAbsoluteRoute, true);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
     private Task OpenCalendarAsync() => ActiveTab == NavigationTab.Calendar
         ? Task.CompletedTask
-        : Shell.Current.GoToAsync(nameof(CalendarPage));
+        : Shell.Current.GoToAsync(AppShell.CalendarAbsoluteRoute, true);
 }

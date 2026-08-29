@@ -39,7 +39,9 @@ public partial class App : Application
                 window.Page = new AppShell(
                     _userState,
                     _pageFactory.CreateOnboardingPage(),
-                    _pageFactory.CreateMainPage()));
+                    _pageFactory.CreateMainPage(),
+                    _pageFactory.CreateAddConsumptionPage(),
+                    _pageFactory.CreateCalendarPage()));
         }
         catch (Exception exception)
         {

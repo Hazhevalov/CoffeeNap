@@ -368,6 +368,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
             var consumption = BuildConsumption(snapshot);
             await _dataService.AddConsumptionAsync(consumption);
             _logger.LogInformation("Consumption {Name} saved with {CaffeineMg} mg.", consumption.Name, consumption.CaffeineMg);
+            RestartQuiz();
             await Shell.Current.GoToAsync(AppShell.MainAbsoluteRoute, true);
         }
         catch (Exception exception)

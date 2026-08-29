@@ -1,9 +1,9 @@
 namespace CoffeeNap.Controls.AddConsumption.Steps;
 
+using CoffeeNap.Models;
+
 public partial class CupCountStep : ContentView
 {
-    public CupCountStep()
-    {
-        InitializeComponent();
-    }
+    public CupCountStep() =>
+        LazyStepLoader.LoadWhenCurrent(this, AddConsumptionStep.CupCount, InitializeComponent);
 }
