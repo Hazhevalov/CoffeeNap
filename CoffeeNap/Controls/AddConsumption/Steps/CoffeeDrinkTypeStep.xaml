@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CoffeeNap.Controls.AddConsumption.Steps.CoffeeDrinkTypeStep"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:CoffeeNap.Models"
+    xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
+    x:DataType="viewModels:AddConsumptionPageViewModel">
+<!--  Cafe Option 1 "Какой?"  -->
+            <Grid
+                Grid.Row="1"
+                Padding="10,10,10,0"
+                IsVisible="{Binding IsCoffeeDrinkTypeStep}"
+                RowSpacing="20"
+                VerticalOptions="Fill">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid
+                    Grid.Row="0"
+                    RowSpacing="20"
+                    VerticalOptions="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Заголовки  -->
+                    <Grid Grid.Row="0" RowSpacing="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Label
+                            Grid.Row="0"
+                            FontSize="16"
+                            Text="Кофе вне дома"
+                            TextColor="{StaticResource MutedTextColor}" />
+
+                        <Label
+                            Grid.Row="1"
+                            FontAttributes="Bold"
+                            FontSize="32"
+                            Text="Какой вид напитка вы пили?"
+                            TextColor="{StaticResource InkColor}" />
+
+                        <Label
+                            Grid.Row="2"
+                            FontSize="16"
+                            Text="Он вас порадовал?"
+                            TextColor="{StaticResource InkColor}" />
+                    </Grid>
+
+                    <!--  Блочный список видов напитка  -->
+                    <FlexLayout
+                        Grid.Row="1"
+                        AlignContent="Start"
+                        AlignItems="Start"
+                        Direction="Row"
+                        JustifyContent="Start"
+                        Wrap="Wrap">
+
+                        <Button
+                            Margin="2"
+                            BackgroundColor="{StaticResource White}"
+                            BorderColor="{StaticResource DividerColor}"
+                            BorderWidth="1"
+                            CornerRadius="15"
+                            FontSize="16"
+                            Command="{Binding SelectCoffeeDrinkTypeCommand}"
+                            CommandParameter="{x:Static models:CoffeeDrinkType.Espresso}"
+                            Text="Еспрессо"
+                            TextColor="{StaticResource InkColor}" />
+
+                        <Button
+                            Margin="2"
+                            BackgroundColor="{StaticResource White}"
+                            BorderColor="{StaticResource DividerColor}"
+                            BorderWidth="1"
+                            CornerRadius="15"
+                            FontSize="16"
+                            Command="{Binding SelectCoffeeDrinkTypeCommand}"
+                            CommandParameter="{x:Static models:CoffeeDrinkType.Macchiato}"
+                            Text="Макиато"
+                            TextColor="{StaticResource InkColor}" />
+
+                        <Button
+                            Margin="2"
+                            BackgroundColor="{StaticResource White}"
+                            BorderColor="{StaticResource DividerColor}"
+                            BorderWidth="1"
+                            CornerRadius="15"
+                            FontSize="16"
+                            Command="{Binding SelectCoffeeDrinkTypeCommand}"
+                            CommandParameter="{x:Static models:CoffeeDrinkType.Ristretto}"
+                            Text="Ристретто"
+                            TextColor="{StaticResource InkColor}" />
+
+                        <Button
+                            Margin="2"
+                            BackgroundColor="{StaticResource White}"
+                            BorderColor="{StaticResource DividerColor}"
+                            BorderWidth="1"
+                            CornerRadius="15"
+                            FontSize="16"
+                            Command="{Binding SelectCoffeeDrinkTypeCommand}"
+                            CommandParameter="{x:Static models:CoffeeDrinkType.Americano}"
+                            Text="Американо"
+                            TextColor="{StaticResource InkColor}" />
+
+                        <Button
+                            Margin="2"
+                            BackgroundColor="{StaticResource White}"
+                            BorderColor="{StaticResource DividerColor}"
+                            BorderWidth="1"
+                            CornerRadius="15"
+                            FontSize="16"
+                            Command="{Binding SelectCoffeeDrinkTypeCommand}"
+                            CommandParameter="{x:Static models:CoffeeDrinkType.Cappuccino}"
+                            Text="Капучино"
+                            TextColor="{StaticResource InkColor}" />
+
+                        <Button
+                            Margin="2"
+                            BackgroundColor="{StaticResource White}"
+                            BorderColor="{StaticResource DividerColor}"
+                            BorderWidth="1"
+                            CornerRadius="15"
+                            FontSize="16"
+                            Command="{Binding SelectCoffeeDrinkTypeCommand}"
+                            CommandParameter="{x:Static models:CoffeeDrinkType.Latte}"
+                            Text="Латте"
+                            TextColor="{StaticResource InkColor}" />
+
+                        <Button
+                            Margin="2"
+                            BackgroundColor="{StaticResource White}"
+                            BorderColor="{StaticResource DividerColor}"
+                            BorderWidth="1"
+                            CornerRadius="15"
+                            FontSize="16"
+                            Command="{Binding SelectCoffeeDrinkTypeCommand}"
+                            CommandParameter="{x:Static models:CoffeeDrinkType.FlatWhite}"
+                            Text="Флэт-Уайт"
+                            TextColor="{StaticResource InkColor}" />
+
+                        <Button
+                            Margin="2"
+                            BackgroundColor="{StaticResource White}"
+                            BorderColor="{StaticResource DividerColor}"
+                            BorderWidth="1"
+                            CornerRadius="15"
+                            FontSize="16"
+                            Command="{Binding SelectCoffeeDrinkTypeCommand}"
+                            CommandParameter="{x:Static models:CoffeeDrinkType.Mocha}"
+                            Text="Мокко"
+                            TextColor="{StaticResource InkColor}" />
+
+                        <Button
+                            Margin="2"
+                            BackgroundColor="{StaticResource White}"
+                            BorderColor="{StaticResource DividerColor}"
+                            BorderWidth="1"
+                            CornerRadius="15"
+                            FontSize="16"
+                            Command="{Binding SelectCoffeeDrinkTypeCommand}"
+                            CommandParameter="{x:Static models:CoffeeDrinkType.Doppio}"
+                            Text="Доппио"
+                            TextColor="{StaticResource InkColor}" />
+
+                        <Button
+                            Margin="2"
+                            BackgroundColor="{StaticResource White}"
+                            BorderColor="{StaticResource DividerColor}"
+                            BorderWidth="1"
+                            CornerRadius="15"
+                            FontSize="16"
+                            Command="{Binding SelectCoffeeDrinkTypeCommand}"
+                            CommandParameter="{x:Static models:CoffeeDrinkType.Affogato}"
+                            Text="Аффогато"
+                            TextColor="{StaticResource InkColor}" />
+
+                    </FlexLayout>
+                </Grid>
+            </Grid>
+</ContentView>

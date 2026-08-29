@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CoffeeNap.Controls.AddConsumption.Steps.DrinkTypeStep"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:CoffeeNap.Models"
+    xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
+    x:DataType="viewModels:AddConsumptionPageViewModel">
+<!--  Step 1 "Какой?"  -->
+            <!--  Сетка всего контента (Без Нав/Топ бара)  -->
+            <Grid
+                Grid.Row="1"
+                Padding="10"
+                IsVisible="{Binding IsDrinkTypeStep}"
+                RowSpacing="20"
+                VerticalOptions="Fill">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!--  Бокс: Опрос и кнопка  -->
+                <Grid Grid.Row="0" VerticalOptions="Fill">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Сетка: Опрос и Кнопка  -->
+                    <Grid
+                        Grid.Row="1"
+                        IsVisible="True"
+                        VerticalOptions="Fill">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!--  Блок выбора напитка  -->
+                        <Grid
+                            Grid.Row="0"
+                            HorizontalOptions="Fill"
+                            RowDefinitions="Auto,Auto"
+                            RowSpacing="20"
+                            VerticalOptions="Center">
+
+                            <!--  Заголовок  -->
+                            <Label
+                                Grid.Row="0"
+                                FontAttributes="Bold"
+                                FontSize="32"
+                                HorizontalOptions="Start"
+                                Text="Какой напиток&#10;вы пили?"
+                                TextColor="{StaticResource InkColor}"
+                                VerticalOptions="Start" />
+
+                            <!--  Карточки  -->
+                            <Grid
+                                Grid.Row="1"
+                                ColumnDefinitions="*,*,*"
+                                ColumnSpacing="5"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Start">
+
+                                <!--  Кофе  -->
+                                <Border
+                                    Grid.Column="0"
+                                    Padding="16"
+                                    BackgroundColor="{StaticResource White}"
+                                    Stroke="{StaticResource DividerColor}"
+                                    StrokeThickness="1">
+
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding SelectDrinkTypeCommand}"
+                                            CommandParameter="{x:Static models:CaffeineConsumptionType.Coffee}" />
+                                    </Border.GestureRecognizers>
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="20" />
+                                    </Border.StrokeShape>
+
+                                    <VerticalStackLayout
+                                        HorizontalOptions="Center"
+                                        Spacing="10"
+                                        VerticalOptions="Center">
+
+                                        <Border
+                                            BackgroundColor="{StaticResource CaffeeIcoFill}"
+                                            HeightRequest="56"
+                                            StrokeThickness="0"
+                                            WidthRequest="56">
+
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="28" />
+                                            </Border.StrokeShape>
+
+                                            <Image
+                                                Aspect="AspectFit"
+                                                HeightRequest="32"
+                                                Source="coffee_ico.png"
+                                                WidthRequest="32" />
+                                        </Border>
+
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            HorizontalTextAlignment="Center"
+                                            Text="Кофе"
+                                            TextColor="{StaticResource InkColor}" />
+                                    </VerticalStackLayout>
+                                </Border>
+
+                                <!--  Энергетик  -->
+                                <Border
+                                    Grid.Column="1"
+                                    Padding="16"
+                                    BackgroundColor="{StaticResource White}"
+                                    Stroke="{StaticResource DividerColor}"
+                                    StrokeThickness="1">
+
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding SelectDrinkTypeCommand}"
+                                            CommandParameter="{x:Static models:CaffeineConsumptionType.EnergyDrink}" />
+                                    </Border.GestureRecognizers>
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="20" />
+                                    </Border.StrokeShape>
+
+                                    <VerticalStackLayout
+                                        HorizontalOptions="Center"
+                                        Spacing="10"
+                                        VerticalOptions="Center">
+
+                                        <Border
+                                            BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
+                                            HeightRequest="56"
+                                            StrokeThickness="0"
+                                            WidthRequest="56">
+
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="28" />
+                                            </Border.StrokeShape>
+
+                                            <Image
+                                                Aspect="AspectFit"
+                                                HeightRequest="32"
+                                                Source="energy_drink_ico.png"
+                                                WidthRequest="32" />
+                                        </Border>
+
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            HorizontalTextAlignment="Center"
+                                            LineBreakMode="TailTruncation"
+                                            MaxLines="1"
+                                            Text="Энергетик"
+                                            TextColor="{StaticResource InkColor}" />
+                                    </VerticalStackLayout>
+                                </Border>
+
+                                <!--  Чай  -->
+                                <Border
+                                    Grid.Column="2"
+                                    Padding="16"
+                                    BackgroundColor="{StaticResource White}"
+                                    Stroke="{StaticResource DividerColor}"
+                                    StrokeThickness="1">
+
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding SelectDrinkTypeCommand}"
+                                            CommandParameter="{x:Static models:CaffeineConsumptionType.Tea}" />
+                                    </Border.GestureRecognizers>
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="20" />
+                                    </Border.StrokeShape>
+
+                                    <VerticalStackLayout
+                                        HorizontalOptions="Center"
+                                        Spacing="10"
+                                        VerticalOptions="Center">
+
+                                        <Border
+                                            BackgroundColor="{StaticResource TeaIcoFill}"
+                                            HeightRequest="56"
+                                            StrokeThickness="0"
+                                            WidthRequest="56">
+
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="28" />
+                                            </Border.StrokeShape>
+
+                                            <Image
+                                                Aspect="AspectFit"
+                                                HeightRequest="32"
+                                                Source="tea_ico.png"
+                                                WidthRequest="32" />
+                                        </Border>
+
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            HorizontalTextAlignment="Center"
+                                            Text="Чай"
+                                            TextColor="{StaticResource InkColor}" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
+                        </Grid>
+
+                        <!--  Кнопка старого рецепта  -->
+                        <Border
+                            Grid.Row="1"
+                            Stroke="{StaticResource DividerColor}"
+                            StrokeThickness="1"
+                            VerticalOptions="End">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20" />
+                            </Border.StrokeShape>
+
+                            <Button
+                                Padding="25"
+                                BackgroundColor="{StaticResource White}"
+                                FontAttributes="Bold"
+                                FontSize="16"
+                                HorizontalOptions="Fill"
+                                Text="Использовать старый рецепт"
+                                TextColor="{StaticResource InkColor}"
+                                VerticalOptions="Center" />
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Grid>
+</ContentView>

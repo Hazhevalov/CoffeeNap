@@ -40,6 +40,7 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<IAppDataService, AppDataService>();
         builder.Services.AddSingleton<UserStateService>();
+        builder.Services.AddSingleton<ICaffeineCalculator, CaffeineCalculator>();
 
         builder.Services.AddTransient<MainHeaderViewModel>();
         builder.Services.AddTransient<BottomNavigationViewModel>();

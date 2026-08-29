@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CoffeeNap.Controls.AddConsumption.Steps.CoffeeBeanTypeStep"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:CoffeeNap.Models"
+    xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
+    x:DataType="viewModels:AddConsumptionPageViewModel">
+<!--  Home Option 4 "Какой кофе?"  -->
+            <Grid
+                Grid.Row="1"
+                Padding="10,10,10,0"
+                IsVisible="{Binding IsCoffeeBeanTypeStep}"
+                RowSpacing="20"
+                VerticalOptions="Fill">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid
+                    Grid.Row="0"
+                    RowSpacing="20"
+                    VerticalOptions="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Заголовки  -->
+                    <Grid Grid.Row="0" RowSpacing="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Label
+                            Grid.Row="0"
+                            FontSize="16"
+                            Text="{Binding CoffeeContext}"
+                            TextColor="{StaticResource MutedTextColor}" />
+
+                        <Label
+                            Grid.Row="1"
+                            FontAttributes="Bold"
+                            FontSize="32"
+                            Text="Какой кофе?"
+                            TextColor="{StaticResource InkColor}" />
+
+                        <Label
+                            Grid.Row="2"
+                            FontSize="16"
+                            Text="Вкусный"
+                            TextColor="{StaticResource InkColor}" />
+                    </Grid>
+
+                    <!--  Варианты выбора  -->
+                    <Grid Grid.Row="1" RowSpacing="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Stroke="{StaticResource DividerColor}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20" />
+                            </Border.StrokeShape>
+
+                            <Button
+                                Padding="0,25"
+                                BackgroundColor="{StaticResource White}"
+                                FontSize="16"
+                                HorizontalOptions="Fill"
+                                Command="{Binding SelectBeanTypeCommand}"
+                                CommandParameter="{x:Static models:CoffeeBeanType.Arabica}"
+                                Text="Арабика"
+                                TextColor="{StaticResource InkColor}" />
+                        </Border>
+
+                        <Border Grid.Row="1" Stroke="{StaticResource DividerColor}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20" />
+                            </Border.StrokeShape>
+
+                            <Button
+                                Padding="0,25"
+                                BackgroundColor="{StaticResource White}"
+                                FontSize="16"
+                                HorizontalOptions="Fill"
+                                Command="{Binding SelectBeanTypeCommand}"
+                                CommandParameter="{x:Static models:CoffeeBeanType.Robusta}"
+                                Text="Робуста"
+                                TextColor="{StaticResource InkColor}" />
+                        </Border>
+                    </Grid>
+
+
+                </Grid>
+            </Grid>
+</ContentView>

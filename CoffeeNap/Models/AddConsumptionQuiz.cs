@@ -1,0 +1,189 @@
+namespace CoffeeNap.Models;
+
+public enum AddConsumptionStep
+{
+    DrinkType,
+    CoffeeLocation,
+    BrewingMethod,
+    CoffeeAmount,
+    CupCount,
+    CoffeeDrinkType,
+    CoffeeVolume,
+    CoffeeBeanType,
+    Result
+}
+
+public enum CoffeeLocation { Home, Outside }
+
+public enum CoffeeBeanType { Arabica, Robusta }
+
+public enum CoffeeBrewingMethod
+{
+    EspressoMachine,
+    ColdBrew,
+    MokaPot,
+    FrenchPress,
+    Turkish,
+    PourOver,
+    CapsuleMachine
+}
+
+public enum CoffeeDrinkType
+{
+    Espresso,
+    Macchiato,
+    Ristretto,
+    Americano,
+    Cappuccino,
+    Latte,
+    FlatWhite,
+    Mocha,
+    Doppio,
+    Affogato
+}
+
+public enum CoffeeVolumePreset { Small, Medium, Large }
+
+public sealed class AddConsumptionQuizState
+{
+    public CaffeineConsumptionType? DrinkType { get; set; }
+    public CoffeeLocation? CoffeeLocation { get; set; }
+    public CoffeeDrinkType? CoffeeDrinkType { get; set; }
+    public CoffeeBrewingMethod? BrewingMethod { get; set; }
+    public int? VolumeMl { get; set; }
+    public string? VolumeDisplay { get; set; }
+    public double? CoffeeAmountGrams { get; set; }
+    public string? CoffeeAmountDisplay { get; set; }
+    public int? CupCount { get; set; }
+    public string? CupCountDisplay { get; set; }
+    public CoffeeBeanType? BeanType { get; set; }
+
+    public void Reset()
+    {
+        DrinkType = null;
+        CoffeeLocation = null;
+        CoffeeDrinkType = null;
+        BrewingMethod = null;
+        VolumeMl = null;
+        VolumeDisplay = null;
+        CoffeeAmountGrams = null;
+        CoffeeAmountDisplay = null;
+        CupCount = null;
+        CupCountDisplay = null;
+        BeanType = null;
+    }
+
+    public void ClearAfterDrinkType()
+    {
+        CoffeeLocation = null;
+        ClearCoffeeBranches();
+    }
+
+    public void ClearCoffeeBranches()
+    {
+        CoffeeDrinkType = null;
+        VolumeMl = null;
+        VolumeDisplay = null;
+        BrewingMethod = null;
+        CoffeeAmountGrams = null;
+        CoffeeAmountDisplay = null;
+        CupCount = null;
+        CupCountDisplay = null;
+        BeanType = null;
+    }
+}
+
+public sealed record ConsumptionCalculationResult(
+    int CaffeineMg,
+    string DisplayName,
+    CaffeineConsumptionType Type,
+    string ContextLabel,
+    string Detail1,
+    string Detail2,
+    string Detail2Value,
+    string Detail3,
+    string Detail4,
+    string Detail4Value);
+
+public static class CoffeeQuizCatalog
+{
+    public const int One = 1;
+    public const int Two = 2;
+    public const int Three = 3;
+    public const double GramsPerSpoon = 8;
+
+    public static int GetVolumeMl(CoffeeVolumePreset preset) => preset switch
+    {
+        CoffeeVolumePreset.Small => 200,
+        CoffeeVolumePreset.Medium => 300,
+        CoffeeVolumePreset.Large => 400,
+        _ => throw new ArgumentOutOfRangeException(nameof(preset))
+    };
+
+    public static string GetVolumeDisplay(CoffeeVolumePreset preset) => preset switch
+    {
+        CoffeeVolumePreset.Small => "Маленький",
+        CoffeeVolumePreset.Medium => "Средний",
+        CoffeeVolumePreset.Large => "Большой",
+        _ => throw new ArgumentOutOfRangeException(nameof(preset))
+    };
+
+    public static double GetSpoonGrams(int spoonCount) => spoonCount * GramsPerSpoon;
+
+    public static string GetSpoonDisplay(int spoonCount) => spoonCount switch
+    {
+        1 => "Одна ложка",
+        2 => "Две ложки",
+        3 => "Три ложки",
+        _ => $"{spoonCount} ложек"
+    };
+
+    public static string GetCupDisplay(int cupCount) => cupCount switch
+    {
+        1 => "Одна чашка",
+        2 => "Две чашки",
+        3 => "Три чашки",
+        _ => $"{cupCount} чашек"
+    };
+
+    public static string GetBeanDisplay(CoffeeBeanType type) => type switch
+    {
+        CoffeeBeanType.Arabica => "Арабика",
+        CoffeeBeanType.Robusta => "Робуста",
+        _ => throw new ArgumentOutOfRangeException(nameof(type))
+    };
+
+    public static string GetLocationDisplay(CoffeeLocation location) => location switch
+    {
+        CoffeeLocation.Home => "Дома",
+        CoffeeLocation.Outside => "В кафе",
+        _ => throw new ArgumentOutOfRangeException(nameof(location))
+    };
+
+    public static string GetBrewingMethodDisplay(CoffeeBrewingMethod method) => method switch
+    {
+        CoffeeBrewingMethod.EspressoMachine => "Эспрессо-машина",
+        CoffeeBrewingMethod.ColdBrew => "Cold brew",
+        CoffeeBrewingMethod.MokaPot => "Гейзер",
+        CoffeeBrewingMethod.FrenchPress => "Френч-пресс",
+        CoffeeBrewingMethod.Turkish => "Турка",
+        CoffeeBrewingMethod.PourOver => "Воронка",
+        CoffeeBrewingMethod.CapsuleMachine => "Капсульная машина",
+        _ => throw new ArgumentOutOfRangeException(nameof(method))
+    };
+
+    public static string GetDrinkDisplay(CoffeeDrinkType type) => type switch
+    {
+        CoffeeDrinkType.Espresso => "Эспрессо",
+        CoffeeDrinkType.Macchiato => "Макиато",
+        CoffeeDrinkType.Ristretto => "Ристретто",
+        CoffeeDrinkType.Americano => "Американо",
+        CoffeeDrinkType.Cappuccino => "Капучино",
+        CoffeeDrinkType.Latte => "Латте",
+        CoffeeDrinkType.FlatWhite => "Флэт-Уайт",
+        CoffeeDrinkType.Mocha => "Мокко",
+        CoffeeDrinkType.Doppio => "Доппио",
+        CoffeeDrinkType.Affogato => "Аффогато",
+        _ => throw new ArgumentOutOfRangeException(nameof(type))
+    };
+}

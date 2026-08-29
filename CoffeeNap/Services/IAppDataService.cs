@@ -5,6 +5,8 @@ namespace CoffeeNap.Services;
 /// <summary>Единый async-фасад для всех persistent-данных приложения.</summary>
 public interface IAppDataService
 {
+    event EventHandler<CaffeineConsumption>? ConsumptionAdded;
+
     Task InitializeAsync();
 
     Task<UserProfile?> GetUserProfileAsync();

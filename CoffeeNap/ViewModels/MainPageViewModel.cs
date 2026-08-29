@@ -51,6 +51,7 @@ public partial class MainPageViewModel : ObservableObject, IDisposable
         Navigation = navigation;
         Navigation.ActiveTab = NavigationTab.Home;
         Consumptions.CollectionChanged += OnConsumptionsCollectionChanged;
+        _dataService.ConsumptionAdded += OnConsumptionAdded;
     }
 
     public MainHeaderViewModel Header { get; }
@@ -262,6 +263,7 @@ public partial class MainPageViewModel : ObservableObject, IDisposable
     {
         StopRelativeTimeTimer();
         Consumptions.CollectionChanged -= OnConsumptionsCollectionChanged;
+        _dataService.ConsumptionAdded -= OnConsumptionAdded;
         _operationLock.Dispose();
         GC.SuppressFinalize(this);
     }
@@ -332,6 +334,26 @@ public partial class MainPageViewModel : ObservableObject, IDisposable
         if (!_isReplacingConsumptions)
         {
             RefreshConsumptionDerivedState();
+        }
+    }
+
+    private void OnConsumptionAdded(object? sender, CaffeineConsumption consumption)
+    {
+        if (!IsInitialized || Consumptions.Any(item => item.Id == consumption.Id))
+        {
+            return;
+        }
+
+        void AddToRuntimeState() =>
+            InsertInChronologicalOrder(new ConsumptionItemViewModel(consumption));
+
+        if (MainThread.IsMainThread)
+        {
+            AddToRuntimeState();
+        }
+        else
+        {
+            MainThread.BeginInvokeOnMainThread(AddToRuntimeState);
         }
     }
 

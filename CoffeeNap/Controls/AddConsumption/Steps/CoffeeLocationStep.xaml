@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CoffeeNap.Controls.AddConsumption.Steps.CoffeeLocationStep"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:CoffeeNap.Models"
+    xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
+    x:DataType="viewModels:AddConsumptionPageViewModel">
+<!--  Step 2 "Где?"  -->
+            <Grid
+                Grid.Row="1"
+                Padding="10"
+                IsVisible="{Binding IsCoffeeLocationStep}"
+                RowSpacing="20"
+                VerticalOptions="Fill">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid
+                    Grid.Row="0"
+                    RowSpacing="20"
+                    VerticalOptions="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Label
+                        Grid.Row="0"
+                        FontAttributes="Bold"
+                        FontSize="32"
+                        HorizontalOptions="Start"
+                        Text="Где вы пили кофе?"
+                        TextColor="{StaticResource InkColor}"
+                        VerticalOptions="Start" />
+
+                    <Grid Grid.Row="1" RowSpacing="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  Home  -->
+                        <Border
+                            Grid.Column="0"
+                            Padding="16"
+                            BackgroundColor="{StaticResource White}"
+                            Stroke="{StaticResource DividerColor}"
+                            StrokeThickness="1">
+
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding SelectCoffeeLocationCommand}"
+                                    CommandParameter="{x:Static models:CoffeeLocation.Home}" />
+                            </Border.GestureRecognizers>
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20" />
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout
+                                HorizontalOptions="Center"
+                                Spacing="10"
+                                VerticalOptions="Center">
+
+                                <Border
+                                    BackgroundColor="{StaticResource CaffeeIcoFill}"
+                                    HeightRequest="56"
+                                    StrokeThickness="0"
+                                    WidthRequest="56">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="28" />
+                                    </Border.StrokeShape>
+
+                                    <Image
+                                        Aspect="AspectFit"
+                                        HeightRequest="32"
+                                        Source="home_active_ico.png"
+                                        WidthRequest="32" />
+
+                                </Border>
+
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="16"
+                                    HorizontalTextAlignment="Center"
+                                    Text="Дома"
+                                    TextColor="{StaticResource InkColor}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!--  Cafe  -->
+                        <Border
+                            Grid.Column="1"
+                            Padding="16"
+                            BackgroundColor="{StaticResource White}"
+                            Stroke="{StaticResource DividerColor}"
+                            StrokeThickness="1">
+
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding SelectCoffeeLocationCommand}"
+                                    CommandParameter="{x:Static models:CoffeeLocation.Outside}" />
+                            </Border.GestureRecognizers>
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20" />
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout
+                                HorizontalOptions="Center"
+                                Spacing="10"
+                                VerticalOptions="Center">
+
+                                <Border
+                                    BackgroundColor="{StaticResource TeaIcoFill}"
+                                    HeightRequest="56"
+                                    StrokeThickness="0"
+                                    WidthRequest="56">
+
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="28" />
+                                    </Border.StrokeShape>
+
+                                    <Image
+                                        Aspect="AspectFit"
+                                        HeightRequest="32"
+                                        Source="cafe_ico.png"
+                                        WidthRequest="32" />
+                                </Border>
+
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="16"
+                                    HorizontalTextAlignment="Center"
+                                    Text="В кафе"
+                                    TextColor="{StaticResource InkColor}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Grid>
+</ContentView>
