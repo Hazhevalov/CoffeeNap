@@ -9,7 +9,8 @@
     <Border StrokeThickness="1"
             Stroke="{StaticResource DividerColor}"
             BackgroundColor="{StaticResource White}"
-            Padding="20,10">
+            Padding="20,10"
+            Margin="0,5">
 
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="1000" />
