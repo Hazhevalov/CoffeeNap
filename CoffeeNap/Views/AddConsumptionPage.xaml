@@ -180,6 +180,15 @@
 
             <steps:CoffeeVolumeStep Grid.Row="1" />
 
+            <!-- Надпись ошибки -->
+            <Label
+                Grid.Row="2"
+                FontSize="13"
+                HorizontalTextAlignment="Center"
+                IsVisible="{Binding HasValidationError}"
+                Text="{Binding ValidationMessage}"
+                TextColor="{StaticResource CaffeineProgressLimit}" />
+            
         </Grid>
 
         <!--  Nav Bar  -->
