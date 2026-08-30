@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CoffeeNap.ViewModels;
 
-public partial class MainPageViewModel : ObservableObject, IDisposable
+public partial class MainPageViewModel : ObservableObject
 {
     private const double LowProgressThreshold = 0.40;
     private const double MediumProgressThreshold = 0.70;
@@ -124,6 +124,7 @@ public partial class MainPageViewModel : ObservableObject, IDisposable
         ? 0
         : Math.Clamp(CurrentCaffeine / DailyCaffeineLimit, 0, 1);
 
+    // Полоска дневной нормы кофеина
     public Color DailyProgressColor
     {
         get
@@ -141,6 +142,7 @@ public partial class MainPageViewModel : ObservableObject, IDisposable
 
     public ObservableCollection<ConsumptionItemViewModel> Consumptions { get; } = [];
 
+    // Инициализация. Подгрузка данных из бд
     public async Task InitializeAsync()
     {
         if (IsInitialized)
@@ -179,66 +181,67 @@ public partial class MainPageViewModel : ObservableObject, IDisposable
         }
     }
 
-    public async Task AddConsumptionAsync(CaffeineConsumption consumption)
-    {
-        await EnsureInitializedAsync();
+    //public async Task AddConsumptionAsync(CaffeineConsumption consumption)
+    //{
+    //    await EnsureInitializedAsync();
 
-        await _operationLock.WaitAsync();
-        try
-        {
-            await _dataService.AddConsumptionAsync(consumption);
-            InsertInChronologicalOrder(new ConsumptionItemViewModel(consumption));
-        }
-        finally
-        {
-            _operationLock.Release();
-        }
-    }
+    //    await _operationLock.WaitAsync();
+    //    try
+    //    {
+    //        await _dataService.AddConsumptionAsync(consumption);
+    //        InsertInChronologicalOrder(new ConsumptionItemViewModel(consumption));
+    //    }
+    //    finally
+    //    {
+    //        _operationLock.Release();
+    //    }
+    //}
 
-    public async Task UpdateConsumptionAsync(CaffeineConsumption consumption)
-    {
-        await EnsureInitializedAsync();
+    //public async Task UpdateConsumptionAsync(CaffeineConsumption consumption)
+    //{
+    //    await EnsureInitializedAsync();
 
-        await _operationLock.WaitAsync();
-        try
-        {
-            await _dataService.UpdateConsumptionAsync(consumption);
-            ReplaceConsumption(new ConsumptionItemViewModel(consumption));
-        }
-        finally
-        {
-            _operationLock.Release();
-        }
-    }
+    //    await _operationLock.WaitAsync();
+    //    try
+    //    {
+    //        await _dataService.UpdateConsumptionAsync(consumption);
+    //        ReplaceConsumption(new ConsumptionItemViewModel(consumption));
+    //    }
+    //    finally
+    //    {
+    //        _operationLock.Release();
+    //    }
+    //}
 
-    public async Task DeleteConsumptionAsync(int id)
-    {
-        await EnsureInitializedAsync();
+    //public async Task DeleteConsumptionAsync(int id)
+    //{
+    //    await EnsureInitializedAsync();
 
-        await _operationLock.WaitAsync();
-        try
-        {
-            await _dataService.DeleteConsumptionAsync(id);
-            var consumption = Consumptions.FirstOrDefault(item => item.Id == id);
-            if (consumption is not null)
-            {
-                Consumptions.Remove(consumption);
-            }
-        }
-        finally
-        {
-            _operationLock.Release();
-        }
-    }
+    //    await _operationLock.WaitAsync();
+    //    try
+    //    {
+    //        await _dataService.DeleteConsumptionAsync(id);
+    //        var consumption = Consumptions.FirstOrDefault(item => item.Id == id);
+    //        if (consumption is not null)
+    //        {
+    //            Consumptions.Remove(consumption);
+    //        }
+    //    }
+    //    finally
+    //    {
+    //        _operationLock.Release();
+    //    }
+    //}
 
-    public async Task SaveDailyCaffeineLimitAsync(double limit)
-    {
-        var settings = await _dataService.GetSettingsAsync();
-        settings.DailyCaffeineLimit = limit;
-        await _dataService.SaveSettingsAsync(settings);
-        DailyCaffeineLimit = limit;
-    }
+    //public async Task SaveDailyCaffeineLimitAsync(double limit)
+    //{
+    //    var settings = await _dataService.GetSettingsAsync();
+    //    settings.DailyCaffeineLimit = limit;
+    //    await _dataService.SaveSettingsAsync(settings);
+    //    DailyCaffeineLimit = limit;
+    //}
 
+    // Запуск счёта времени употребления
     public void StartRelativeTimeTimer()
     {
         if (_relativeTimeCancellation is { IsCancellationRequested: false })
@@ -259,23 +262,23 @@ public partial class MainPageViewModel : ObservableObject, IDisposable
         cancellation?.Dispose();
     }
 
-    public void Dispose()
-    {
-        StopRelativeTimeTimer();
-        Consumptions.CollectionChanged -= OnConsumptionsCollectionChanged;
-        _dataService.ConsumptionAdded -= OnConsumptionAdded;
-        _operationLock.Dispose();
-        GC.SuppressFinalize(this);
-    }
+    //public void Dispose()
+    //{
+    //    StopRelativeTimeTimer();
+    //    Consumptions.CollectionChanged -= OnConsumptionsCollectionChanged;
+    //    _dataService.ConsumptionAdded -= OnConsumptionAdded;
+    //    _operationLock.Dispose();
+    //    GC.SuppressFinalize(this);
+    //}
 
-    private async Task EnsureInitializedAsync()
-    {
-        await InitializeAsync();
-        if (!IsInitialized)
-        {
-            throw new InvalidOperationException("Application data is not initialized.");
-        }
-    }
+    //private async Task EnsureInitializedAsync()
+    //{
+    //    await InitializeAsync();
+    //    if (!IsInitialized)
+    //    {
+    //        throw new InvalidOperationException("Application data is not initialized.");
+    //    }
+    //}
 
     private void ReplaceConsumptions(IEnumerable<CaffeineConsumption> consumptions)
     {
@@ -308,26 +311,26 @@ public partial class MainPageViewModel : ObservableObject, IDisposable
         Consumptions.Insert(index, consumption);
     }
 
-    private void ReplaceConsumption(ConsumptionItemViewModel consumption)
-    {
-        _isReplacingConsumptions = true;
-        try
-        {
-            var existing = Consumptions.FirstOrDefault(item => item.Id == consumption.Id);
-            if (existing is not null)
-            {
-                Consumptions.Remove(existing);
-            }
+    //private void ReplaceConsumption(ConsumptionItemViewModel consumption)
+    //{
+    //    _isReplacingConsumptions = true;
+    //    try
+    //    {
+    //        var existing = Consumptions.FirstOrDefault(item => item.Id == consumption.Id);
+    //        if (existing is not null)
+    //        {
+    //            Consumptions.Remove(existing);
+    //        }
 
-            InsertInChronologicalOrder(consumption);
-        }
-        finally
-        {
-            _isReplacingConsumptions = false;
-        }
+    //        InsertInChronologicalOrder(consumption);
+    //    }
+    //    finally
+    //    {
+    //        _isReplacingConsumptions = false;
+    //    }
 
-        RefreshConsumptionDerivedState();
-    }
+    //    RefreshConsumptionDerivedState();
+    //}
 
     private void OnConsumptionsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {

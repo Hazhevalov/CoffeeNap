@@ -70,9 +70,11 @@ public partial class OnboardingViewModel : ObservableObject
         }
     }
 
+    // 
     [RelayCommand]
     private void ReturnToWelcome() => CurrentStep = OnboardingStep.Welcome;
 
+    // Подтверждение имени, переход на основной экран
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task ConfirmNameAsync()
     {

@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CoffeeNap.ViewModels;
 
+// Объект употребления на главном экране. CaffeineConsumption прописан в Models
 public sealed class ConsumptionItemViewModel(CaffeineConsumption model) : ObservableObject
 {
     internal CaffeineConsumption Model { get; } = model;

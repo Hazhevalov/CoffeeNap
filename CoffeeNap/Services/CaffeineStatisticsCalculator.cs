@@ -2,6 +2,7 @@ using CoffeeNap.Models;
 
 namespace CoffeeNap.Services;
 
+// Подсчёт ДНЕВНОЙ нормы кофеина
 public static class CaffeineStatisticsCalculator
 {
     public static double CalculateDailyCaffeine(

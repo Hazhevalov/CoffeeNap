@@ -9,6 +9,7 @@ namespace CoffeeNap.ViewModels;
 
 public partial class AddConsumptionPageViewModel : ObservableObject
 {
+    // Путь для кофе дома
     private static readonly AddConsumptionStep[] HomeFlow =
     [
         AddConsumptionStep.DrinkType, AddConsumptionStep.CoffeeLocation,
@@ -17,6 +18,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         AddConsumptionStep.Result
     ];
 
+    // Путь для кофе вне дома
     private static readonly AddConsumptionStep[] OutsideFlow =
     [
         AddConsumptionStep.DrinkType, AddConsumptionStep.CoffeeLocation,
@@ -153,6 +155,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     public string ResultDetail4Value => CalculationResult?.Detail4Value ?? string.Empty;
     public string ResultCaffeine => CalculationResult is null ? string.Empty : $"+{CalculationResult.CaffeineMg}мг";
 
+    // Выбрать тип напитка
     [RelayCommand]
     private void SelectDrinkType(CaffeineConsumptionType type)
     {
@@ -240,13 +243,13 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         TransitionTo(AddConsumptionStep.CoffeeBeanType);
     }
 
-    [RelayCommand]
-    private void ShowManualCupCount()
-    {
-        ClearValidation();
-        ManualCupCountText = string.Empty;
-        IsManualCupCountVisible = true;
-    }
+    //[RelayCommand]
+    //private void ShowManualCupCount()
+    //{
+    //    ClearValidation();
+    //    ManualCupCountText = string.Empty;
+    //    IsManualCupCountVisible = true;
+    //}
 
     [RelayCommand]
     private void ConfirmManualCupCount()
@@ -278,6 +281,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         TransitionTo(AddConsumptionStep.CoffeeVolume);
     }
 
+    // Объем напитка
     [RelayCommand]
     private void SelectVolume(ServingSize servingSize)
     {
@@ -292,7 +296,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
             var volumeMl = CoffeeServingCatalog.GetVolumeMl(drinkType, servingSize);
             QuizState.ServingSize = servingSize;
             QuizState.VolumeMl = volumeMl;
-            QuizState.VolumeDisplay = $"{CoffeeQuizCatalog.GetServingSizeDisplay(servingSize)} — {volumeMl} мл";
+            QuizState.VolumeDisplay = $"{CoffeeQuizCatalog.GetServingSizeDisplay(servingSize)}";
         }
         catch (InvalidOperationException exception)
         {
@@ -308,6 +312,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         TransitionTo(AddConsumptionStep.CoffeeBeanType);
     }
 
+    // Ручной ввод объема кофе
     [RelayCommand]
     private void ConfirmManualVolume()
     {
@@ -349,6 +354,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         }
     }
 
+    // Кнопка вернуться назад
     [RelayCommand]
     private async Task BackAsync()
     {
@@ -363,6 +369,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         await Shell.Current.GoToAsync(AppShell.MainAbsoluteRoute, true);
     }
 
+    // Перезапуск квиза
     [RelayCommand]
     private void RestartQuiz()
     {
@@ -377,6 +384,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         CurrentStep = AddConsumptionStep.DrinkType;
     }
 
+    // Сохранить как новое употребление
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task SaveConsumptionAsync()
     {
@@ -409,6 +417,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         }
     }
 
+    // Дебаг тема для поиска ошибок
     private bool TryValidateQuiz(out string message)
     {
         if (QuizState.DrinkType != CaffeineConsumptionType.Coffee)
@@ -435,6 +444,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         return isValid;
     }
 
+    // Построение шаблона для употребления
     private static CaffeineConsumption BuildConsumption(ConsumptionCalculationResult snapshot) => new()
     {
         Name = snapshot.DisplayName,
@@ -443,6 +453,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         ConsumedAt = DateTimeOffset.UtcNow
     };
 
+    // Переход к следующему шагу
     private void TransitionTo(AddConsumptionStep nextStep)
     {
         _stepHistory.Push(CurrentStep);

@@ -1,4 +1,3 @@
-namespace CoffeeNap.ViewModels;
 
 public enum NavigationTab
 {

@@ -23,6 +23,7 @@ public partial class OnboardingPage : ContentPage
         }
     }
 
+    // Возврат при свайпе назад
     protected override bool OnBackButtonPressed()
     {
         if (BindingContext is OnboardingViewModel { CurrentStep: OnboardingStep.NameSetup })
@@ -38,6 +39,7 @@ public partial class OnboardingPage : ContentPage
         return base.OnBackButtonPressed();
     }
 
+    // Кнопка продолжить
     private async void OnStartButtonClicked(object? sender, EventArgs e)
     {
         if (_isTransitioning || BindingContext is not OnboardingViewModel viewModel)
@@ -67,6 +69,7 @@ public partial class OnboardingPage : ContentPage
         }
     }
 
+    // Переключение между экранами
     private async Task ShowWelcomeStepAsync()
     {
         if (_isTransitioning || BindingContext is not OnboardingViewModel viewModel)

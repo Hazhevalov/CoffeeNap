@@ -7,13 +7,14 @@ public interface ICaffeineCalculator
     ConsumptionCalculationResult Calculate(AddConsumptionQuizState state);
 }
 
-/// <summary>Детерминированная приблизительная оценка кофеина из ответов quiz.</summary>
+// Примерная оценка кофеина
 public sealed class CaffeineCalculator : ICaffeineCalculator
 {
     private const double ArabicaMultiplier = 1.0;
     private const double RobustaMultiplier = 1.7;
     private const double ArabicaCaffeinePerGram = 12.0;
 
+    // Публичная функция для подсчёта
     public ConsumptionCalculationResult Calculate(AddConsumptionQuizState state)
     {
         ArgumentNullException.ThrowIfNull(state);
@@ -25,6 +26,7 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
         };
     }
 
+    // Подсчёт кофе вне дома
     private static ConsumptionCalculationResult CalculateOutside(AddConsumptionQuizState state)
     {
         if (state.CoffeeDrinkType is not { } drink ||
@@ -50,6 +52,7 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
             $"{state.VolumeMl} мл");
     }
 
+    // Подсчёт кофе дома
     private static ConsumptionCalculationResult CalculateHome(AddConsumptionQuizState state)
     {
         if (state.BrewingMethod is not { } method ||
@@ -86,6 +89,7 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
         _ => throw new ArgumentOutOfRangeException(nameof(bean))
     };
 
+    // Кол-во кофеина в напитках на 100 мл
     private static double GetCaffeinePer100Ml(CoffeeDrinkType drink) => drink switch
     {
         CoffeeDrinkType.Espresso => 212,
@@ -99,6 +103,7 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
         _ => throw new ArgumentOutOfRangeException(nameof(drink))
     };
 
+    // Коэфициент типов приготовления кофе
     private static double GetExtractionCoefficient(CoffeeBrewingMethod method) => method switch
     {
         CoffeeBrewingMethod.EspressoMachine => 0.75,

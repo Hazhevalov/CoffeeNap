@@ -69,9 +69,4 @@
 		<PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <!-- Явно сохраняет папку Models в обозревателе проекта даже при отсутствии файлов. -->
-	  <Folder Include="Models\" />
-	</ItemGroup>
-
 </Project>

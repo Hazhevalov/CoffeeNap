@@ -6,12 +6,7 @@ namespace CoffeeNap.Models;
 /// </summary>
 public enum CaffeineConsumptionType
 {
-    /// <summary>Кофейный напиток.</summary>
     Coffee,
-
-    /// <summary>Чай.</summary>
     Tea,
-
-    /// <summary>Энергетический напиток.</summary>
     EnergyDrink
 }

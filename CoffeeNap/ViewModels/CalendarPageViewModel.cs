@@ -10,6 +10,7 @@ public sealed class CalendarPageViewModel : ObservableObject
     {
         Header = header;
         Navigation = navigation;
+        // Нав бар активной становится иконка календаря
         Navigation.ActiveTab = NavigationTab.Calendar;
     }
 

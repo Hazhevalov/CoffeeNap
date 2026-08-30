@@ -64,23 +64,23 @@ public sealed class UserStateService : ObservableObject
         }
     }
 
-    public async Task UpdateUserNameAsync(string userName)
-    {
-        var normalizedName = NormalizeUserName(userName);
-        await InitializeAsync();
+    //public async Task UpdateUserNameAsync(string userName)
+    //{
+    //    var normalizedName = NormalizeUserName(userName);
+    //    await InitializeAsync();
 
-        await _operationLock.WaitAsync();
-        try
-        {
-            _profile.UserName = normalizedName;
-            await _dataService.SaveUserProfileAsync(_profile);
-            await PublishProfileAsync(_profile);
-        }
-        finally
-        {
-            _operationLock.Release();
-        }
-    }
+    //    await _operationLock.WaitAsync();
+    //    try
+    //    {
+    //        _profile.UserName = normalizedName;
+    //        await _dataService.SaveUserProfileAsync(_profile);
+    //        await PublishProfileAsync(_profile);
+    //    }
+    //    finally
+    //    {
+    //        _operationLock.Release();
+    //    }
+    //}
 
     public async Task CompleteOnboardingAsync(string userName)
     {

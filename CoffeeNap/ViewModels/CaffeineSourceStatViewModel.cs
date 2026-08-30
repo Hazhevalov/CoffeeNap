@@ -2,6 +2,7 @@ using CoffeeNap.Models;
 
 namespace CoffeeNap.ViewModels;
 
+// Объект "Ваши источники кофеина" на главном экране
 public sealed class CaffeineSourceStatViewModel
 {
     public CaffeineSourceStatViewModel(

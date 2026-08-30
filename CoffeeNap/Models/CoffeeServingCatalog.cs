@@ -14,7 +14,7 @@ public sealed record CoffeeDrinkServingProfile(
     };
 }
 
-/// <summary>Единственный источник стандартных объёмов кофе вне дома.</summary>
+// Стандартные объёмы кофе вне дома
 public static class CoffeeServingCatalog
 {
     private static readonly IReadOnlyDictionary<CoffeeDrinkType, CoffeeDrinkServingProfile> Profiles =

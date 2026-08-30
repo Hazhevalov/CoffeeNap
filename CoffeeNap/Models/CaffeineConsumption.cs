@@ -2,6 +2,7 @@ using SQLite;
 
 namespace CoffeeNap.Models;
 
+// Класс употребления 
 [Table("CaffeineConsumptions")]
 public sealed class CaffeineConsumption
 {
