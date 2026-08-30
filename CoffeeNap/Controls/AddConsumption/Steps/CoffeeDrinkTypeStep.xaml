@@ -97,18 +97,6 @@
                             CornerRadius="15"
                             FontSize="16"
                             Command="{Binding SelectCoffeeDrinkTypeCommand}"
-                            CommandParameter="{x:Static models:CoffeeDrinkType.Ristretto}"
-                            Text="Ристретто"
-                            TextColor="{StaticResource InkColor}" />
-
-                        <Button
-                            Margin="2"
-                            BackgroundColor="{StaticResource White}"
-                            BorderColor="{StaticResource DividerColor}"
-                            BorderWidth="1"
-                            CornerRadius="15"
-                            FontSize="16"
-                            Command="{Binding SelectCoffeeDrinkTypeCommand}"
                             CommandParameter="{x:Static models:CoffeeDrinkType.Americano}"
                             Text="Американо"
                             TextColor="{StaticResource InkColor}" />
@@ -159,18 +147,6 @@
                             Command="{Binding SelectCoffeeDrinkTypeCommand}"
                             CommandParameter="{x:Static models:CoffeeDrinkType.Mocha}"
                             Text="Мокко"
-                            TextColor="{StaticResource InkColor}" />
-
-                        <Button
-                            Margin="2"
-                            BackgroundColor="{StaticResource White}"
-                            BorderColor="{StaticResource DividerColor}"
-                            BorderWidth="1"
-                            CornerRadius="15"
-                            FontSize="16"
-                            Command="{Binding SelectCoffeeDrinkTypeCommand}"
-                            CommandParameter="{x:Static models:CoffeeDrinkType.Doppio}"
-                            Text="Доппио"
                             TextColor="{StaticResource InkColor}" />
 
                         <Button

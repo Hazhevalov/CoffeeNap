@@ -90,13 +90,11 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
     {
         CoffeeDrinkType.Espresso => 212,
         CoffeeDrinkType.Macchiato => 100,
-        CoffeeDrinkType.Ristretto => 250,
         CoffeeDrinkType.Americano => 45,
         CoffeeDrinkType.Cappuccino => 40,
         CoffeeDrinkType.Latte => 32,
         CoffeeDrinkType.FlatWhite => 55,
         CoffeeDrinkType.Mocha => 38,
-        CoffeeDrinkType.Doppio => 212,
         CoffeeDrinkType.Affogato => 100,
         _ => throw new ArgumentOutOfRangeException(nameof(drink))
     };

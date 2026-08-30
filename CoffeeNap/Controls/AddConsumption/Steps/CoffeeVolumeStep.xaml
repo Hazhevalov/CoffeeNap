@@ -100,7 +100,7 @@
                                 FontSize="16"
                                 HorizontalOptions="Fill"
                                 Command="{Binding SelectVolumeCommand}"
-                                CommandParameter="{x:Static models:CoffeeVolumePreset.Small}"
+                                CommandParameter="{x:Static models:ServingSize.Small}"
                                 Text="Маленький"
                                 TextColor="{StaticResource InkColor}" />
                         </Border>
@@ -116,7 +116,7 @@
                                 FontSize="16"
                                 HorizontalOptions="Fill"
                                 Command="{Binding SelectVolumeCommand}"
-                                CommandParameter="{x:Static models:CoffeeVolumePreset.Medium}"
+                                CommandParameter="{x:Static models:ServingSize.Medium}"
                                 Text="Средний"
                                 TextColor="{StaticResource InkColor}" />
                         </Border>
@@ -132,7 +132,7 @@
                                 FontSize="16"
                                 HorizontalOptions="Fill"
                                 Command="{Binding SelectVolumeCommand}"
-                                CommandParameter="{x:Static models:CoffeeVolumePreset.Large}"
+                                CommandParameter="{x:Static models:ServingSize.Large}"
                                 Text="Большой"
                                 TextColor="{StaticResource InkColor}" />
                         </Border>

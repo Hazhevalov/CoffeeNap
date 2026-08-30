@@ -32,17 +32,15 @@ public enum CoffeeDrinkType
 {
     Espresso,
     Macchiato,
-    Ristretto,
     Americano,
     Cappuccino,
     Latte,
     FlatWhite,
     Mocha,
-    Doppio,
     Affogato
 }
 
-public enum CoffeeVolumePreset { Small, Medium, Large }
+public enum ServingSize { Small, Medium, Large }
 
 public sealed class AddConsumptionQuizState
 {
@@ -50,6 +48,7 @@ public sealed class AddConsumptionQuizState
     public CoffeeLocation? CoffeeLocation { get; set; }
     public CoffeeDrinkType? CoffeeDrinkType { get; set; }
     public CoffeeBrewingMethod? BrewingMethod { get; set; }
+    public ServingSize? ServingSize { get; set; }
     public int? VolumeMl { get; set; }
     public string? VolumeDisplay { get; set; }
     public double? CoffeeAmountGrams { get; set; }
@@ -64,6 +63,7 @@ public sealed class AddConsumptionQuizState
         CoffeeLocation = null;
         CoffeeDrinkType = null;
         BrewingMethod = null;
+        ServingSize = null;
         VolumeMl = null;
         VolumeDisplay = null;
         CoffeeAmountGrams = null;
@@ -82,6 +82,7 @@ public sealed class AddConsumptionQuizState
     public void ClearCoffeeBranches()
     {
         CoffeeDrinkType = null;
+        ServingSize = null;
         VolumeMl = null;
         VolumeDisplay = null;
         BrewingMethod = null;
@@ -112,20 +113,12 @@ public static class CoffeeQuizCatalog
     public const int Three = 3;
     public const double GramsPerSpoon = 8;
 
-    public static int GetVolumeMl(CoffeeVolumePreset preset) => preset switch
+    public static string GetServingSizeDisplay(ServingSize servingSize) => servingSize switch
     {
-        CoffeeVolumePreset.Small => 200,
-        CoffeeVolumePreset.Medium => 300,
-        CoffeeVolumePreset.Large => 400,
-        _ => throw new ArgumentOutOfRangeException(nameof(preset))
-    };
-
-    public static string GetVolumeDisplay(CoffeeVolumePreset preset) => preset switch
-    {
-        CoffeeVolumePreset.Small => "Маленький",
-        CoffeeVolumePreset.Medium => "Средний",
-        CoffeeVolumePreset.Large => "Большой",
-        _ => throw new ArgumentOutOfRangeException(nameof(preset))
+        ServingSize.Small => "Маленький",
+        ServingSize.Medium => "Средний",
+        ServingSize.Large => "Большой",
+        _ => throw new ArgumentOutOfRangeException(nameof(servingSize))
     };
 
     public static double GetSpoonGrams(int spoonCount) => spoonCount * GramsPerSpoon;
@@ -176,13 +169,11 @@ public static class CoffeeQuizCatalog
     {
         CoffeeDrinkType.Espresso => "Эспрессо",
         CoffeeDrinkType.Macchiato => "Макиато",
-        CoffeeDrinkType.Ristretto => "Ристретто",
         CoffeeDrinkType.Americano => "Американо",
         CoffeeDrinkType.Cappuccino => "Капучино",
         CoffeeDrinkType.Latte => "Латте",
         CoffeeDrinkType.FlatWhite => "Флэт-Уайт",
         CoffeeDrinkType.Mocha => "Мокко",
-        CoffeeDrinkType.Doppio => "Доппио",
         CoffeeDrinkType.Affogato => "Аффогато",
         _ => throw new ArgumentOutOfRangeException(nameof(type))
     };

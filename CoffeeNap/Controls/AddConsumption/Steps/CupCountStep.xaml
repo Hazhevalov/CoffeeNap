@@ -106,11 +106,11 @@
                                     BackgroundColor="{StaticResource White}"
                                     FontSize="16"
                                     HorizontalOptions="Fill"
-                                    Command="{Binding ShowManualCupCountCommand}"
                                     Text="Больше?"
-                                    TextColor="{StaticResource InkColor}" />
+                                    TextColor="{StaticResource InkColor}"/>
+                                    <!--Command="{Binding ShowManualCupCountCommand}"-->
 
-                                <Entry
+                                <!--<Entry
                                     Margin="20,0,20,12"
                                     IsVisible="{Binding IsManualCupCountVisible}"
                                     Keyboard="Numeric"
@@ -119,7 +119,7 @@
                                     ReturnCommand="{Binding ConfirmManualCupCountCommand}"
                                     ReturnType="Next"
                                     Text="{Binding ManualCupCountText, Mode=TwoWay}"
-                                    TextColor="{StaticResource InkColor}" />
+                                    TextColor="{StaticResource InkColor}" />-->
                             </VerticalStackLayout>
                         </Border>
                     </Grid>

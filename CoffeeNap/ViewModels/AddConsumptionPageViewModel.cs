@@ -264,18 +264,44 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     [RelayCommand]
     private void SelectCoffeeDrinkType(CoffeeDrinkType type)
     {
+        var drinkChanged = QuizState.CoffeeDrinkType != type;
         QuizState.CoffeeDrinkType = type;
-        QuizState.VolumeMl = null;
-        QuizState.BeanType = null;
-        InvalidateResult();
+        if (drinkChanged)
+        {
+            QuizState.ServingSize = null;
+            QuizState.VolumeMl = null;
+            QuizState.VolumeDisplay = null;
+            QuizState.BeanType = null;
+            InvalidateResult();
+        }
+
         TransitionTo(AddConsumptionStep.CoffeeVolume);
     }
 
     [RelayCommand]
-    private void SelectVolume(CoffeeVolumePreset preset)
+    private void SelectVolume(ServingSize servingSize)
     {
-        QuizState.VolumeMl = CoffeeQuizCatalog.GetVolumeMl(preset);
-        QuizState.VolumeDisplay = CoffeeQuizCatalog.GetVolumeDisplay(preset);
+        if (QuizState.CoffeeDrinkType is not { } drinkType)
+        {
+            ValidationMessage = "Сначала выберите вид напитка";
+            return;
+        }
+
+        try
+        {
+            var volumeMl = CoffeeServingCatalog.GetVolumeMl(drinkType, servingSize);
+            QuizState.ServingSize = servingSize;
+            QuizState.VolumeMl = volumeMl;
+            QuizState.VolumeDisplay = $"{CoffeeQuizCatalog.GetServingSizeDisplay(servingSize)} — {volumeMl} мл";
+        }
+        catch (InvalidOperationException exception)
+        {
+            ValidationMessage = "Для выбранного напитка не настроен стандартный объём";
+            _logger.LogError(exception, "Serving profile is missing for {CoffeeDrinkType}.", drinkType);
+            return;
+        }
+
+        ClearValidation();
         ManualVolumeText = string.Empty;
         QuizState.BeanType = null;
         InvalidateResult();
@@ -292,6 +318,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         }
 
         ClearValidation();
+        QuizState.ServingSize = null;
         QuizState.VolumeMl = volume;
         QuizState.VolumeDisplay = $"{volume} мл";
         QuizState.BeanType = null;
