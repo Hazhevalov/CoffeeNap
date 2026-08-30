@@ -1,18 +1,63 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-             x:Class="CoffeeNap.Views.SettingsPage"
+    x:Class="CoffeeNap.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:CoffeeNap.Controls"
+    xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     Title="Настройки"
     BackgroundColor="{StaticResource SurfaceColor}"
-    Shell.NavBarIsVisible="True">
-    <!-- Временный placeholder до реализации настроек; Shell показывает кнопку «Назад». -->
-    <Label
-        FontFamily="Inter"
-        FontSize="24"
-        FontAttributes="Bold"
-        HorizontalOptions="Center"
-        Text="Настройки"
-        TextColor="{StaticResource InkColor}"
-        VerticalOptions="Center" />
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <VerticalStackLayout Grid.Row="1" Spacing="10">
+            <!--  Кнопка смены языка  -->
+            <Border Stroke="{StaticResource DividerColor}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+
+                <Button
+                    Padding="20"
+                    BackgroundColor="{StaticResource White}"
+                    FontSize="16"
+                    Text="Язык"
+                    TextColor="{StaticResource InkColor}" />
+            </Border>
+
+            <!--  Кнопка смены темы  -->
+            <Border Stroke="{StaticResource DividerColor}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+
+                <Button
+                    Padding="20"
+                    BackgroundColor="{StaticResource White}"
+                    FontSize="16"
+                    Text="Тема"
+                    TextColor="{StaticResource InkColor}" />
+            </Border>
+
+            <!--  Кнопка удаления данных  -->
+            <Border Stroke="{StaticResource DividerColor}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+
+                <Button
+                    Padding="20"
+                    BackgroundColor="{StaticResource White}"
+                    FontSize="16"
+                    Text="Удалить данные"
+                    TextColor="{StaticResource ValidationErrorColor}" />
+            </Border>
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>
