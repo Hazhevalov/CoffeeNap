@@ -42,7 +42,7 @@
                 </Grid>
             </Border>
 
-            <!--  Кнопка смены темы  -->
+            <!--  Кнопка политики конфиденциальности  -->
             <Border Padding="20" Stroke="{StaticResource DividerColor}">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20" />
@@ -52,17 +52,10 @@
                     <Label
                         Grid.Column="0"
                         FontAttributes="Bold"
-                        FontSize="16"
+                        FontSize="15"
                         HorizontalTextAlignment="Start"
-                        Text="Тема"
+                        Text="Политика конфиденциальности"
                         TextColor="{StaticResource InkColor}" />
-
-                    <Label
-                        Grid.Column="1"
-                        FontSize="16"
-                        HorizontalTextAlignment="End"
-                        Text="Светлая"
-                        TextColor="{StaticResource MutedTextColor}" />
                 </Grid>
             </Border>
 
@@ -164,111 +157,9 @@
                 </VerticalStackLayout>
             </Grid>
         </Border>
-        
-        <!--Всплывашка для смены темы (Системная под вопросом)-->
-        <Border IsVisible="False"
-                Grid.Row="2"
-                BackgroundColor="{StaticResource White}"
-                Stroke="{StaticResource DividerColor}"
-                StrokeShape="20"
-                ZIndex="30">
-            
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="36" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <!--  Хуйня для сворачивания панели  -->
-                <Grid Grid.Row="0" BackgroundColor="Transparent">
-                    <BoxView
-                        BackgroundColor="{StaticResource InkColor}"
-                        CornerRadius="2"
-                        HeightRequest="4"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center"
-                        WidthRequest="42" />
-                </Grid>
-
-                <!--  Список кнопок  -->
-                <VerticalStackLayout
-                    Grid.Row="1"
-                    Padding="10,10"
-                    Spacing="10">
-
-                    <!--  Системная  -->
-                    <Border Padding="20" Stroke="{StaticResource DividerColor}">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20" />
-                        </Border.StrokeShape>
-
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                            <Label
-                                Grid.Column="1"
-                                FontAttributes="Bold"
-                                FontSize="16"
-                                HorizontalTextAlignment="Start"
-                                Text="Системная"
-                                TextColor="{StaticResource InkColor}" />
-                        </Grid>
-                    </Border>
-
-                    <!--  Светлая  -->
-                    <Border Padding="20" Stroke="{StaticResource EnergyDrinkIcoFill}">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20" />
-                        </Border.StrokeShape>
-
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                            <Rectangle 
-                                RadiusX="200"
-                                RadiusY="200"
-                                WidthRequest="24"
-                                HeightRequest="24"
-                                BackgroundColor="{StaticResource White}"
-                                Stroke="{StaticResource DividerColor}"/>
-
-                            <Label
-                                Grid.Column="1"
-                                FontAttributes="Bold"
-                                FontSize="16"
-                                HorizontalTextAlignment="Start"
-                                Text="Светлая"
-                                TextColor="{StaticResource InkColor}" />
-                        </Grid>
-                    </Border>
-
-                    <!--  Темная  -->
-                    <Border Padding="20" Stroke="{StaticResource DividerColor}">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20" />
-                        </Border.StrokeShape>
-
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                            <Rectangle 
-                                RadiusX="200"
-                                RadiusY="200"
-                                WidthRequest="24"
-                                HeightRequest="24"
-                                BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
-                                Stroke="{StaticResource DividerColor}"/>
-
-                            <Label
-                                Grid.Column="1"
-                                FontAttributes="Bold"
-                                FontSize="16"
-                                HorizontalTextAlignment="Start"
-                                Text="Темная"
-                                TextColor="{StaticResource InkColor}" />
-                        </Grid>
-                    </Border>
-                </VerticalStackLayout>
-            </Grid>
-        </Border>
 
         <!--Всплывашка для удаления данных-->
-        <Border IsVisible="True" 
+        <Border IsVisible="False" 
                 Grid.Row="1" 
                 BackgroundColor="{StaticResource White}"
                 ZIndex="20"
@@ -330,6 +221,7 @@
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </Border>
+        
         <!--  Nav Bar  -->
         <!--  Нижняя навигация вынесена в отдельный переиспользуемый контрол.  -->
         <controls:BottomNavigationBar
