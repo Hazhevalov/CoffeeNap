@@ -267,6 +267,69 @@
             </Grid>
         </Border>
 
+        <!--Всплывашка для удаления данных-->
+        <Border IsVisible="True" 
+                Grid.Row="1" 
+                BackgroundColor="{StaticResource White}"
+                ZIndex="20"
+                Padding="16,20" 
+                StrokeShape="20"
+                VerticalOptions="Center">
+            
+            <VerticalStackLayout Spacing="20">
+                <VerticalStackLayout Spacing="0">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        HorizontalTextAlignment="Center"
+                        Text="Внимание!"
+                        TextColor="{StaticResource InkColor}"/>
+
+                    <Label
+                        FontSize="16"
+                        HorizontalTextAlignment="Center"
+                        Text="Удаление данных приведет к потере всех ваших настроек и прогресса. Вы уверены, что хотите продолжить?"
+                        TextColor="{StaticResource InkColor}"/>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="10">
+                    
+                    <Border
+                        BackgroundColor="#FFECEC"
+                        MinimumHeightRequest="48"
+                        HorizontalOptions="Fill"
+                        StrokeShape="20"
+                        Padding="16,20"
+                        StrokeThickness="1"
+                        Stroke="#FFC8C8">
+                        
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="16"                        
+                            Text="Удалить данные"
+                            TextColor="{StaticResource ValidationErrorColor}"
+                            HorizontalOptions="Center"/>
+                    </Border>
+
+                    <Border
+                        BackgroundColor="{StaticResource White}"
+                        MinimumHeightRequest="48"
+                        HorizontalOptions="Fill"
+                        StrokeShape="20"
+                        Padding="16,20"
+                        StrokeThickness="1"
+                        Stroke="{StaticResource DividerColor}">
+
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="16"                        
+                            Text="Отмена"
+                            TextColor="{StaticResource InkColor}"
+                            HorizontalOptions="Center"/>
+                    </Border>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </Border>
         <!--  Nav Bar  -->
         <!--  Нижняя навигация вынесена в отдельный переиспользуемый контрол.  -->
         <controls:BottomNavigationBar
