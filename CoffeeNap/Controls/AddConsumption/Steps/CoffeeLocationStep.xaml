@@ -36,7 +36,7 @@
                         TextColor="{StaticResource InkColor}"
                         VerticalOptions="Start" />
 
-                    <Grid Grid.Row="1" RowSpacing="5">
+                    <Grid Grid.Row="1" RowSpacing="5" ColumnSpacing="10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
