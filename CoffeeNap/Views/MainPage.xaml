@@ -65,7 +65,19 @@
                     BindingContext="{Binding Header}"
                     SafeAreaEdges="Container" />
 
-        <VerticalStackLayout Grid.Row="1" Spacing="10">
+        <!--
+            Grid задаёт панели конечную высоту строки и позволяет ей раскрываться
+            поверх верхних карточек. Сами карточки остаются в VerticalStackLayout.
+        -->
+        <Grid
+            Grid.Row="1"
+            IsClippedToBounds="True">
+
+        <VerticalStackLayout
+            x:Name="FixedTopContent"
+            Grid.Row="1"
+            Spacing="10"
+            VerticalOptions="Start">
             <!-- Блок "Дневная норма кофеина" -->
             <Border
                 MinimumHeightRequest="150"
@@ -358,6 +370,14 @@
                 </Grid>
             </Border>
         </VerticalStackLayout>
+
+        <controls:ConsumptionPanel
+            x:Name="ConsumptionPanel"
+            ZIndex="10"
+            CollapsedTopInset="{Binding Source={x:Reference FixedTopContent}, Path=Height}"
+            ItemsSource="{Binding Consumptions}" />
+
+        </Grid>
 
         <controls:BottomNavigationBar Grid.Row="2"
             BindingContext="{Binding Navigation}"
