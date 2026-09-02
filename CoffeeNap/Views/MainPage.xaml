@@ -10,48 +10,6 @@
     SafeAreaEdges="None"
     Shell.NavBarIsVisible="False">
 
-    <!-- <Grid RowSpacing="0">
-
-        <Grid
-            x:Name="PageContentArea"
-            Grid.Row="0"
-            BackgroundColor="{StaticResource PageBackgroundColor}"
-            IsClippedToBounds="True"
-            SafeAreaEdges="None">
-
-            <VerticalStackLayout
-                x:Name="FixedTopContent"
-                Padding="0,0,0,12"
-                Spacing="0"
-                VerticalOptions="Start">
-
-            </VerticalStackLayout>
-
-        </Grid>
-
-
-        <controls:BottomNavigationBar
-            MinimumHeightRequest="78"
-            x:Name="BottomNavigationBar"
-            VerticalOptions="End"
-            HorizontalOptions="Center"
-            ZIndex="20"
-            BindingContext="{Binding Navigation}"
-            SafeAreaEdges="Container">
-
-            <controls:BottomNavigationBar.Shadow>
-                <Shadow
-                    Brush="#40000000"
-                    Offset="0,-6"
-                    Radius="14"
-                    Opacity="0.45" />
-            </controls:BottomNavigationBar.Shadow>
-
-        </controls:BottomNavigationBar>
-
-    </Grid> -->
-
-
     <Grid RowSpacing="10" Padding="12,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -78,6 +36,7 @@
             Grid.Row="1"
             Spacing="10"
             VerticalOptions="Start">
+            
             <!-- Блок "Дневная норма кофеина" -->
             <Border
                 MinimumHeightRequest="150"
@@ -371,18 +330,21 @@
             </Border>
         </VerticalStackLayout>
 
-        <controls:ConsumptionPanel
-            x:Name="ConsumptionPanel"
-            ZIndex="10"
-            CollapsedTopInset="{Binding Source={x:Reference FixedTopContent}, Path=Height}"
-            ItemsSource="{Binding Consumptions}" />
+        <Border StrokeThickness="0" StrokeShape="30">
+            <controls:ConsumptionPanel
+                x:Name="ConsumptionPanel"
+                ZIndex="10"
+                CollapsedTopInset="{Binding Source={x:Reference FixedTopContent}, Path=Height}"
+                ItemsSource="{Binding Consumptions}" 
+                Margin="0,10"/>
+        </Border>
 
         </Grid>
 
         <controls:BottomNavigationBar Grid.Row="2"
             BindingContext="{Binding Navigation}"
             x:Name="BottomNavigationBar"
-            VerticalOptions="End"
+            VerticalOptions="Start"
             HorizontalOptions="Center"/>
     </Grid>
 </ContentPage>
