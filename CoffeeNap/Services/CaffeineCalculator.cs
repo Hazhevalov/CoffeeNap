@@ -57,7 +57,6 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
     {
         if (state.BrewingMethod is not { } method ||
             state.CoffeeAmountGrams is not > 0 ||
-            state.CupCount is not > 0 ||
             state.BeanType is not { } bean)
         {
             throw new InvalidOperationException("Home coffee answers are incomplete.");
@@ -67,8 +66,7 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
             state.CoffeeAmountGrams.Value *
             ArabicaCaffeinePerGram *
             GetBeanMultiplier(bean) *
-            GetExtractionCoefficient(method) /
-            state.CupCount.Value);
+            GetExtractionCoefficient(method));
         return new ConsumptionCalculationResult(
             Math.Max(1, caffeine),
             "Домашний кофе",
@@ -77,9 +75,9 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
             CoffeeQuizCatalog.GetBrewingMethodDisplay(method),
             state.CoffeeAmountDisplay ?? $"{state.CoffeeAmountGrams:0.#} г",
             $"{state.CoffeeAmountGrams:0.#}г",
-            state.CupCountDisplay ?? CoffeeQuizCatalog.GetCupDisplay(state.CupCount.Value),
             CoffeeQuizCatalog.GetBeanDisplay(bean),
-            $"×{GetBeanMultiplier(bean):0.#}");
+            string.Empty,
+            string.Empty);
     }
 
     private static double GetBeanMultiplier(CoffeeBeanType bean) => bean switch
@@ -112,7 +110,7 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
         CoffeeBrewingMethod.FrenchPress => 0.75,
         CoffeeBrewingMethod.Turkish => 0.85,
         CoffeeBrewingMethod.PourOver => 0.70,
-        CoffeeBrewingMethod.CapsuleMachine => 0.65,
+        CoffeeBrewingMethod.Kettle => 0.75,
         _ => throw new ArgumentOutOfRangeException(nameof(method))
     };
 }

@@ -1,7 +1,7 @@
 namespace CoffeeNap.Controls;
 
 /// <summary>
-/// Адаптивная capsule-полоса без платформенной рамки. Track и заполнение
+/// Адаптивная скруглённая полоса без платформенной рамки. Track и заполнение
 /// рисуются внутри фактических границ самого контрола.
 /// </summary>
 public sealed class RoundedProgressBar : GraphicsView, IDrawable

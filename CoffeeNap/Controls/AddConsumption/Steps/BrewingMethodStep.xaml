@@ -70,10 +70,59 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <!--  Эспрессо машина  -->
+                            <!--  Чайник  -->
                             <Border
                                 Grid.Row="0"
                                 Grid.Column="0"
+                                Padding="16"
+                                BackgroundColor="{StaticResource White}"
+                                Stroke="{StaticResource DividerColor}"
+                                StrokeThickness="1">
+
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectBrewingMethodCommand}" CommandParameter="{x:Static models:CoffeeBrewingMethod.Kettle}" />
+                                </Border.GestureRecognizers>
+
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
+
+                                <VerticalStackLayout
+                                            HorizontalOptions="Center"
+                                            Spacing="10"
+                                            VerticalOptions="Center">
+
+                                    <Border
+                                        BackgroundColor="{StaticResource CaffeeIcoFill}"
+                                        HeightRequest="56"
+                                        StrokeThickness="0"
+                                        WidthRequest="56">
+
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="28" />
+                                        </Border.StrokeShape>
+
+                                        <Image
+                                            Aspect="AspectFit"
+                                            HeightRequest="32"
+                                            Source="tea_ico.png"
+                                            WidthRequest="32" />
+
+                                    </Border>
+
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="16"
+                                        HorizontalTextAlignment="Center"
+                                        Text="Чайник"
+                                        TextColor="{StaticResource InkColor}" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!--  Эспрессо машина  -->
+                            <Border
+                                Grid.Row="0"
+                                Grid.Column="1"
                                 Padding="16"
                                 BackgroundColor="{StaticResource White}"
                                 Stroke="{StaticResource DividerColor}"
@@ -121,8 +170,8 @@
 
                             <!--  Cold Brew  -->
                             <Border
-                                Grid.Row="0"
-                                Grid.Column="1"
+                                Grid.Row="1"
+                                Grid.Column="0"
                                 Padding="16"
                                 BackgroundColor="{StaticResource White}"
                                 Stroke="{StaticResource DividerColor}"
@@ -171,7 +220,7 @@
                             <!--  Гейзер  -->
                             <Border
                                 Grid.Row="1"
-                                Grid.Column="0"
+                                Grid.Column="1"
                                 Padding="16"
                                 BackgroundColor="{StaticResource White}"
                                 Stroke="{StaticResource DividerColor}"
@@ -219,7 +268,7 @@
 
                             <!--  Френч пресс  -->
                             <Border
-                                Grid.Row="1"
+                                Grid.Row="2"
                                 Grid.Column="1"
                                 Padding="16"
                                 BackgroundColor="{StaticResource White}"
@@ -317,8 +366,8 @@
 
                             <!--  Воронка  -->
                             <Border
-                                Grid.Row="2"
-                                Grid.Column="1"
+                                Grid.Row="3"
+                                Grid.Column="0"
                                 Padding="16"
                                 BackgroundColor="{StaticResource White}"
                                 Stroke="{StaticResource DividerColor}"
@@ -360,55 +409,6 @@
                                         FontSize="16"
                                         HorizontalTextAlignment="Center"
                                         Text="Воронка"
-                                        TextColor="{StaticResource InkColor}" />
-                                </VerticalStackLayout>
-                            </Border>
-
-                            <!--  Капсульная машина  -->
-                            <Border
-                                Grid.Row="3"
-                                Grid.Column="0"
-                                Padding="16"
-                                BackgroundColor="{StaticResource White}"
-                                Stroke="{StaticResource DividerColor}"
-                                StrokeThickness="1">
-
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding SelectBrewingMethodCommand}" CommandParameter="{x:Static models:CoffeeBrewingMethod.CapsuleMachine}" />
-                                </Border.GestureRecognizers>
-
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="20" />
-                                </Border.StrokeShape>
-
-                                <VerticalStackLayout
-                                    HorizontalOptions="Center"
-                                    Spacing="10"
-                                    VerticalOptions="Center">
-
-                                    <Border
-                                        BackgroundColor="{StaticResource TeaIcoFill}"
-                                        HeightRequest="56"
-                                        StrokeThickness="0"
-                                        WidthRequest="56">
-
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="28" />
-                                        </Border.StrokeShape>
-
-                                        <Image
-                                            Aspect="AspectFit"
-                                            HeightRequest="32"
-                                            Source="capsul_ico.png"
-                                            WidthRequest="32" />
-
-                                    </Border>
-
-                                    <Label
-                                        FontAttributes="Bold"
-                                        FontSize="16"
-                                        HorizontalTextAlignment="Center"
-                                        Text="Капсульная машина"
                                         TextColor="{StaticResource InkColor}" />
                                 </VerticalStackLayout>
                             </Border>

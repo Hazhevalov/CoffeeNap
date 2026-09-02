@@ -170,8 +170,6 @@
 
             <steps:CoffeeAmountStep Grid.Row="1" />
 
-            <steps:CupCountStep Grid.Row="1" />
-
             <steps:CoffeeBeanTypeStep Grid.Row="1" />
 
             <steps:ConsumptionResultStep Grid.Row="1" />

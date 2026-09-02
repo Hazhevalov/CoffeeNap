@@ -6,7 +6,6 @@ public enum AddConsumptionStep
     CoffeeLocation,
     BrewingMethod,
     CoffeeAmount,
-    CupCount,
     CoffeeDrinkType,
     CoffeeVolume,
     CoffeeBeanType,
@@ -25,7 +24,7 @@ public enum CoffeeBrewingMethod
     FrenchPress,
     Turkish,
     PourOver,
-    CapsuleMachine
+    Kettle
 }
 
 public enum CoffeeDrinkType
@@ -53,8 +52,6 @@ public sealed class AddConsumptionQuizState
     public string? VolumeDisplay { get; set; }
     public double? CoffeeAmountGrams { get; set; }
     public string? CoffeeAmountDisplay { get; set; }
-    public int? CupCount { get; set; }
-    public string? CupCountDisplay { get; set; }
     public CoffeeBeanType? BeanType { get; set; }
 
     public void Reset()
@@ -68,8 +65,6 @@ public sealed class AddConsumptionQuizState
         VolumeDisplay = null;
         CoffeeAmountGrams = null;
         CoffeeAmountDisplay = null;
-        CupCount = null;
-        CupCountDisplay = null;
         BeanType = null;
     }
 
@@ -88,8 +83,6 @@ public sealed class AddConsumptionQuizState
         BrewingMethod = null;
         CoffeeAmountGrams = null;
         CoffeeAmountDisplay = null;
-        CupCount = null;
-        CupCountDisplay = null;
         BeanType = null;
     }
 }
@@ -131,14 +124,6 @@ public static class CoffeeQuizCatalog
         _ => $"{spoonCount} ложек"
     };
 
-    public static string GetCupDisplay(int cupCount) => cupCount switch
-    {
-        1 => "Одна чашка",
-        2 => "Две чашки",
-        3 => "Три чашки",
-        _ => $"{cupCount} чашек"
-    };
-
     public static string GetBeanDisplay(CoffeeBeanType type) => type switch
     {
         CoffeeBeanType.Arabica => "Арабика",
@@ -161,7 +146,7 @@ public static class CoffeeQuizCatalog
         CoffeeBrewingMethod.FrenchPress => "Френч-пресс",
         CoffeeBrewingMethod.Turkish => "Турка",
         CoffeeBrewingMethod.PourOver => "Воронка",
-        CoffeeBrewingMethod.CapsuleMachine => "Капсульная машина",
+        CoffeeBrewingMethod.Kettle => "Чайник",
         _ => throw new ArgumentOutOfRangeException(nameof(method))
     };
 
