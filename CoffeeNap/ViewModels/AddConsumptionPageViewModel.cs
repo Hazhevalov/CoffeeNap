@@ -14,8 +14,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     [
         AddConsumptionStep.DrinkType, AddConsumptionStep.CoffeeLocation,
         AddConsumptionStep.BrewingMethod, AddConsumptionStep.CoffeeAmount,
-        AddConsumptionStep.CupCount, AddConsumptionStep.CoffeeBeanType,
-        AddConsumptionStep.Result
+        AddConsumptionStep.CoffeeBeanType, AddConsumptionStep.Result
     ];
 
     // Путь для кофе вне дома
@@ -34,8 +33,6 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     private ConsumptionCalculationResult? _calculationResult;
     private string _manualVolumeText = string.Empty;
     private string _manualCoffeeAmountText = string.Empty;
-    private string _manualCupCountText = string.Empty;
-    private bool _isManualCupCountVisible;
     private string _validationMessage = string.Empty;
     private bool _isSaving;
 
@@ -82,18 +79,6 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         set => SetProperty(ref _manualCoffeeAmountText, value);
     }
 
-    public string ManualCupCountText
-    {
-        get => _manualCupCountText;
-        set => SetProperty(ref _manualCupCountText, value);
-    }
-
-    public bool IsManualCupCountVisible
-    {
-        get => _isManualCupCountVisible;
-        private set => SetProperty(ref _isManualCupCountVisible, value);
-    }
-
     public string ValidationMessage
     {
         get => _validationMessage;
@@ -118,7 +103,6 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     public bool IsCoffeeLocationStep => CurrentStep == AddConsumptionStep.CoffeeLocation;
     public bool IsBrewingMethodStep => CurrentStep == AddConsumptionStep.BrewingMethod;
     public bool IsCoffeeAmountStep => CurrentStep == AddConsumptionStep.CoffeeAmount;
-    public bool IsCupCountStep => CurrentStep == AddConsumptionStep.CupCount;
     public bool IsCoffeeBeanTypeStep => CurrentStep == AddConsumptionStep.CoffeeBeanType;
     public bool IsResultStep => CurrentStep == AddConsumptionStep.Result;
     public bool IsCoffeeDrinkTypeStep => CurrentStep == AddConsumptionStep.CoffeeDrinkType;
@@ -190,7 +174,6 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     {
         QuizState.BrewingMethod = method;
         QuizState.CoffeeAmountGrams = null;
-        QuizState.CupCount = null;
         QuizState.BeanType = null;
         InvalidateResult();
         TransitionTo(AddConsumptionStep.CoffeeAmount);
@@ -202,12 +185,9 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         QuizState.CoffeeAmountGrams = CoffeeQuizCatalog.GetSpoonGrams(spoonCount);
         QuizState.CoffeeAmountDisplay = CoffeeQuizCatalog.GetSpoonDisplay(spoonCount);
         ManualCoffeeAmountText = string.Empty;
-        ManualCupCountText = string.Empty;
-        IsManualCupCountVisible = false;
-        QuizState.CupCount = null;
         QuizState.BeanType = null;
         InvalidateResult();
-        TransitionTo(AddConsumptionStep.CupCount);
+        TransitionTo(AddConsumptionStep.CoffeeBeanType);
     }
 
     [RelayCommand]
@@ -222,46 +202,9 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         ClearValidation();
         QuizState.CoffeeAmountGrams = grams;
         QuizState.CoffeeAmountDisplay = $"{grams:0.#} г";
-        ManualCupCountText = string.Empty;
-        IsManualCupCountVisible = false;
-        QuizState.CupCount = null;
-        QuizState.BeanType = null;
-        InvalidateResult();
-        TransitionTo(AddConsumptionStep.CupCount);
-    }
-
-    [RelayCommand]
-    private void SelectCupCount(int cupCount)
-    {
-        if (cupCount <= 0) return;
-        ManualCupCountText = string.Empty;
-        IsManualCupCountVisible = false;
-        QuizState.CupCount = cupCount;
-        QuizState.CupCountDisplay = CoffeeQuizCatalog.GetCupDisplay(cupCount);
         QuizState.BeanType = null;
         InvalidateResult();
         TransitionTo(AddConsumptionStep.CoffeeBeanType);
-    }
-
-    //[RelayCommand]
-    //private void ShowManualCupCount()
-    //{
-    //    ClearValidation();
-    //    ManualCupCountText = string.Empty;
-    //    IsManualCupCountVisible = true;
-    //}
-
-    [RelayCommand]
-    private void ConfirmManualCupCount()
-    {
-        if (!int.TryParse(ManualCupCountText, NumberStyles.Integer, CultureInfo.CurrentCulture, out var cupCount) || cupCount < 3)
-        {
-            ValidationMessage = "Введите количество чашек не меньше 3";
-            return;
-        }
-
-        ClearValidation();
-        SelectCupCount(cupCount);
     }
 
     [RelayCommand]
@@ -377,8 +320,6 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         _stepHistory.Clear();
         ManualVolumeText = string.Empty;
         ManualCoffeeAmountText = string.Empty;
-        ManualCupCountText = string.Empty;
-        IsManualCupCountVisible = false;
         ClearValidation();
         InvalidateResult();
         CurrentStep = AddConsumptionStep.DrinkType;
@@ -431,7 +372,6 @@ public partial class AddConsumptionPageViewModel : ObservableObject
             CoffeeLocation.Home =>
                 QuizState.BrewingMethod is not null &&
                 QuizState.CoffeeAmountGrams is > 0 &&
-                QuizState.CupCount is > 0 &&
                 QuizState.BeanType is not null,
             CoffeeLocation.Outside =>
                 QuizState.CoffeeDrinkType is not null &&
@@ -475,7 +415,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     {
         OnPropertyChanged(nameof(IsDrinkTypeStep)); OnPropertyChanged(nameof(IsCoffeeLocationStep));
         OnPropertyChanged(nameof(IsBrewingMethodStep)); OnPropertyChanged(nameof(IsCoffeeAmountStep));
-        OnPropertyChanged(nameof(IsCupCountStep)); OnPropertyChanged(nameof(IsCoffeeBeanTypeStep));
+        OnPropertyChanged(nameof(IsCoffeeBeanTypeStep));
         OnPropertyChanged(nameof(IsResultStep)); OnPropertyChanged(nameof(IsCoffeeDrinkTypeStep));
         OnPropertyChanged(nameof(IsCoffeeVolumeStep)); OnPropertyChanged(nameof(ProgressStage));
         OnPropertyChanged(nameof(ProgressColumnSpan));

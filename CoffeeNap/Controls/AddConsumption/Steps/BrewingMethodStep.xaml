@@ -80,7 +80,7 @@
                                 StrokeThickness="1">
 
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding SelectBrewingMethodCommand}" CommandParameter="{x:Static models:CoffeeBrewingMethod.EspressoMachine}" />
+                                    <TapGestureRecognizer Command="{Binding SelectBrewingMethodCommand}" CommandParameter="{x:Static models:CoffeeBrewingMethod.Kettle}" />
                                 </Border.GestureRecognizers>
 
                                 <Border.StrokeShape>
@@ -367,7 +367,7 @@
                             <!--  Воронка  -->
                             <Border
                                 Grid.Row="3"
-                                Grid.Column="1"
+                                Grid.Column="0"
                                 Padding="16"
                                 BackgroundColor="{StaticResource White}"
                                 Stroke="{StaticResource DividerColor}"
