@@ -11,27 +11,636 @@
     SafeAreaEdges="All"
     Shell.NavBarIsVisible="False">
 
-    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10" Padding="12,0">
         <controls:MainHeaderView
             Grid.Row="0"
             HeightRequest="86"
             BindingContext="{Binding Header}" />
 
-        <!-- Временный placeholder будущего календаря истории употреблений. -->
-        <Label
-            Grid.Row="1"
-            FontFamily="Inter"
-            FontSize="24"
-            FontAttributes="Bold"
-            HorizontalOptions="Center"
-            Text="Календарь"
-            TextColor="{StaticResource InkColor}"
-            VerticalOptions="Center" />
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="10">
+                <!-- Блок смены месяца -->
+                <Border VerticalOptions="Start"
+                        BackgroundColor="{StaticResource White}"
+                        Stroke="{StaticResource DividerColor}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 30" Padding="10">
+
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                        <Button
+                            Padding="15"
+                            BackgroundColor="{StaticResource White}"
+                            CornerRadius="15"
+                            HeightRequest="54"
+                            HorizontalOptions="Start"
+                            ImageSource="back_ico.png"
+                            Command="{Binding BackCommand}"
+                            VerticalOptions="Center"
+                            WidthRequest="54" />
+
+                            <Label
+                                Text="{Binding MonthTitle}"
+                                FontSize="18"
+                                FontAttributes="Bold"
+                                TextColor="{StaticResource InkColor}"
+                                VerticalOptions="Center" />
+
+                        <Button
+                            Padding="15"
+                            BackgroundColor="{StaticResource White}"
+                            CornerRadius="15"
+                            HeightRequest="54"
+                            HorizontalOptions="Start"
+                            ImageSource="back_ico.png"
+                            Command="{Binding BackCommand}"
+                            VerticalOptions="Center"
+                            WidthRequest="54" 
+                            Rotation="180"/>
+                        </HorizontalStackLayout>
+                </Border>
+
+                <!-- Блок календаря -->
+                <Border VerticalOptions="Start"
+                    BackgroundColor="{StaticResource White}"
+                    Stroke="{StaticResource DividerColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 30" Padding="20">
+
+                    <VerticalStackLayout Spacing="20">
+                        <!-- Дни недели -->
+                        <Grid
+                            ColumnDefinitions="*,*,*,*,*,*,*">
+
+                            <Label
+                                Text="Пн"
+                                HorizontalTextAlignment="Center"
+                                TextColor="#AAAAAA"
+                                FontSize="14" />
+
+                            <Label
+                                Grid.Column="1"
+                                Text="Вт"
+                                HorizontalTextAlignment="Center"
+                                TextColor="#AAAAAA"
+                                FontSize="14" />
+
+                            <Label
+                                Grid.Column="2"
+                                Text="Ср"
+                                HorizontalTextAlignment="Center"
+                                TextColor="#AAAAAA"
+                                FontSize="14" />
+
+                            <Label
+                                Grid.Column="3"
+                                Text="Чт"
+                                HorizontalTextAlignment="Center"
+                                TextColor="#AAAAAA"
+                                FontSize="14" />
+
+                            <Label
+                                Grid.Column="4"
+                                Text="Пт"
+                                HorizontalTextAlignment="Center"
+                                TextColor="#AAAAAA"
+                                FontSize="14" />
+
+                            <Label
+                                Grid.Column="5"
+                                Text="Сб"
+                                HorizontalTextAlignment="Center"
+                                TextColor="#AAAAAA"
+                                FontSize="14" />
+
+                            <Label
+                                Grid.Column="6"
+                                Text="Вс"
+                                HorizontalTextAlignment="Center"
+                                TextColor="#AAAAAA"
+                                FontSize="14" />
+                        </Grid>
+
+                        <!-- Сетка календаря -->
+                        <CollectionView
+                            ItemsSource="{Binding Days}"
+                            SelectionMode="None"
+                            HorizontalScrollBarVisibility="Never"
+                            VerticalScrollBarVisibility="Never">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout
+                                    Orientation="Vertical"
+                                    Span="7"
+                                    HorizontalItemSpacing="8"
+                                    VerticalItemSpacing="16" />
+                            </CollectionView.ItemsLayout>
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        IsVisible="True"
+                                        WidthRequest="44"
+                                        HeightRequest="44"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="Transparent"
+                                        Stroke="{StaticResource DividerColor}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 200">
+
+                                        <Label
+                                            Text="{Binding Day}"
+                                            FontSize="16"
+                                            FontAttributes="Bold"
+                                            TextColor="{StaticResource InkColor}"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalTextAlignment="Center" />
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <!-- Легенда -->
+                        <Grid
+                            ColumnDefinitions="*,*,*,*"
+                            ColumnSpacing="8">
+
+                            <!-- 120 мг -->
+                            <HorizontalStackLayout
+                                Grid.Column="0"
+                                Spacing="6"
+                                HorizontalOptions="Center">
+
+                                <Border
+                                    WidthRequest="10"
+                                    HeightRequest="10"
+                                    BackgroundColor="#B5F51A"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 200"
+                                    VerticalOptions="Center" />
+
+                                <Label
+                                    Text="120мг"
+                                    FontSize="14"
+                                    TextColor="#AAAAAA"
+                                    VerticalOptions="Center" />
+
+                            </HorizontalStackLayout>
+
+
+                            <!-- 150 мг -->
+                            <HorizontalStackLayout
+                                Grid.Column="1"
+                                Spacing="6"
+                                HorizontalOptions="Center">
+
+                                <Border
+                                    WidthRequest="10"
+                                    HeightRequest="10"
+                                    BackgroundColor="#F7E514"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 200"
+                                    VerticalOptions="Center" />
+
+                                <Label
+                                    Text="150мг"
+                                    FontSize="14"
+                                    TextColor="#AAAAAA"
+                                    VerticalOptions="Center" />
+
+                            </HorizontalStackLayout>
+
+
+                            <!-- 280 мг -->
+                            <HorizontalStackLayout
+                                Grid.Column="2"
+                                Spacing="6"
+                                HorizontalOptions="Center">
+
+                                <Border
+                                    WidthRequest="10"
+                                    HeightRequest="10"
+                                    BackgroundColor="#FF7A16"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 200"
+                                    VerticalOptions="Center" />
+
+                                <Label
+                                    Text="280мг"
+                                    FontSize="14"
+                                    TextColor="#AAAAAA"
+                                    VerticalOptions="Center" />
+
+                            </HorizontalStackLayout>
+
+
+                            <!-- 300 мг -->
+                            <HorizontalStackLayout
+                                Grid.Column="3"
+                                Spacing="6"
+                                HorizontalOptions="Center">
+
+                                <Border
+                                    WidthRequest="10"
+                                    HeightRequest="10"
+                                    BackgroundColor="#FF0000"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 200"
+                                    VerticalOptions="Center" />
+
+                                <Label
+                                    Text="300мг"
+                                    FontSize="14"
+                                    TextColor="#AAAAAA"
+                                    VerticalOptions="Center" />
+
+                            </HorizontalStackLayout>
+
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+                
+                <Border BackgroundColor="{StaticResource White}"
+                        Stroke="{StaticResource DividerColor}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 30"
+                        Padding="15,20">
+
+                    <VerticalStackLayout Spacing="20">
+
+                        <!-- Диаграмма -->
+                        <Grid ColumnDefinitions="*,*,*,*,*,*,*"
+                                RowDefinitions="Auto,Auto"
+                                ColumnSpacing="1">
+
+                            <!-- Понедельник -->
+                            <Grid Grid.Column="0"
+                                    RowDefinitions="150,Auto"
+                                    RowSpacing="12">
+
+                                <Border Grid.Row="0"
+                                    WidthRequest="20"
+                                    HeightRequest="150"
+                                    BackgroundColor="{StaticResource TeaIcoFill}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 22"
+                                    VerticalOptions="End">
+
+                    <Border
+                        BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 22"
+                        VerticalOptions="End"
+                        HeightRequest="96">
+
+                        <Border
+                            BackgroundColor="{StaticResource CaffeeIcoFill}"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 22"
+                            VerticalOptions="End"
+                            HeightRequest="44" />
+
+                    </Border>
+                </Border>
+
+                                <Label Grid.Row="1"
+                                    Text="Пн"
+                                    FontSize="11"
+                                    TextColor="#AAAAAA"
+                                    HorizontalTextAlignment="Center" />
+                            </Grid>
+                            
+                            <!-- Вторник -->
+                            <Grid Grid.Column="1"
+                                RowDefinitions="Auto,Auto"
+                                RowSpacing="12">
+
+                                <Border
+                                    Grid.Row="0"
+                                    WidthRequest="20"
+                                    HeightRequest="150"
+                                    BackgroundColor="{StaticResource TeaIcoFill}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 22"
+                                    VerticalOptions="End">
+
+                                    <Border
+                                        BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 22"
+                                        VerticalOptions="End"
+                                        HeightRequest="96">
+
+                                        <Border
+                                            BackgroundColor="{StaticResource CaffeeIcoFill}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 22"
+                                            VerticalOptions="End"
+                                            HeightRequest="44" />
+
+                                    </Border>
+
+                                </Border>
+
+                                <Label
+                                    Grid.Row="1"
+                                    Text="Вт"
+                                    FontSize="11"
+                                    TextColor="#AAAAAA"
+                                    HorizontalTextAlignment="Center" />
+
+                            </Grid>
+
+
+                            <!-- Среда -->
+                            <Grid Grid.Column="2"
+                                RowDefinitions="Auto,Auto"
+                                RowSpacing="12">
+
+                                <Border
+                                    Grid.Row="0"
+                                    WidthRequest="20"
+                                    HeightRequest="150"
+                                    BackgroundColor="{StaticResource TeaIcoFill}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 22"
+                                    VerticalOptions="End">
+
+                                    <Border
+                                        BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 22"
+                                        VerticalOptions="End"
+                                        HeightRequest="96">
+
+                                        <Border
+                                            BackgroundColor="{StaticResource CaffeeIcoFill}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 22"
+                                            VerticalOptions="End"
+                                            HeightRequest="44" />
+
+                                    </Border>
+
+                                </Border>
+
+                                <Label
+                                    Grid.Row="1"
+                                    Text="Ср"
+                                    FontSize="11"
+                                    TextColor="#AAAAAA"
+                                    HorizontalTextAlignment="Center" />
+
+                            </Grid>
+
+
+                            <!-- Четверг -->
+                            <Grid Grid.Column="3"
+                                RowDefinitions="Auto,Auto"
+                                RowSpacing="12">
+
+                                <Border
+                                    Grid.Row="0"
+                                    WidthRequest="20"
+                                    HeightRequest="150"
+                                    BackgroundColor="{StaticResource TeaIcoFill}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 22"
+                                    VerticalOptions="End">
+
+                                    <Border
+                                        BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 22"
+                                        VerticalOptions="End"
+                                        HeightRequest="96">
+
+                                        <Border
+                                            BackgroundColor="{StaticResource CaffeeIcoFill}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 22"
+                                            VerticalOptions="End"
+                                            HeightRequest="44" />
+
+                                    </Border>
+
+                                </Border>
+
+                                <Label
+                                    Grid.Row="1"
+                                    Text="Чт"
+                                    FontSize="11"
+                                    TextColor="#AAAAAA"
+                                    HorizontalTextAlignment="Center" />
+
+                            </Grid>
+
+
+                            <!-- Пятница -->
+                            <Grid Grid.Column="4"
+                                RowDefinitions="Auto,Auto"
+                                RowSpacing="12">
+
+                                <Border
+                                    Grid.Row="0"
+                                    WidthRequest="20"
+                                    HeightRequest="150"
+                                    BackgroundColor="{StaticResource TeaIcoFill}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 22"
+                                    VerticalOptions="End">
+
+                                    <Border
+                                        BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 22"
+                                        VerticalOptions="End"
+                                        HeightRequest="96">
+
+                                        <Border
+                                            BackgroundColor="{StaticResource CaffeeIcoFill}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 22"
+                                            VerticalOptions="End"
+                                            HeightRequest="44" />
+
+                                    </Border>
+
+                                </Border>
+
+                                <Label
+                                    Grid.Row="1"
+                                    Text="Пт"
+                                    FontSize="11"
+                                    TextColor="#AAAAAA"
+                                    HorizontalTextAlignment="Center" />
+
+                            </Grid>
+
+
+                            <!-- Суббота -->
+                            <Grid Grid.Column="5"
+                                RowDefinitions="Auto,Auto"
+                                RowSpacing="12">
+
+                                <Border
+                                    Grid.Row="0"
+                                    WidthRequest="20"
+                                    HeightRequest="150"
+                                    BackgroundColor="{StaticResource TeaIcoFill}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 22"
+                                    VerticalOptions="End">
+
+                                    <Border
+                                        BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 22"
+                                        VerticalOptions="End"
+                                        HeightRequest="96">
+
+                                        <Border
+                                            BackgroundColor="{StaticResource CaffeeIcoFill}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 22"
+                                            VerticalOptions="End"
+                                            HeightRequest="44" />
+
+                                    </Border>
+
+                                </Border>
+
+                                <Label
+                                    Grid.Row="1"
+                                    Text="Сб"
+                                    FontSize="11"
+                                    TextColor="#AAAAAA"
+                                    HorizontalTextAlignment="Center" />
+
+                            </Grid>
+
+
+                            <!-- Воскресенье -->
+                            <Grid Grid.Column="6"
+                                RowDefinitions="Auto,Auto"
+                                RowSpacing="12">
+
+                                <Border
+                                    Grid.Row="0"
+                                    WidthRequest="20"
+                                    HeightRequest="150"
+                                    BackgroundColor="{StaticResource TeaIcoFill}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 22"
+                                    VerticalOptions="End">
+
+                                    <Border
+                                        BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 22"
+                                        VerticalOptions="End"
+                                        HeightRequest="96">
+
+                                        <Border
+                                            BackgroundColor="{StaticResource CaffeeIcoFill}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 22"
+                                            VerticalOptions="End"
+                                            HeightRequest="44" />
+
+                                    </Border>
+
+                                </Border>
+
+                                <Label
+                                    Grid.Row="1"
+                                    Text="Вс"
+                                    FontSize="11"
+                                    TextColor="#AAAAAA"
+                                    HorizontalTextAlignment="Center" />
+
+                            </Grid>
+
+                        </Grid>
+
+
+                        <!-- Легенда -->
+                        <HorizontalStackLayout
+                            Spacing="28"
+                            HorizontalOptions="Center">
+
+                            <!-- Кофе -->
+                            <HorizontalStackLayout Spacing="8">
+
+                                <Border
+                                    WidthRequest="10"
+                                    HeightRequest="10"
+                                    BackgroundColor="{StaticResource CaffeeIcoFill}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 200"
+                                    VerticalOptions="Center" />
+
+                                <Label
+                                    Text="Кофе"
+                                    FontSize="14"
+                                    TextColor="#AAAAAA"
+                                    VerticalOptions="Center" />
+
+                            </HorizontalStackLayout>
+
+
+                            <!-- Чай -->
+                            <HorizontalStackLayout Spacing="8">
+
+                                <Border
+                                    WidthRequest="10"
+                                    HeightRequest="10"
+                                    BackgroundColor="{StaticResource EnergyDrinkIcoFill}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 200"
+                                    VerticalOptions="Center" />
+
+                                <Label
+                                    Text="Чай"
+                                    FontSize="14"
+                                    TextColor="#AAAAAA"
+                                    VerticalOptions="Center" />
+
+                            </HorizontalStackLayout>
+
+
+                            <!-- Энергетики -->
+                            <HorizontalStackLayout Spacing="8">
+
+                                <Border
+                                    WidthRequest="10"
+                                    HeightRequest="10"
+                                    BackgroundColor="{StaticResource TeaIcoFill}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 200"
+                                    VerticalOptions="Center" />
+
+                                <Label
+                                    Text="Энергетики"
+                                    FontSize="14"
+                                    TextColor="#AAAAAA"
+                                    VerticalOptions="Center" />
+
+                            </HorizontalStackLayout>
+
+                        </HorizontalStackLayout>
+
+                    </VerticalStackLayout>
+
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
 
         <controls:BottomNavigationBar
             Grid.Row="2"
             BindingContext="{Binding Navigation}"
-            ZIndex="20">
+            ZIndex="20"
+            VerticalOptions="Start"
+            HorizontalOptions="Center">
             <controls:BottomNavigationBar.Shadow>
                 <Shadow
                     Brush="#40000000"
