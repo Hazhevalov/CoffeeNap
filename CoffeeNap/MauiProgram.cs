@@ -53,13 +53,13 @@ public static class MauiProgram
         builder.Services.AddTransient<MainHeaderViewModel>();
         builder.Services.AddTransient<BottomNavigationViewModel>();
         builder.Services.AddTransient<MainPageViewModel>();
-        builder.Services.AddSingleton<CalendarPageViewModel>();
+        builder.Services.AddTransient<CalendarPageViewModel>();
         builder.Services.AddSingleton<AddConsumptionPageViewModel>();
         builder.Services.AddTransient<OnboardingViewModel>();
         builder.Services.AddTransient<SettingsPageViewModel>();
 
         builder.Services.AddTransient<MainPage>();
-        builder.Services.AddSingleton<CalendarPage>();
+        builder.Services.AddTransient<CalendarPage>();
         builder.Services.AddSingleton<AddConsumptionPage>();
         builder.Services.AddTransient<SettingsPage>();
         builder.Services.AddTransient<OnboardingPage>();

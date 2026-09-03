@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using CoffeeNap.Models;
 using CoffeeNap.Services;
+using CoffeeNap.Converters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
 
@@ -9,9 +10,6 @@ namespace CoffeeNap.ViewModels;
 
 public partial class MainPageViewModel : ObservableObject
 {
-    private const double LowProgressThreshold = 0.40;
-    private const double MediumProgressThreshold = 0.70;
-    private const double LimitProgressThreshold = 1.00;
     private static readonly TimeSpan RelativeTimeRefreshInterval = TimeSpan.FromSeconds(30);
 
     private readonly IAppDataService _dataService;
@@ -135,13 +133,8 @@ public partial class MainPageViewModel : ObservableObject
         get
         {
             var ratio = DailyCaffeineLimit <= 0 ? 0 : CurrentCaffeine / DailyCaffeineLimit;
-            return ratio switch
-            {
-                <= LowProgressThreshold => GetResourceColor("CaffeineProgressLow", Colors.Lime),
-                <= MediumProgressThreshold => GetResourceColor("CaffeineProgressMedium", Colors.Yellow),
-                < LimitProgressThreshold => GetResourceColor("CaffeineProgressHigh", Colors.Orange),
-                _ => GetResourceColor("CaffeineProgressLimit", Colors.Red)
-            };
+            return CaffeineLevelColorProvider.GetColor(
+                CaffeineLevelResolver.ResolveProgress(ratio));
         }
     }
 
@@ -407,20 +400,19 @@ public partial class MainPageViewModel : ObservableObject
 
     private void RecalculateSourceStatistics(IReadOnlyCollection<CaffeineConsumption> consumptions)
     {
-        var counts = CaffeineStatisticsCalculator.CountBySource(consumptions);
-        var totalCount = consumptions.Count;
+        var distribution = ConsumptionTypeDistributionCalculator.Calculate(consumptions);
         CoffeeSource = new CaffeineSourceStatViewModel(
             CaffeineConsumptionType.Coffee,
-            counts[CaffeineConsumptionType.Coffee],
-            totalCount);
+            distribution.CoffeeCount,
+            distribution.TotalCount);
         TeaSource = new CaffeineSourceStatViewModel(
             CaffeineConsumptionType.Tea,
-            counts[CaffeineConsumptionType.Tea],
-            totalCount);
+            distribution.TeaCount,
+            distribution.TotalCount);
         EnergyDrinkSource = new CaffeineSourceStatViewModel(
             CaffeineConsumptionType.EnergyDrink,
-            counts[CaffeineConsumptionType.EnergyDrink],
-            totalCount);
+            distribution.EnergyDrinkCount,
+            distribution.TotalCount);
     }
 
     private async Task RunRelativeTimeTimerAsync(CancellationToken cancellationToken)
@@ -461,8 +453,4 @@ public partial class MainPageViewModel : ObservableObject
         }
     }
 
-    private static Color GetResourceColor(string key, Color fallback) =>
-        Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
-            ? color
-            : fallback;
 }

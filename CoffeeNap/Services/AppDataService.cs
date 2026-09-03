@@ -53,6 +53,9 @@ public sealed class AppDataService : IAppDataService
             await _database.InitializeAsync();
             await MigrateLegacyPreferencesAsync();
             await EnsureDefaultSettingsAsync();
+#if DEBUG
+            await DebugConsumptionSeeder.SeedCurrentWeekAsync(_database, _logger);
+#endif
             _isInitialized = true;
         }
         finally

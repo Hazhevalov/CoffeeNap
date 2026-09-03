@@ -24,18 +24,8 @@ public static class CaffeineStatisticsCalculator
     public static IReadOnlyDictionary<CaffeineConsumptionType, int> CountBySource(
         IEnumerable<CaffeineConsumption> consumptions)
     {
-        var counts = Enum
-            .GetValues<CaffeineConsumptionType>()
-            .ToDictionary(type => type, _ => 0);
-
-        foreach (var consumption in consumptions)
-        {
-            if (counts.ContainsKey(consumption.Type))
-            {
-                counts[consumption.Type]++;
-            }
-        }
-
-        return counts;
+        var distribution = ConsumptionTypeDistributionCalculator.Calculate(consumptions);
+        return Enum.GetValues<CaffeineConsumptionType>()
+            .ToDictionary(type => type, distribution.GetCount);
     }
 }

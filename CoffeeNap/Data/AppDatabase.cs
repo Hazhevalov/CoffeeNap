@@ -96,6 +96,21 @@ public sealed class AppDatabase
     public Task<int> InsertConsumptionAsync(CaffeineConsumption consumption) =>
         _connection.InsertAsync(consumption);
 
+    public async Task<bool> HasConsumptionNamePrefixAsync(string prefix) =>
+        await _connection.ExecuteScalarAsync<int>(
+            "SELECT EXISTS(" +
+            "SELECT 1 FROM CaffeineConsumptions WHERE Name LIKE ? LIMIT 1)",
+            $"{prefix}%") != 0;
+
+    public Task InsertConsumptionsAsync(IReadOnlyList<CaffeineConsumption> consumptions) =>
+        _connection.RunInTransactionAsync(connection =>
+        {
+            foreach (var consumption in consumptions)
+            {
+                connection.Insert(consumption);
+            }
+        });
+
     public Task<int> UpdateConsumptionAsync(CaffeineConsumption consumption) =>
         _connection.UpdateAsync(consumption);
 

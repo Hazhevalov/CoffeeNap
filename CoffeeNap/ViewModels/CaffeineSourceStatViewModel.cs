@@ -1,5 +1,6 @@
 using CoffeeNap.Models;
 using CoffeeNap.Services;
+using CoffeeNap.Converters;
 
 namespace CoffeeNap.ViewModels;
 
@@ -30,13 +31,7 @@ public sealed class CaffeineSourceStatViewModel
         _ => string.Empty
     };
 
-    public Color Color => Type switch
-    {
-        CaffeineConsumptionType.Coffee => Color.FromArgb("#111111"),
-        CaffeineConsumptionType.Tea => Color.FromArgb("#B8B8B8"),
-        CaffeineConsumptionType.EnergyDrink => Color.FromArgb("#686868"),
-        _ => Colors.Transparent
-    };
+    public Color Color => CaffeineSourceColorProvider.GetColor(Type);
 
     public double Ratio => TotalCount == 0 ? 0 : (double)Count / TotalCount;
 
