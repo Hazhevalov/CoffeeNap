@@ -23,9 +23,6 @@ public partial class AppShell : Shell
         AddConsumptionShellContent.Content = addConsumptionPage;
         CalendarShellContent.Content = calendarPage;
 
-        Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
-        Routing.RegisterRoute(nameof(PrivacyPolicyPage), typeof(PrivacyPolicyPage));
-
         CurrentItem = userState.IsOnboardingCompleted && userState.HasUserName
             ? MainShellItem
             : OnboardingShellItem;

@@ -16,6 +16,7 @@ public enum OnboardingStep
 public partial class OnboardingViewModel : ObservableObject
 {
     private readonly UserStateService _userState;
+    private readonly IAppNavigationService _appNavigation;
     private readonly ILogger<OnboardingViewModel> _logger;
     private readonly LocalizationService _localization;
     private OnboardingStep _currentStep = OnboardingStep.Welcome;
@@ -25,10 +26,12 @@ public partial class OnboardingViewModel : ObservableObject
 
     public OnboardingViewModel(
         UserStateService userState,
+        IAppNavigationService appNavigation,
         LocalizationService localization,
         ILogger<OnboardingViewModel> logger)
     {
         _userState = userState;
+        _appNavigation = appNavigation;
         _localization = localization;
         _logger = logger;
     }
@@ -105,6 +108,6 @@ public partial class OnboardingViewModel : ObservableObject
         }
 
         // Абсолютный маршрут не оставляет onboarding доступным через Back.
-        await Shell.Current.GoToAsync(AppShell.MainAbsoluteRoute, true);
+        await _appNavigation.NavigateToTopLevelAsync(AppShell.MainAbsoluteRoute);
     }
 }

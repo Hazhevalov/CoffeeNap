@@ -10,16 +10,21 @@ public partial class SettingsPageViewModel : ObservableObject
     private readonly LocalizationService _localization;
     private readonly IAppDataService _dataService;
     private readonly IApplicationLifecycleService _lifecycleService;
+    private readonly IAppNavigationService _navigationService;
     private readonly IDialogService _dialogService;
     private readonly ILogger<SettingsPageViewModel> _logger;
     private bool _isLanguagePanelVisible;
     private bool _isDeleteConfirmationVisible;
     private bool _isDeletingData;
 
+    public event Func<Task>? LanguageMenuTransitionRequested;
+    public event Func<Task>? DeleteWarningTransitionRequested;
+
     public SettingsPageViewModel(
         BottomNavigationViewModel navigation,
         LocalizationService localization,
         IAppDataService dataService,
+        IAppNavigationService navigationService,
         IApplicationLifecycleService lifecycleService,
         IDialogService dialogService,
         ILogger<SettingsPageViewModel> logger)
@@ -28,6 +33,7 @@ public partial class SettingsPageViewModel : ObservableObject
         Navigation.ActiveTab = NavigationTab.None;
         _localization = localization;
         _dataService = dataService;
+        _navigationService = navigationService;
         _lifecycleService = lifecycleService;
         _dialogService = dialogService;
         _logger = logger;
@@ -83,9 +89,23 @@ public partial class SettingsPageViewModel : ObservableObject
             return;
         }
 
+        if (_localization.LanguageCode == languageCode)
+        {
+            IsLanguagePanelVisible = false;
+            return;
+        }
+
         try
         {
-            await _localization.ChangeLanguageAsync(languageCode);
+            var languageSaved = await _localization.SaveLanguageAsync(languageCode);
+            IsLanguagePanelVisible = false;
+            await AwaitTransitionAsync(LanguageMenuTransitionRequested);
+
+            if (languageSaved)
+            {
+                _localization.PrepareSavedLanguageForRestart(languageCode);
+                await _lifecycleService.RestartApplicationAsync();
+            }
         }
         catch (Exception exception)
         {
@@ -98,17 +118,13 @@ public partial class SettingsPageViewModel : ObservableObject
         finally
         {
             IsLanguagePanelVisible = false;
-            OnPropertyChanged(nameof(CurrentLanguageCode));
-            OnPropertyChanged(nameof(CurrentLanguageDisplayName));
-            OnPropertyChanged(nameof(IsRussianSelected));
-            OnPropertyChanged(nameof(IsEnglishSelected));
         }
     }
 
     [RelayCommand(AllowConcurrentExecutions = false)]
     private Task OpenPrivacyPolicyAsync() => IsDeletingData
         ? Task.CompletedTask
-        : Shell.Current.GoToAsync(nameof(Views.PrivacyPolicyPage), true);
+        : _navigationService.OpenPrivacyPolicyAsync();
 
     [RelayCommand]
     private void DeleteData()
@@ -136,6 +152,7 @@ public partial class SettingsPageViewModel : ObservableObject
         {
             await _dataService.DeleteAllUserDataAsync();
             IsDeleteConfirmationVisible = false;
+            await AwaitTransitionAsync(DeleteWarningTransitionRequested);
             await MainThread.InvokeOnMainThreadAsync(_lifecycleService.CloseApplication);
         }
         catch (Exception exception)
@@ -150,5 +167,14 @@ public partial class SettingsPageViewModel : ObservableObject
         {
             IsDeletingData = false;
         }
+    }
+
+    private static Task AwaitTransitionAsync(Func<Task>? transition) =>
+        transition?.Invoke() ?? Task.CompletedTask;
+
+    internal void ResetTransientUiState()
+    {
+        IsLanguagePanelVisible = false;
+        IsDeleteConfirmationVisible = false;
     }
 }

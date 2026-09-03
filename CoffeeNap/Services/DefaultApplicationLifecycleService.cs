@@ -2,6 +2,12 @@ namespace CoffeeNap.Services;
 
 public sealed class DefaultApplicationLifecycleService : IApplicationLifecycleService
 {
+    public Task RestartApplicationAsync()
+    {
+        CloseApplication();
+        return Task.CompletedTask;
+    }
+
     public void CloseApplication()
     {
         var application = Application.Current;

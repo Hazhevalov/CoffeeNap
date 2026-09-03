@@ -7,7 +7,7 @@ namespace CoffeeNap.Models;
 public sealed class AppSettings
 {
     public const double DefaultDailyCaffeineLimit = 300;
-    public const string DefaultLanguageCode = "ru";
+    public const string DefaultLanguageCode = "en";
 
     [PrimaryKey]
     public int Id { get; set; }

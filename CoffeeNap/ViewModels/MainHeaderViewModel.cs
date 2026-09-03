@@ -1,5 +1,4 @@
 using CoffeeNap.Services;
-using CoffeeNap.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -8,13 +7,18 @@ namespace CoffeeNap.ViewModels;
 /// <summary>Логика переиспользуемой шапки, независимая от PageViewModel.</summary>
 public partial class MainHeaderViewModel : ObservableObject
 {
-    public MainHeaderViewModel(UserStateService userState)
+    private readonly IAppNavigationService _navigationService;
+
+    public MainHeaderViewModel(
+        UserStateService userState,
+        IAppNavigationService navigationService)
     {
         UserState = userState;
+        _navigationService = navigationService;
     }
 
     public UserStateService UserState { get; }
 
     [RelayCommand(AllowConcurrentExecutions = false)]
-    private Task OpenSettingsAsync() => Shell.Current.GoToAsync(nameof(SettingsPage));
+    private Task OpenSettingsAsync() => _navigationService.OpenSettingsAsync();
 }

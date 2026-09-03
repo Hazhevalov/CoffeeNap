@@ -19,13 +19,23 @@ public class CalendarPageViewModel : ObservableObject
         private set => SetProperty(ref _monthTitle, value);
     }
 
-    public CalendarPageViewModel(LocalizationService localization)
+    public CalendarPageViewModel(
+        LocalizationService localization,
+        MainHeaderViewModel header,
+        BottomNavigationViewModel navigation)
     {
         _localization = localization;
+        Header = header;
+        Navigation = navigation;
+        Navigation.ActiveTab = NavigationTab.Calendar;
         UpdateLocalizedState();
         GenerateCalendar(_currentMonth);
         _localization.CultureChanged += OnCultureChanged;
     }
+
+    public MainHeaderViewModel Header { get; }
+
+    public BottomNavigationViewModel Navigation { get; }
 
     private void OnCultureChanged(object? sender, EventArgs eventArgs) => UpdateLocalizedState();
 

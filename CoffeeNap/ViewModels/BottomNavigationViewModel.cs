@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CoffeeNap.Services;
 
 namespace CoffeeNap.ViewModels;
 
@@ -9,7 +10,13 @@ namespace CoffeeNap.ViewModels;
 /// </summary>
 public partial class BottomNavigationViewModel : ObservableObject
 {
+    private readonly IAppNavigationService _navigationService;
     private NavigationTab _activeTab;
+
+    public BottomNavigationViewModel(IAppNavigationService navigationService)
+    {
+        _navigationService = navigationService;
+    }
 
     public NavigationTab ActiveTab
     {
@@ -34,15 +41,15 @@ public partial class BottomNavigationViewModel : ObservableObject
     [RelayCommand(AllowConcurrentExecutions = false)]
     private Task OpenHomeAsync() => ActiveTab == NavigationTab.Home
         ? Task.CompletedTask
-        : Shell.Current.GoToAsync(AppShell.MainAbsoluteRoute, true);
+        : _navigationService.NavigateToTopLevelAsync(AppShell.MainAbsoluteRoute);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
     private Task OpenAddConsumptionAsync() => ActiveTab == NavigationTab.AddConsumption
         ? Task.CompletedTask
-        : Shell.Current.GoToAsync(AppShell.AddConsumptionAbsoluteRoute, true);
+        : _navigationService.NavigateToTopLevelAsync(AppShell.AddConsumptionAbsoluteRoute);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
     private Task OpenCalendarAsync() => ActiveTab == NavigationTab.Calendar
         ? Task.CompletedTask
-        : Shell.Current.GoToAsync(AppShell.CalendarAbsoluteRoute, true);
+        : _navigationService.NavigateToTopLevelAsync(AppShell.CalendarAbsoluteRoute);
 }

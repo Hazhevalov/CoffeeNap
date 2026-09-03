@@ -42,6 +42,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<UserStateService>();
         builder.Services.AddSingleton<LocalizationService>();
         builder.Services.AddSingleton<IDialogService, DialogService>();
+        builder.Services.AddSingleton<IAppNavigationService, AppNavigationService>();
 #if ANDROID
         builder.Services.AddSingleton<IApplicationLifecycleService, Platforms.Android.AndroidApplicationLifecycleService>();
 #else

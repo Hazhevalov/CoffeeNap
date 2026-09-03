@@ -3,6 +3,7 @@
     x:Class="CoffeeNap.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:CoffeeNap.Behaviors"
     xmlns:controls="clr-namespace:CoffeeNap.Controls"
     xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
@@ -22,6 +23,9 @@
         <VerticalStackLayout Grid.Row="1" Spacing="10">
             <!--  Кнопка смены языка  -->
             <Border Padding="20" Stroke="{StaticResource DividerColor}">
+                <Border.Behaviors>
+                    <behaviors:PressAnimationBehavior />
+                </Border.Behaviors>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ToggleLanguagePanelCommand}" />
                 </Border.GestureRecognizers>
@@ -49,6 +53,9 @@
 
             <!--  Кнопка политики конфиденциальности  -->
             <Border Padding="20" Stroke="{StaticResource DividerColor}">
+                <Border.Behaviors>
+                    <behaviors:PressAnimationBehavior />
+                </Border.Behaviors>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding OpenPrivacyPolicyCommand}" />
                 </Border.GestureRecognizers>
@@ -69,6 +76,9 @@
 
             <!--  Кнопка удаления данных  -->
             <Border Padding="20" Stroke="{StaticResource DividerColor}">
+                <Border.Behaviors>
+                    <behaviors:PressAnimationBehavior />
+                </Border.Behaviors>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding DeleteDataCommand}" />
                 </Border.GestureRecognizers>
@@ -89,7 +99,8 @@
         </VerticalStackLayout>
         
         <!--Всплывашка для смены языка-->
-        <Border IsVisible="{Binding IsLanguagePanelVisible}"
+        <Border x:Name="LanguageMenu"
+                IsVisible="False"
                 Grid.Row="2"
                 BackgroundColor="{StaticResource White}"
                 Stroke="{StaticResource DividerColor}"
@@ -125,6 +136,9 @@
                     
                     <!--  Русский  -->
                     <Border Padding="20" Stroke="{StaticResource EnergyDrinkIcoFill}">
+                        <Border.Behaviors>
+                            <behaviors:PressAnimationBehavior />
+                        </Border.Behaviors>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding ChangeLanguageCommand}"
@@ -161,6 +175,9 @@
 
                     <!--  Английский  -->
                     <Border Padding="20" Stroke="{StaticResource DividerColor}">
+                        <Border.Behaviors>
+                            <behaviors:PressAnimationBehavior />
+                        </Border.Behaviors>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding ChangeLanguageCommand}"
@@ -199,7 +216,8 @@
         </Border>
 
         <!--Всплывашка для удаления данных-->
-        <Border IsVisible="{Binding IsDeleteConfirmationVisible}"
+        <Border x:Name="DeleteWarning"
+                IsVisible="False"
                 Grid.Row="1" 
                 BackgroundColor="{StaticResource White}"
                 ZIndex="20"
@@ -233,6 +251,9 @@
                         Padding="16,20"
                         StrokeThickness="1"
                         Stroke="#FFC8C8">
+                        <Border.Behaviors>
+                            <behaviors:PressAnimationBehavior />
+                        </Border.Behaviors>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ConfirmDeleteCommand}" />
                         </Border.GestureRecognizers>
@@ -253,6 +274,9 @@
                         Padding="16,20"
                         StrokeThickness="1"
                         Stroke="{StaticResource DividerColor}">
+                        <Border.Behaviors>
+                            <behaviors:PressAnimationBehavior />
+                        </Border.Behaviors>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding CancelDeleteCommand}" />
                         </Border.GestureRecognizers>

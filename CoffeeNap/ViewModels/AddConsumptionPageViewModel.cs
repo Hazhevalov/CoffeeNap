@@ -26,6 +26,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     ];
 
     private readonly IAppDataService _dataService;
+    private readonly IAppNavigationService _appNavigation;
     private readonly ICaffeineCalculator _calculator;
     private readonly LocalizationService _localization;
     private readonly ILogger<AddConsumptionPageViewModel> _logger;
@@ -41,6 +42,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         MainHeaderViewModel header,
         BottomNavigationViewModel navigation,
         IAppDataService dataService,
+        IAppNavigationService appNavigation,
         ICaffeineCalculator calculator,
         LocalizationService localization,
         ILogger<AddConsumptionPageViewModel> logger)
@@ -48,6 +50,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         Header = header;
         Navigation = navigation;
         _dataService = dataService;
+        _appNavigation = appNavigation;
         _calculator = calculator;
         _localization = localization;
         _logger = logger;
@@ -316,7 +319,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
             return;
         }
 
-        await Shell.Current.GoToAsync(AppShell.MainAbsoluteRoute, true);
+        await _appNavigation.NavigateToTopLevelAsync(AppShell.MainAbsoluteRoute);
     }
 
     // Перезапуск квиза
@@ -352,7 +355,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
             await _dataService.AddConsumptionAsync(consumption);
             _logger.LogInformation("Consumption {Name} saved with {CaffeineMg} mg.", consumption.Name, consumption.CaffeineMg);
             RestartQuiz();
-            await Shell.Current.GoToAsync(AppShell.MainAbsoluteRoute, true);
+            await _appNavigation.NavigateToTopLevelAsync(AppShell.MainAbsoluteRoute);
         }
         catch (Exception exception)
         {
