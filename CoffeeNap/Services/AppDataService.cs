@@ -11,9 +11,17 @@ namespace CoffeeNap.Services;
 public sealed class AppDataService : IAppDataService
 {
     public event EventHandler<CaffeineConsumption>? ConsumptionAdded;
+    public event EventHandler? UserDataDeleted;
 
     private const string LegacyUserNameKey = "coffee_nap.user_name";
     private const string LegacyOnboardingCompletedKey = "coffee_nap.onboarding_completed";
+    private static readonly string[] LegacyResetKeys =
+    [
+        LegacyUserNameKey,
+        LegacyOnboardingCompletedKey,
+        "coffee_nap.language",
+        "Language"
+    ];
     private readonly AppDatabase _database;
     private readonly SemaphoreSlim _initializationLock = new(1, 1);
     private readonly ILogger<AppDataService> _logger;
@@ -72,7 +80,14 @@ public sealed class AppDataService : IAppDataService
     public async Task<AppSettings> GetSettingsAsync()
     {
         await InitializeAsync();
-        return await _database.GetSettingsAsync() ?? CreateDefaultSettings();
+        var settings = await _database.GetSettingsAsync() ?? CreateDefaultSettings();
+        if (settings.LanguageCode is not ("ru" or "en"))
+        {
+            settings.LanguageCode = AppSettings.DefaultLanguageCode;
+            await _database.SaveSettingsAsync(settings);
+        }
+
+        return settings;
     }
 
     public async Task SaveSettingsAsync(AppSettings settings)
@@ -85,6 +100,13 @@ public sealed class AppDataService : IAppDataService
             throw new ArgumentOutOfRangeException(
                 nameof(settings),
                 "Daily caffeine limit must be greater than zero.");
+        }
+
+        if (settings.LanguageCode is not ("ru" or "en"))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(settings),
+                "Language code must be either 'ru' or 'en'.");
         }
 
         settings.Id = DatabaseConstants.SettingsId;
@@ -162,6 +184,19 @@ public sealed class AppDataService : IAppDataService
         await _database.DeleteConsumptionAsync(id);
     }
 
+    public async Task DeleteAllUserDataAsync()
+    {
+        await InitializeAsync();
+        await _database.DeleteAllUserDataAsync();
+
+        foreach (var key in LegacyResetKeys)
+        {
+            Preferences.Default.Remove(key);
+        }
+
+        UserDataDeleted?.Invoke(this, EventArgs.Empty);
+    }
+
     private async Task MigrateLegacyPreferencesAsync()
     {
         if (await _database.GetUserProfileAsync() is not null)
@@ -203,7 +238,8 @@ public sealed class AppDataService : IAppDataService
 
     private static AppSettings CreateDefaultSettings() => new()
     {
-        Id = DatabaseConstants.SettingsId
+        Id = DatabaseConstants.SettingsId,
+        LanguageCode = AppSettings.DefaultLanguageCode
     };
 
     private static void ValidateConsumption(CaffeineConsumption consumption)

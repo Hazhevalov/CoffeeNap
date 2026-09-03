@@ -8,16 +8,19 @@ namespace CoffeeNap;
 public partial class App : Application
 {
     private readonly UserStateService _userState;
+    private readonly LocalizationService _localization;
     private readonly AppPageFactory _pageFactory;
     private readonly ILogger<App> _logger;
 
     public App(
         UserStateService userState,
+        LocalizationService localization,
         AppPageFactory pageFactory,
         ILogger<App> logger)
     {
         InitializeComponent();
         _userState = userState;
+        _localization = localization;
         _pageFactory = pageFactory;
         _logger = logger;
     }
@@ -33,6 +36,7 @@ public partial class App : Application
     {
         try
         {
+            await _localization.InitializeAsync();
             await _userState.InitializeAsync();
 
             await MainThread.InvokeOnMainThreadAsync(() =>
@@ -63,12 +67,12 @@ public partial class App : Application
         }
     };
 
-    private static ContentPage CreateStartupErrorPage() => new()
+    private ContentPage CreateStartupErrorPage() => new()
     {
         BackgroundColor = Color.FromArgb("#F7F7F7"),
         Content = new Label
         {
-            Text = "Не удалось загрузить данные приложения. Перезапустите CoffeeNap.",
+            Text = _localization["StartupFailed"],
             TextColor = Colors.Black,
             HorizontalTextAlignment = TextAlignment.Center,
             HorizontalOptions = LayoutOptions.Center,

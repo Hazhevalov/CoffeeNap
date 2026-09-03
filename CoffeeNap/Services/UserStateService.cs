@@ -9,17 +9,23 @@ namespace CoffeeNap.Services;
 /// </summary>
 public sealed class UserStateService : ObservableObject
 {
-    private const string DefaultUserName = "Пользователь";
     private readonly IAppDataService _dataService;
+    private readonly LocalizationService _localization;
     private readonly SemaphoreSlim _operationLock = new(1, 1);
     private UserProfile _profile = new();
-    private string _userName = DefaultUserName;
+    private string _userName;
     private bool _isOnboardingCompleted;
     private bool _isInitialized;
 
-    public UserStateService(IAppDataService dataService)
+    public UserStateService(
+        IAppDataService dataService,
+        LocalizationService localization)
     {
         _dataService = dataService;
+        _localization = localization;
+        _userName = localization["DefaultUserName"];
+        _dataService.UserDataDeleted += OnUserDataDeleted;
+        _localization.CultureChanged += OnCultureChanged;
     }
 
     public string UserName
@@ -104,7 +110,7 @@ public sealed class UserStateService : ObservableObject
     private async Task PublishProfileAsync(UserProfile profile)
     {
         var displayName = string.IsNullOrWhiteSpace(profile.UserName)
-            ? DefaultUserName
+            ? _localization["DefaultUserName"]
             : profile.UserName;
 
         if (MainThread.IsMainThread)
@@ -135,5 +141,23 @@ public sealed class UserStateService : ObservableObject
         }
 
         return normalizedName;
+    }
+
+    private void OnUserDataDeleted(object? sender, EventArgs eventArgs)
+    {
+        _profile = new UserProfile();
+        _isInitialized = false;
+        UserName = _localization["DefaultUserName"];
+        IsOnboardingCompleted = false;
+        OnPropertyChanged(nameof(HasUserName));
+        OnPropertyChanged(nameof(IsInitialized));
+    }
+
+    private void OnCultureChanged(object? sender, EventArgs eventArgs)
+    {
+        if (string.IsNullOrWhiteSpace(_profile.UserName))
+        {
+            UserName = _localization["DefaultUserName"];
+        }
     }
 }

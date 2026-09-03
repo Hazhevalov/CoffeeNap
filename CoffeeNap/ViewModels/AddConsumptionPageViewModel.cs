@@ -27,6 +27,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
 
     private readonly IAppDataService _dataService;
     private readonly ICaffeineCalculator _calculator;
+    private readonly LocalizationService _localization;
     private readonly ILogger<AddConsumptionPageViewModel> _logger;
     private readonly Stack<AddConsumptionStep> _stepHistory = [];
     private AddConsumptionStep _currentStep = AddConsumptionStep.DrinkType;
@@ -41,14 +42,18 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         BottomNavigationViewModel navigation,
         IAppDataService dataService,
         ICaffeineCalculator calculator,
+        LocalizationService localization,
         ILogger<AddConsumptionPageViewModel> logger)
     {
         Header = header;
         Navigation = navigation;
         _dataService = dataService;
         _calculator = calculator;
+        _localization = localization;
         _logger = logger;
         Navigation.ActiveTab = NavigationTab.AddConsumption;
+        _dataService.UserDataDeleted += OnUserDataDeleted;
+        _localization.CultureChanged += OnCultureChanged;
     }
 
     public MainHeaderViewModel Header { get; }
@@ -125,9 +130,9 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     public ConsumptionCalculationResult? CalculationResult => _calculationResult;
     public string CoffeeContext => QuizState.CoffeeLocation switch
     {
-        CoffeeLocation.Home => "Домашний кофе",
-        CoffeeLocation.Outside => "Кофе вне дома",
-        _ => "Кофе"
+        CoffeeLocation.Home => _localization["HomeCoffee"],
+        CoffeeLocation.Outside => _localization["OutsideCoffee"],
+        _ => _localization["Coffee"]
     };
     public string ResultContext => CalculationResult?.ContextLabel ?? string.Empty;
     public string ResultName => CalculationResult?.DisplayName ?? string.Empty;
@@ -137,7 +142,9 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     public string ResultDetail3 => CalculationResult?.Detail3 ?? string.Empty;
     public string ResultDetail4 => CalculationResult?.Detail4 ?? string.Empty;
     public string ResultDetail4Value => CalculationResult?.Detail4Value ?? string.Empty;
-    public string ResultCaffeine => CalculationResult is null ? string.Empty : $"+{CalculationResult.CaffeineMg}мг";
+    public string ResultCaffeine => CalculationResult is null
+        ? string.Empty
+        : $"+{CalculationResult.CaffeineMg} {_localization["MilligramShort"]}";
 
     // Выбрать тип напитка
     [RelayCommand]
@@ -149,7 +156,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         QuizState.ClearAfterDrinkType();
         if (type != CaffeineConsumptionType.Coffee)
         {
-            ValidationMessage = "Пошел нахуй";
+            ValidationMessage = _localization["CoffeeOnlySupported"];
             return;
         }
 
@@ -195,13 +202,13 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     {
         if (!TryParsePositiveDouble(ManualCoffeeAmountText, out var grams))
         {
-            ValidationMessage = "Введите количество кофе больше 0 г";
+            ValidationMessage = _localization["CoffeeAmountInvalid"];
             return;
         }
 
         ClearValidation();
         QuizState.CoffeeAmountGrams = grams;
-        QuizState.CoffeeAmountDisplay = $"{grams:0.#} г";
+        QuizState.CoffeeAmountDisplay = $"{grams:0.#} {_localization["GramShort"]}";
         QuizState.BeanType = null;
         InvalidateResult();
         TransitionTo(AddConsumptionStep.CoffeeBeanType);
@@ -230,7 +237,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     {
         if (QuizState.CoffeeDrinkType is not { } drinkType)
         {
-            ValidationMessage = "Сначала выберите вид напитка";
+            ValidationMessage = _localization["SelectDrinkTypeFirst"];
             return;
         }
 
@@ -243,7 +250,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         }
         catch (InvalidOperationException exception)
         {
-            ValidationMessage = "Для выбранного напитка не настроен стандартный объём";
+            ValidationMessage = _localization["ServingProfileMissing"];
             _logger.LogError(exception, "Serving profile is missing for {CoffeeDrinkType}.", drinkType);
             return;
         }
@@ -261,14 +268,14 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     {
         if (!int.TryParse(ManualVolumeText, NumberStyles.Integer, CultureInfo.CurrentCulture, out var volume) || volume <= 0)
         {
-            ValidationMessage = "Введите объём больше 0 мл";
+            ValidationMessage = _localization["VolumeInvalid"];
             return;
         }
 
         ClearValidation();
         QuizState.ServingSize = null;
         QuizState.VolumeMl = volume;
-        QuizState.VolumeDisplay = $"{volume} мл";
+        QuizState.VolumeDisplay = $"{volume} {_localization["MilliliterShort"]}";
         QuizState.BeanType = null;
         InvalidateResult();
         TransitionTo(AddConsumptionStep.CoffeeBeanType);
@@ -349,7 +356,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         }
         catch (Exception exception)
         {
-            ValidationMessage = "Не удалось сохранить употребление. Попробуйте ещё раз";
+            ValidationMessage = _localization["ConsumptionSaveFailed"];
             _logger.LogError(exception, "Consumption save failed.");
         }
         finally
@@ -363,7 +370,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     {
         if (QuizState.DrinkType != CaffeineConsumptionType.Coffee)
         {
-            message = "Выберите кофе";
+            message = _localization["SelectCoffee"];
             return false;
         }
 
@@ -380,7 +387,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
             _ => false
         };
 
-        message = isValid ? string.Empty : "Заполните все обязательные параметры кофе";
+        message = isValid ? string.Empty : _localization["CompleteCoffeeParameters"];
         return isValid;
     }
 
@@ -435,4 +442,39 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         var normalized = value.Replace(',', CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]);
         return double.TryParse(normalized, NumberStyles.Float, CultureInfo.CurrentCulture, out result) && result > 0;
     }
+
+    private void OnCultureChanged(object? sender, EventArgs eventArgs)
+    {
+        if (QuizState.ServingSize is { } servingSize)
+        {
+            QuizState.VolumeDisplay = CoffeeQuizCatalog.GetServingSizeDisplay(servingSize);
+        }
+        else if (QuizState.VolumeMl is { } volume)
+        {
+            QuizState.VolumeDisplay = $"{volume} {_localization["MilliliterShort"]}";
+        }
+
+        if (QuizState.CoffeeAmountGrams is { } grams)
+        {
+            var spoonCount = (int)Math.Round(grams / CoffeeQuizCatalog.GramsPerSpoon);
+            QuizState.CoffeeAmountDisplay = spoonCount is >= 1 and <= 3 &&
+                                             Math.Abs(grams - spoonCount * CoffeeQuizCatalog.GramsPerSpoon) < 0.01
+                ? CoffeeQuizCatalog.GetSpoonDisplay(spoonCount)
+                : $"{grams:0.#} {_localization["GramShort"]}";
+        }
+
+        OnPropertyChanged(nameof(CoffeeContext));
+        if (_calculationResult is not null && TryValidateQuiz(out _))
+        {
+            _calculationResult = _calculator.Calculate(QuizState);
+        }
+
+        NotifyResultChanged();
+        if (HasValidationError)
+        {
+            ClearValidation();
+        }
+    }
+
+    private void OnUserDataDeleted(object? sender, EventArgs eventArgs) => RestartQuiz();
 }

@@ -3,6 +3,7 @@
     x:Class="CoffeeNap.Views.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:controls="clr-namespace:CoffeeNap.Controls"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:MainPageViewModel"
@@ -74,7 +75,7 @@
                             FontSize="20"
                             FontAttributes="Bold"
                             LineHeight="1.1"
-                            Text="Дневная&#10;норма кофеина"
+                            Text="{localization:Translate DailyCaffeineLimit}"
                             TextColor="{StaticResource SurfaceColor}" />
                         
                         <Image
@@ -126,7 +127,7 @@
                                 <Span
                                     FontSize="20"
                                     FontAttributes="Bold"
-                                    Text=" миллиграмм" />
+                                    Text="{localization:Translate Milligrams}" />
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
@@ -170,7 +171,7 @@
                             FontSize="20"
                             FontAttributes="Bold"
                             LineHeight="1.1"
-                            Text="Ваши&#10;источники кофеина"
+                            Text="{localization:Translate CaffeineSources}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Image

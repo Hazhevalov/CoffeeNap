@@ -3,6 +3,7 @@
     x:Class="CoffeeNap.Views.OnboardingPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:controls="clr-namespace:CoffeeNap.Controls"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:OnboardingViewModel"
@@ -65,14 +66,14 @@
                         FontFamily="Inter"
                         FontSize="27"
                         LineHeight="1.12"
-                        Text="Хорошего&#10;настроения и&#10;ароматного кофе!"
+                        Text="{localization:Translate OnboardingGreeting}"
                         TextColor="{StaticResource InkColor}" />
                     <Label
                         FontFamily="Inter"
                         FontSize="13"
                         LineHeight="1.12"
                         MaxLines="3"
-                        Text="Мы поможем тебе понимать, когда&#10;пора подзарядиться, а когда -&#10;сделать паузу."
+                        Text="{localization:Translate OnboardingDescription}"
                         TextColor="#555555" />
                 </VerticalStackLayout>
 
@@ -97,7 +98,7 @@
                             <Label
                                 FontFamily="Inter"
                                 FontSize="13"
-                                Text="Давайте начнем"
+                                Text="{localization:Translate Start}"
                                 TextColor="{StaticResource SurfaceColor}"
                                 VerticalTextAlignment="Center" />
                             <Image
@@ -137,7 +138,7 @@
                         FontAttributes="Bold"
                         FontFamily="Inter"
                         FontSize="27"
-                        Text="Как Вас зовут?"
+                        Text="{localization:Translate NamePrompt}"
                         TextColor="{StaticResource InkColor}" />
 
                     <Border
@@ -165,7 +166,7 @@
                             FontFamily="Inter"
                             FontSize="13"
                             Keyboard="Text"
-                            Placeholder="Имя"
+                            Placeholder="{localization:Translate NamePlaceholder}"
                             PlaceholderColor="#B7B7B7"
                             ReturnCommand="{Binding ConfirmNameCommand}"
                             ReturnType="Done"
@@ -194,7 +195,7 @@
                     CornerRadius="18"
                     FontFamily="Inter"
                     FontSize="13"
-                    Text="Подтвердить"
+                    Text="{localization:Translate Confirm}"
                     TextColor="{StaticResource SurfaceColor}" />
             </Grid>
         </Grid>

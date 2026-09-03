@@ -1,22 +1,36 @@
 using System.Collections.ObjectModel;
 using CoffeeNap.Models;
+using CoffeeNap.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CoffeeNap.ViewModels;
 
-public class CalendarPageViewModel
+public class CalendarPageViewModel : ObservableObject
 {
+    private readonly LocalizationService _localization;
+    private readonly DateTime _currentMonth = new(2026, 9, 1);
+    private string _monthTitle = string.Empty;
+
     public ObservableCollection<CalendarDay> Days { get; } = new();
 
-    public string MonthTitle { get; }
-
-    public CalendarPageViewModel()
+    public string MonthTitle
     {
-        var currentMonth = new DateTime(2026, 9, 1);
-
-        MonthTitle = currentMonth.ToString("MMMM yyyy");
-
-        GenerateCalendar(currentMonth);
+        get => _monthTitle;
+        private set => SetProperty(ref _monthTitle, value);
     }
+
+    public CalendarPageViewModel(LocalizationService localization)
+    {
+        _localization = localization;
+        UpdateLocalizedState();
+        GenerateCalendar(_currentMonth);
+        _localization.CultureChanged += OnCultureChanged;
+    }
+
+    private void OnCultureChanged(object? sender, EventArgs eventArgs) => UpdateLocalizedState();
+
+    private void UpdateLocalizedState() =>
+        MonthTitle = _currentMonth.ToString("MMMM yyyy", _localization.CurrentCulture);
 
     private void GenerateCalendar(DateTime month)
     {

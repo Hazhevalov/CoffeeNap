@@ -17,6 +17,7 @@ public partial class OnboardingViewModel : ObservableObject
 {
     private readonly UserStateService _userState;
     private readonly ILogger<OnboardingViewModel> _logger;
+    private readonly LocalizationService _localization;
     private OnboardingStep _currentStep = OnboardingStep.Welcome;
     private string? _userName = string.Empty;
     private bool _hasValidationError;
@@ -24,9 +25,11 @@ public partial class OnboardingViewModel : ObservableObject
 
     public OnboardingViewModel(
         UserStateService userState,
+        LocalizationService localization,
         ILogger<OnboardingViewModel> logger)
     {
         _userState = userState;
+        _localization = localization;
         _logger = logger;
     }
 
@@ -95,7 +98,7 @@ public partial class OnboardingViewModel : ObservableObject
         }
         catch (Exception exception)
         {
-            ValidationMessage = "Не удалось сохранить профиль. Попробуйте ещё раз";
+            ValidationMessage = _localization["ProfileSaveFailed"];
             HasValidationError = true;
             _logger.LogError(exception, "Profile save failed during onboarding.");
             return;

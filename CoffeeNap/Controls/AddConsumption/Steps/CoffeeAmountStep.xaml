@@ -3,6 +3,7 @@
     x:Class="CoffeeNap.Controls.AddConsumption.Steps.CoffeeAmountStep"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:AddConsumptionPageViewModel">
@@ -38,20 +39,20 @@
                         <Label
                             Grid.Row="0"
                             FontSize="16"
-                            Text="Домашний кофе"
+                            Text="{localization:Translate HomeCoffee}"
                             TextColor="{StaticResource MutedTextColor}" />
 
                         <Label
                             Grid.Row="1"
                             FontAttributes="Bold"
                             FontSize="32"
-                            Text="Сколько кофе использовали?"
+                            Text="{localization:Translate CoffeeAmountQuestion}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Label
                             Grid.Row="2"
                             FontSize="16"
-                            Text="Можно примерно, это не проблема"
+                            Text="{localization:Translate ApproximateHint}"
                             TextColor="{StaticResource InkColor}" />
                     </Grid>
 
@@ -81,7 +82,7 @@
                                 FontSize="16"
                                 Keyboard="Numeric"
                                 MaxLength="3"
-                                Placeholder="Знаю граммы"
+                                Placeholder="{localization:Translate KnowGrams}"
                                 ReturnType="Next"
                                 ReturnCommand="{Binding ConfirmManualCoffeeAmountCommand}"
                                 Text="{Binding ManualCoffeeAmountText, Mode=TwoWay}"
@@ -100,7 +101,7 @@
                                 HorizontalOptions="Fill"
                                 Command="{Binding SelectCoffeeAmountCommand}"
                                 CommandParameter="{x:Static models:CoffeeQuizCatalog.One}"
-                                Text="Одна ложка"
+                                Text="{localization:Translate OneSpoon}"
                                 TextColor="{StaticResource InkColor}" />
                         </Border>
 
@@ -116,7 +117,7 @@
                                 HorizontalOptions="Fill"
                                 Command="{Binding SelectCoffeeAmountCommand}"
                                 CommandParameter="{x:Static models:CoffeeQuizCatalog.Two}"
-                                Text="Две ложки"
+                                Text="{localization:Translate TwoSpoons}"
                                 TextColor="{StaticResource InkColor}" />
                         </Border>
 
@@ -132,7 +133,7 @@
                                 HorizontalOptions="Fill"
                                 Command="{Binding SelectCoffeeAmountCommand}"
                                 CommandParameter="{x:Static models:CoffeeQuizCatalog.Three}"
-                                Text="Больше?"
+                                Text="{localization:Translate More}"
                                 TextColor="{StaticResource InkColor}" />
                         </Border>
                     </Grid>

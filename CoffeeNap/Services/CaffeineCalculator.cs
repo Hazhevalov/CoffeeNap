@@ -43,13 +43,13 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
             Math.Max(1, caffeine),
             drinkName,
             CaffeineConsumptionType.Coffee,
-            "Кофе вне дома",
+            LocalizationService.Current["OutsideCoffee"],
             CoffeeQuizCatalog.GetLocationDisplay(CoffeeLocation.Outside),
             drinkName,
             string.Empty,
-            state.VolumeDisplay ?? $"{state.VolumeMl} мл",
+            state.VolumeDisplay ?? $"{state.VolumeMl} {LocalizationService.Current["MilliliterShort"]}",
             CoffeeQuizCatalog.GetBeanDisplay(bean),
-            $"{state.VolumeMl} мл");
+            $"{state.VolumeMl} {LocalizationService.Current["MilliliterShort"]}");
     }
 
     // Подсчёт кофе дома
@@ -69,12 +69,12 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
             GetExtractionCoefficient(method));
         return new ConsumptionCalculationResult(
             Math.Max(1, caffeine),
-            "Домашний кофе",
+            LocalizationService.Current["HomeCoffee"],
             CaffeineConsumptionType.Coffee,
-            "Домашний кофе",
+            LocalizationService.Current["HomeCoffee"],
             CoffeeQuizCatalog.GetBrewingMethodDisplay(method),
-            state.CoffeeAmountDisplay ?? $"{state.CoffeeAmountGrams:0.#} г",
-            $"{state.CoffeeAmountGrams:0.#}г",
+            state.CoffeeAmountDisplay ?? $"{state.CoffeeAmountGrams:0.#} {LocalizationService.Current["GramShort"]}",
+            $"{state.CoffeeAmountGrams:0.#} {LocalizationService.Current["GramShort"]}",
             CoffeeQuizCatalog.GetBeanDisplay(bean),
             string.Empty,
             string.Empty);

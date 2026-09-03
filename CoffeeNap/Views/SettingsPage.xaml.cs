@@ -1,13 +1,15 @@
+using CoffeeNap.ViewModels;
+
 namespace CoffeeNap.Views;
 
 /// <summary>
-/// Заготовка экрана настроек. Сейчас содержимое статично и задаётся в SettingsPage.xaml.
+/// Экран настроек; вся логика предоставляется SettingsPageViewModel.
 /// </summary>
 public partial class SettingsPage : ContentPage
 {
-    /// <summary>Загружает XAML-разметку страницы.</summary>
-    public SettingsPage()
+    public SettingsPage(SettingsPageViewModel viewModel)
     {
         InitializeComponent();
+        BindingContext = viewModel;
     }
 }

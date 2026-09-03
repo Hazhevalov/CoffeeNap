@@ -15,6 +15,7 @@ public partial class MainPageViewModel : ObservableObject
     private static readonly TimeSpan RelativeTimeRefreshInterval = TimeSpan.FromSeconds(30);
 
     private readonly IAppDataService _dataService;
+    private readonly LocalizationService _localization;
     private readonly ILogger<MainPageViewModel> _logger;
     private readonly SemaphoreSlim _operationLock = new(1, 1);
     private CancellationTokenSource? _relativeTimeCancellation;
@@ -41,17 +42,21 @@ public partial class MainPageViewModel : ObservableObject
 
     public MainPageViewModel(
         IAppDataService dataService,
+        LocalizationService localization,
         ILogger<MainPageViewModel> logger,
         MainHeaderViewModel header,
         BottomNavigationViewModel navigation)
     {
         _dataService = dataService;
+        _localization = localization;
         _logger = logger;
         Header = header;
         Navigation = navigation;
         Navigation.ActiveTab = NavigationTab.Home;
         Consumptions.CollectionChanged += OnConsumptionsCollectionChanged;
         _dataService.ConsumptionAdded += OnConsumptionAdded;
+        _dataService.UserDataDeleted += OnUserDataDeleted;
+        _localization.CultureChanged += OnCultureChanged;
     }
 
     public MainHeaderViewModel Header { get; }
@@ -171,7 +176,7 @@ public partial class MainPageViewModel : ObservableObject
         }
         catch (Exception exception)
         {
-            InitializationError = "Не удалось загрузить данные";
+            InitializationError = _localization["LoadDataFailed"];
             _logger.LogError(exception, "Main page initialization failed.");
         }
         finally
@@ -358,6 +363,32 @@ public partial class MainPageViewModel : ObservableObject
         {
             MainThread.BeginInvokeOnMainThread(AddToRuntimeState);
         }
+    }
+
+    private void OnCultureChanged(object? sender, EventArgs eventArgs)
+    {
+        foreach (var consumption in Consumptions)
+        {
+            consumption.RefreshLocalizedState();
+        }
+
+        RecalculateSourceStatistics(Consumptions.Select(item => item.Model).ToArray());
+        if (InitializationError is not null)
+        {
+            InitializationError = _localization["LoadDataFailed"];
+        }
+    }
+
+    private void OnUserDataDeleted(object? sender, EventArgs eventArgs)
+    {
+        StopRelativeTimeTimer();
+        Consumptions.Clear();
+        CurrentCaffeine = 0;
+        DailyCaffeineLimit = AppSettings.DefaultDailyCaffeineLimit;
+        InitializationError = null;
+        IsBusy = false;
+        IsInitialized = false;
+        RecalculateSourceStatistics([]);
     }
 
     private void RefreshConsumptionDerivedState()

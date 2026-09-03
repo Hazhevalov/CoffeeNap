@@ -3,6 +3,7 @@
     x:Class="CoffeeNap.Controls.AddConsumption.Steps.CoffeeVolumeStep"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:AddConsumptionPageViewModel">
@@ -39,20 +40,20 @@
                         <Label
                             Grid.Row="0"
                             FontSize="16"
-                            Text="Кофе вне дома"
+                            Text="{localization:Translate OutsideCoffee}"
                             TextColor="{StaticResource MutedTextColor}" />
 
                         <Label
                             Grid.Row="1"
                             FontAttributes="Bold"
                             FontSize="32"
-                            Text="Объем"
+                            Text="{localization:Translate Volume}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Label
                             Grid.Row="2"
                             FontSize="16"
-                            Text="Размер имеет значение!"
+                            Text="{localization:Translate SizeMatters}"
                             TextColor="{StaticResource InkColor}" />
                     </Grid>
 
@@ -82,7 +83,7 @@
                                 FontSize="16"
                                 Keyboard="Numeric"
                                 MaxLength="3"
-                                Placeholder="Знаю миллилитры"
+                                Placeholder="{localization:Translate KnowMilliliters}"
                                 ReturnType="Next"
                                 ReturnCommand="{Binding ConfirmManualVolumeCommand}"
                                 Text="{Binding ManualVolumeText, Mode=TwoWay}"
@@ -101,7 +102,7 @@
                                 HorizontalOptions="Fill"
                                 Command="{Binding SelectVolumeCommand}"
                                 CommandParameter="{x:Static models:ServingSize.Small}"
-                                Text="Маленький"
+                                Text="{localization:Translate Small}"
                                 TextColor="{StaticResource InkColor}" />
                         </Border>
 
@@ -117,7 +118,7 @@
                                 HorizontalOptions="Fill"
                                 Command="{Binding SelectVolumeCommand}"
                                 CommandParameter="{x:Static models:ServingSize.Medium}"
-                                Text="Средний"
+                                Text="{localization:Translate Medium}"
                                 TextColor="{StaticResource InkColor}" />
                         </Border>
 
@@ -133,7 +134,7 @@
                                 HorizontalOptions="Fill"
                                 Command="{Binding SelectVolumeCommand}"
                                 CommandParameter="{x:Static models:ServingSize.Large}"
-                                Text="Большой"
+                                Text="{localization:Translate Large}"
                                 TextColor="{StaticResource InkColor}" />
                         </Border>
                     </Grid>

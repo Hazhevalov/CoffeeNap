@@ -40,6 +40,13 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<IAppDataService, AppDataService>();
         builder.Services.AddSingleton<UserStateService>();
+        builder.Services.AddSingleton<LocalizationService>();
+        builder.Services.AddSingleton<IDialogService, DialogService>();
+#if ANDROID
+        builder.Services.AddSingleton<IApplicationLifecycleService, Platforms.Android.AndroidApplicationLifecycleService>();
+#else
+        builder.Services.AddSingleton<IApplicationLifecycleService, DefaultApplicationLifecycleService>();
+#endif
         builder.Services.AddSingleton<ICaffeineCalculator, CaffeineCalculator>();
 
         builder.Services.AddTransient<MainHeaderViewModel>();
@@ -48,12 +55,14 @@ public static class MauiProgram
         builder.Services.AddSingleton<CalendarPageViewModel>();
         builder.Services.AddSingleton<AddConsumptionPageViewModel>();
         builder.Services.AddTransient<OnboardingViewModel>();
+        builder.Services.AddTransient<SettingsPageViewModel>();
 
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddSingleton<CalendarPage>();
         builder.Services.AddSingleton<AddConsumptionPage>();
         builder.Services.AddTransient<SettingsPage>();
         builder.Services.AddTransient<OnboardingPage>();
+        builder.Services.AddTransient<PrivacyPolicyPage>();
 
         builder.Services.AddSingleton<AppPageFactory>();
 

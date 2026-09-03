@@ -3,6 +3,7 @@
     x:Class="CoffeeNap.Controls.AddConsumption.Steps.CoffeeLocationStep"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:AddConsumptionPageViewModel">
@@ -32,7 +33,7 @@
                         FontAttributes="Bold"
                         FontSize="32"
                         HorizontalOptions="Start"
-                        Text="Где вы пили кофе?"
+                        Text="{localization:Translate CoffeeLocationQuestion}"
                         TextColor="{StaticResource InkColor}"
                         VerticalOptions="Start" />
 
@@ -87,7 +88,7 @@
                                     FontAttributes="Bold"
                                     FontSize="16"
                                     HorizontalTextAlignment="Center"
-                                    Text="Дома"
+                                    Text="{localization:Translate AtHome}"
                                     TextColor="{StaticResource InkColor}" />
                             </VerticalStackLayout>
                         </Border>
@@ -136,7 +137,7 @@
                                     FontAttributes="Bold"
                                     FontSize="16"
                                     HorizontalTextAlignment="Center"
-                                    Text="В кафе"
+                                    Text="{localization:Translate AtCafe}"
                                     TextColor="{StaticResource InkColor}" />
                             </VerticalStackLayout>
                         </Border>

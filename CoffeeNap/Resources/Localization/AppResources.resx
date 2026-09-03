@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="SettingsTitle" xml:space="preserve"><value>Настройки</value></data>
+  <data name="Language" xml:space="preserve"><value>Язык</value></data>
+  <data name="Russian" xml:space="preserve"><value>Русский</value></data>
+  <data name="English" xml:space="preserve"><value>Английский</value></data>
+  <data name="PrivacyPolicy" xml:space="preserve"><value>Политика конфиденциальности</value></data>
+  <data name="DeleteData" xml:space="preserve"><value>Удалить данные</value></data>
+  <data name="Attention" xml:space="preserve"><value>Внимание!</value></data>
+  <data name="DeleteConfirmation" xml:space="preserve"><value>Удаление данных приведет к потере всех ваших настроек и прогресса. Вы уверены, что хотите продолжить?</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Отмена</value></data>
+  <data name="DeleteFailed" xml:space="preserve"><value>Не удалось удалить данные. Попробуйте ещё раз.</value></data>
+  <data name="LanguageChangeFailed" xml:space="preserve"><value>Не удалось сохранить язык. Попробуйте ещё раз.</value></data>
+  <data name="StartupFailed" xml:space="preserve"><value>Не удалось загрузить данные приложения. Перезапустите CoffeeNap.</value></data>
+  <data name="ErrorTitle" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Ok" xml:space="preserve"><value>ОК</value></data>
+  <data name="Welcome" xml:space="preserve"><value>Добро пожаловать,</value></data>
+  <data name="DailyCaffeineLimit" xml:space="preserve"><value>Дневная&#10;норма кофеина</value></data>
+  <data name="Milligrams" xml:space="preserve"><value> миллиграмм</value></data>
+  <data name="CaffeineSources" xml:space="preserve"><value>Ваши&#10;источники кофеина</value></data>
+  <data name="Consumptions" xml:space="preserve"><value>Ваши употребления</value></data>
+  <data name="OnboardingGreeting" xml:space="preserve"><value>Хорошего&#10;настроения и&#10;ароматного кофе!</value></data>
+  <data name="OnboardingDescription" xml:space="preserve"><value>Мы поможем тебе понимать, когда&#10;пора подзарядиться, а когда -&#10;сделать паузу.</value></data>
+  <data name="Start" xml:space="preserve"><value>Давайте начнем</value></data>
+  <data name="NamePrompt" xml:space="preserve"><value>Как Вас зовут?</value></data>
+  <data name="NamePlaceholder" xml:space="preserve"><value>Имя</value></data>
+  <data name="Confirm" xml:space="preserve"><value>Подтвердить</value></data>
+  <data name="CalendarTitle" xml:space="preserve"><value>Календарь</value></data>
+  <data name="MondayShort" xml:space="preserve"><value>Пн</value></data>
+  <data name="TuesdayShort" xml:space="preserve"><value>Вт</value></data>
+  <data name="WednesdayShort" xml:space="preserve"><value>Ср</value></data>
+  <data name="ThursdayShort" xml:space="preserve"><value>Чт</value></data>
+  <data name="FridayShort" xml:space="preserve"><value>Пт</value></data>
+  <data name="SaturdayShort" xml:space="preserve"><value>Сб</value></data>
+  <data name="SundayShort" xml:space="preserve"><value>Вс</value></data>
+  <data name="Coffee" xml:space="preserve"><value>Кофе</value></data>
+  <data name="Tea" xml:space="preserve"><value>Чай</value></data>
+  <data name="EnergyDrinks" xml:space="preserve"><value>Энергетики</value></data>
+  <data name="AddConsumptionTitle" xml:space="preserve"><value>Добавление употребления</value></data>
+  <data name="DrinkQuestion" xml:space="preserve"><value>Какой напиток&#10;вы пили?</value></data>
+  <data name="EnergyDrink" xml:space="preserve"><value>Энергетик</value></data>
+  <data name="UseOldRecipe" xml:space="preserve"><value>Использовать старый рецепт</value></data>
+  <data name="HomeCoffee" xml:space="preserve"><value>Домашний кофе</value></data>
+  <data name="CoffeeAmountQuestion" xml:space="preserve"><value>Сколько кофе использовали?</value></data>
+  <data name="ApproximateHint" xml:space="preserve"><value>Можно примерно, это не проблема</value></data>
+  <data name="KnowGrams" xml:space="preserve"><value>Знаю граммы</value></data>
+  <data name="OneSpoon" xml:space="preserve"><value>Одна ложка</value></data>
+  <data name="TwoSpoons" xml:space="preserve"><value>Две ложки</value></data>
+  <data name="ThreeSpoons" xml:space="preserve"><value>Три ложки</value></data>
+  <data name="More" xml:space="preserve"><value>Больше?</value></data>
+  <data name="CoffeeLocationQuestion" xml:space="preserve"><value>Где вы пили кофе?</value></data>
+  <data name="AtHome" xml:space="preserve"><value>Дома</value></data>
+  <data name="AtCafe" xml:space="preserve"><value>В кафе</value></data>
+  <data name="Result" xml:space="preserve"><value>Результат!</value></data>
+  <data name="Total" xml:space="preserve"><value>Итого:</value></data>
+  <data name="EditData" xml:space="preserve"><value>Изменить данные</value></data>
+  <data name="Or" xml:space="preserve"><value>или</value></data>
+  <data name="SaveAndDrink" xml:space="preserve"><value>Сохранить и выпить</value></data>
+  <data name="OutsideCoffee" xml:space="preserve"><value>Кофе вне дома</value></data>
+  <data name="Volume" xml:space="preserve"><value>Объем</value></data>
+  <data name="SizeMatters" xml:space="preserve"><value>Размер имеет значение!</value></data>
+  <data name="KnowMilliliters" xml:space="preserve"><value>Знаю миллилитры</value></data>
+  <data name="Small" xml:space="preserve"><value>Маленький</value></data>
+  <data name="Medium" xml:space="preserve"><value>Средний</value></data>
+  <data name="Large" xml:space="preserve"><value>Большой</value></data>
+  <data name="DrinkTypeQuestion" xml:space="preserve"><value>Какой вид напитка вы пили?</value></data>
+  <data name="EnjoyedHint" xml:space="preserve"><value>Он вас порадовал?</value></data>
+  <data name="Espresso" xml:space="preserve"><value>Эспрессо</value></data>
+  <data name="Macchiato" xml:space="preserve"><value>Макиато</value></data>
+  <data name="Americano" xml:space="preserve"><value>Американо</value></data>
+  <data name="Cappuccino" xml:space="preserve"><value>Капучино</value></data>
+  <data name="Latte" xml:space="preserve"><value>Латте</value></data>
+  <data name="FlatWhite" xml:space="preserve"><value>Флэт-Уайт</value></data>
+  <data name="Mocha" xml:space="preserve"><value>Мокко</value></data>
+  <data name="Affogato" xml:space="preserve"><value>Аффогато</value></data>
+  <data name="CoffeeBeanQuestion" xml:space="preserve"><value>Какой кофе?</value></data>
+  <data name="Tasty" xml:space="preserve"><value>Вкусный</value></data>
+  <data name="Arabica" xml:space="preserve"><value>Арабика</value></data>
+  <data name="Robusta" xml:space="preserve"><value>Робуста</value></data>
+  <data name="BrewingQuestion" xml:space="preserve"><value>Как вы заваривали?</value></data>
+  <data name="AccuracyHint" xml:space="preserve"><value>Это повысит нашу точность до 75%!</value></data>
+  <data name="Kettle" xml:space="preserve"><value>Чайник</value></data>
+  <data name="EspressoMachine" xml:space="preserve"><value>Эспрессо-машина</value></data>
+  <data name="ColdBrew" xml:space="preserve"><value>Cold brew</value></data>
+  <data name="MokaPot" xml:space="preserve"><value>Гейзер</value></data>
+  <data name="FrenchPress" xml:space="preserve"><value>Френч-пресс</value></data>
+  <data name="Turkish" xml:space="preserve"><value>Турка</value></data>
+  <data name="PourOver" xml:space="preserve"><value>Воронка</value></data>
+  <data name="DefaultUserName" xml:space="preserve"><value>Пользователь</value></data>
+  <data name="LoadDataFailed" xml:space="preserve"><value>Не удалось загрузить данные</value></data>
+  <data name="ProfileSaveFailed" xml:space="preserve"><value>Не удалось сохранить профиль. Попробуйте ещё раз</value></data>
+  <data name="NameRequired" xml:space="preserve"><value>Введите имя</value></data>
+  <data name="NameTooShort" xml:space="preserve"><value>Имя должно содержать минимум {0} символа</value></data>
+  <data name="NameTooLong" xml:space="preserve"><value>Имя должно содержать не более {0} символов</value></data>
+  <data name="NameInvalidCharacters" xml:space="preserve"><value>Используйте только латинские буквы и цифры</value></data>
+  <data name="JustNow" xml:space="preserve"><value>только что</value></data>
+  <data name="MinuteOne" xml:space="preserve"><value>минуту</value></data>
+  <data name="MinuteFew" xml:space="preserve"><value>минуты</value></data>
+  <data name="MinuteMany" xml:space="preserve"><value>минут</value></data>
+  <data name="HourOne" xml:space="preserve"><value>час</value></data>
+  <data name="HourFew" xml:space="preserve"><value>часа</value></data>
+  <data name="HourMany" xml:space="preserve"><value>часов</value></data>
+  <data name="DayOne" xml:space="preserve"><value>день</value></data>
+  <data name="DayFew" xml:space="preserve"><value>дня</value></data>
+  <data name="DayMany" xml:space="preserve"><value>дней</value></data>
+  <data name="AgoFormat" xml:space="preserve"><value>{0} {1} назад</value></data>
+  <data name="CoffeeOnlySupported" xml:space="preserve"><value>Пока поддерживается только кофе</value></data>
+  <data name="CoffeeAmountInvalid" xml:space="preserve"><value>Введите количество кофе больше 0 г</value></data>
+  <data name="SelectDrinkTypeFirst" xml:space="preserve"><value>Сначала выберите вид напитка</value></data>
+  <data name="ServingProfileMissing" xml:space="preserve"><value>Для выбранного напитка не настроен стандартный объём</value></data>
+  <data name="VolumeInvalid" xml:space="preserve"><value>Введите объём больше 0 мл</value></data>
+  <data name="ConsumptionSaveFailed" xml:space="preserve"><value>Не удалось сохранить употребление. Попробуйте ещё раз</value></data>
+  <data name="SelectCoffee" xml:space="preserve"><value>Выберите кофе</value></data>
+  <data name="CompleteCoffeeParameters" xml:space="preserve"><value>Заполните все обязательные параметры кофе</value></data>
+  <data name="MilligramShort" xml:space="preserve"><value>мг</value></data>
+  <data name="Caffeine120" xml:space="preserve"><value>120мг</value></data>
+  <data name="Caffeine150" xml:space="preserve"><value>150мг</value></data>
+  <data name="Caffeine280" xml:space="preserve"><value>280мг</value></data>
+  <data name="Caffeine300" xml:space="preserve"><value>300мг</value></data>
+  <data name="SpoonMany" xml:space="preserve"><value>ложек</value></data>
+  <data name="GramShort" xml:space="preserve"><value>г</value></data>
+  <data name="MilliliterShort" xml:space="preserve"><value>мл</value></data>
+</root>

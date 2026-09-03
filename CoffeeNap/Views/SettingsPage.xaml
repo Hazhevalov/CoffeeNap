@@ -4,8 +4,10 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:CoffeeNap.Controls"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
-    Title="Настройки"
+    x:DataType="viewModels:SettingsPageViewModel"
+    Title="{localization:Translate SettingsTitle}"
     BackgroundColor="{StaticResource SurfaceColor}"
     Shell.NavBarIsVisible="False">
 
@@ -20,6 +22,9 @@
         <VerticalStackLayout Grid.Row="1" Spacing="10">
             <!--  Кнопка смены языка  -->
             <Border Padding="20" Stroke="{StaticResource DividerColor}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleLanguagePanelCommand}" />
+                </Border.GestureRecognizers>
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
@@ -30,20 +35,23 @@
                         FontAttributes="Bold"
                         FontSize="16"
                         HorizontalTextAlignment="Start"
-                        Text="Язык"
+                        Text="{localization:Translate Language}"
                         TextColor="{StaticResource InkColor}" />
 
                     <Label
                         Grid.Column="1"
                         FontSize="16"
                         HorizontalTextAlignment="End"
-                        Text="Русский"
+                        Text="{Binding CurrentLanguageDisplayName}"
                         TextColor="{StaticResource MutedTextColor}" />
                 </Grid>
             </Border>
 
             <!--  Кнопка политики конфиденциальности  -->
             <Border Padding="20" Stroke="{StaticResource DividerColor}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenPrivacyPolicyCommand}" />
+                </Border.GestureRecognizers>
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
@@ -54,13 +62,16 @@
                         FontAttributes="Bold"
                         FontSize="15"
                         HorizontalTextAlignment="Start"
-                        Text="Политика конфиденциальности"
+                        Text="{localization:Translate PrivacyPolicy}"
                         TextColor="{StaticResource InkColor}" />
                 </Grid>
             </Border>
 
             <!--  Кнопка удаления данных  -->
             <Border Padding="20" Stroke="{StaticResource DividerColor}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding DeleteDataCommand}" />
+                </Border.GestureRecognizers>
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20" />
                 </Border.StrokeShape>
@@ -71,14 +82,14 @@
                         FontAttributes="Bold"
                         FontSize="16"
                         HorizontalTextAlignment="Start"
-                        Text="Удалить данные"
+                        Text="{localization:Translate DeleteData}"
                         TextColor="{StaticResource ValidationErrorColor}" />
                 </Grid>
             </Border>
         </VerticalStackLayout>
         
         <!--Всплывашка для смены языка-->
-        <Border IsVisible="False"
+        <Border IsVisible="{Binding IsLanguagePanelVisible}"
                 Grid.Row="2"
                 BackgroundColor="{StaticResource White}"
                 Stroke="{StaticResource DividerColor}"
@@ -94,6 +105,9 @@
 
                 <!--  Хуйня для сворачивания панели  -->
                 <Grid Grid.Row="0" BackgroundColor="Transparent">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ToggleLanguagePanelCommand}" />
+                    </Grid.GestureRecognizers>
                     <BoxView
                         BackgroundColor="{StaticResource InkColor}"
                         CornerRadius="2"
@@ -111,6 +125,19 @@
                     
                     <!--  Русский  -->
                     <Border Padding="20" Stroke="{StaticResource EnergyDrinkIcoFill}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding ChangeLanguageCommand}"
+                                CommandParameter="ru" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger
+                                TargetType="Border"
+                                Binding="{Binding IsRussianSelected}"
+                                Value="False">
+                                <Setter Property="Stroke" Value="{StaticResource DividerColor}" />
+                            </DataTrigger>
+                        </Border.Triggers>
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20" />
                         </Border.StrokeShape>
@@ -127,13 +154,26 @@
                                 FontAttributes="Bold"
                                 FontSize="16"
                                 HorizontalTextAlignment="Start"
-                                Text="Русский"
+                                Text="{localization:Translate Russian}"
                                 TextColor="{StaticResource InkColor}" />
                         </Grid>
                     </Border>
 
                     <!--  Английский  -->
                     <Border Padding="20" Stroke="{StaticResource DividerColor}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding ChangeLanguageCommand}"
+                                CommandParameter="en" />
+                        </Border.GestureRecognizers>
+                        <Border.Triggers>
+                            <DataTrigger
+                                TargetType="Border"
+                                Binding="{Binding IsEnglishSelected}"
+                                Value="True">
+                                <Setter Property="Stroke" Value="{StaticResource EnergyDrinkIcoFill}" />
+                            </DataTrigger>
+                        </Border.Triggers>
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20" />
                         </Border.StrokeShape>
@@ -150,7 +190,7 @@
                                 FontAttributes="Bold"
                                 FontSize="16"
                                 HorizontalTextAlignment="Start"
-                                Text="Английский"
+                                Text="{localization:Translate English}"
                                 TextColor="{StaticResource InkColor}" />
                         </Grid>
                     </Border>
@@ -159,7 +199,7 @@
         </Border>
 
         <!--Всплывашка для удаления данных-->
-        <Border IsVisible="False" 
+        <Border IsVisible="{Binding IsDeleteConfirmationVisible}"
                 Grid.Row="1" 
                 BackgroundColor="{StaticResource White}"
                 ZIndex="20"
@@ -173,13 +213,13 @@
                         FontAttributes="Bold"
                         FontSize="20"
                         HorizontalTextAlignment="Center"
-                        Text="Внимание!"
+                        Text="{localization:Translate Attention}"
                         TextColor="{StaticResource InkColor}"/>
 
                     <Label
                         FontSize="16"
                         HorizontalTextAlignment="Center"
-                        Text="Удаление данных приведет к потере всех ваших настроек и прогресса. Вы уверены, что хотите продолжить?"
+                        Text="{localization:Translate DeleteConfirmation}"
                         TextColor="{StaticResource InkColor}"/>
                 </VerticalStackLayout>
 
@@ -193,11 +233,14 @@
                         Padding="16,20"
                         StrokeThickness="1"
                         Stroke="#FFC8C8">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ConfirmDeleteCommand}" />
+                        </Border.GestureRecognizers>
                         
                         <Label
                             FontAttributes="Bold"
                             FontSize="16"                        
-                            Text="Удалить данные"
+                            Text="{localization:Translate DeleteData}"
                             TextColor="{StaticResource ValidationErrorColor}"
                             HorizontalOptions="Center"/>
                     </Border>
@@ -210,11 +253,14 @@
                         Padding="16,20"
                         StrokeThickness="1"
                         Stroke="{StaticResource DividerColor}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding CancelDeleteCommand}" />
+                        </Border.GestureRecognizers>
 
                         <Label
                             FontAttributes="Bold"
                             FontSize="16"                        
-                            Text="Отмена"
+                            Text="{localization:Translate Cancel}"
                             TextColor="{StaticResource InkColor}"
                             HorizontalOptions="Center"/>
                     </Border>
@@ -228,6 +274,7 @@
             x:Name="BottomNavigationBar"
             Grid.Row="2"
             BindingContext="{Binding Navigation}"
+            IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.IsNotDeletingData}"
             HorizontalOptions="Center"
             MinimumHeightRequest="78"
             SafeAreaEdges="Container"

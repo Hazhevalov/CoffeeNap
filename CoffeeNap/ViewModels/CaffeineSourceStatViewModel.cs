@@ -1,4 +1,5 @@
 using CoffeeNap.Models;
+using CoffeeNap.Services;
 
 namespace CoffeeNap.ViewModels;
 
@@ -23,9 +24,9 @@ public sealed class CaffeineSourceStatViewModel
 
     public string Name => Type switch
     {
-        CaffeineConsumptionType.Coffee => "Кофе",
-        CaffeineConsumptionType.Tea => "Чай",
-        CaffeineConsumptionType.EnergyDrink => "Энергетики",
+        CaffeineConsumptionType.Coffee => LocalizationService.Current["Coffee"],
+        CaffeineConsumptionType.Tea => LocalizationService.Current["Tea"],
+        CaffeineConsumptionType.EnergyDrink => LocalizationService.Current["EnergyDrinks"],
         _ => string.Empty
     };
 

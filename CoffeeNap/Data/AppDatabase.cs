@@ -101,4 +101,13 @@ public sealed class AppDatabase
 
     public Task<int> DeleteConsumptionAsync(int id) =>
         _connection.DeleteAsync<CaffeineConsumption>(id);
+
+    /// <summary>Atomically removes user rows without changing the database schema.</summary>
+    public Task DeleteAllUserDataAsync() =>
+        _connection.RunInTransactionAsync(connection =>
+        {
+            connection.DeleteAll<CaffeineConsumption>();
+            connection.DeleteAll<UserProfile>();
+            connection.DeleteAll<AppSettings>();
+        });
 }

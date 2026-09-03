@@ -1,5 +1,6 @@
 using CoffeeNap.Helpers;
 using CoffeeNap.Models;
+using CoffeeNap.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CoffeeNap.ViewModels;
@@ -33,9 +34,15 @@ public sealed class ConsumptionItemViewModel(CaffeineConsumption model) : Observ
         _ => Colors.Black
     };
 
-    public string CaffeineDisplay => $"{CaffeineMg} мг";
+    public string CaffeineDisplay => $"{CaffeineMg} {LocalizationService.Current["MilligramShort"]}";
 
     public string RelativeTime => RelativeTimeFormatter.Format(ConsumedAt, DateTimeOffset.Now);
+
+    public void RefreshLocalizedState()
+    {
+        OnPropertyChanged(nameof(RelativeTime));
+        OnPropertyChanged(nameof(CaffeineDisplay));
+    }
 
     public void RefreshRelativeTime() => OnPropertyChanged(nameof(RelativeTime));
 }

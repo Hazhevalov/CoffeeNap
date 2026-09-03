@@ -3,10 +3,11 @@
     x:Class="CoffeeNap.Views.CalendarPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:controls="clr-namespace:CoffeeNap.Controls"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:CalendarPageViewModel"
-    Title="Календарь"
+    Title="{localization:Translate CalendarTitle}"
     BackgroundColor="{StaticResource PageBackgroundColor}"
     SafeAreaEdges="All"
     Shell.NavBarIsVisible="False">
@@ -72,49 +73,49 @@
                             ColumnDefinitions="*,*,*,*,*,*,*">
 
                             <Label
-                                Text="Пн"
+                                Text="{localization:Translate MondayShort}"
                                 HorizontalTextAlignment="Center"
                                 TextColor="#AAAAAA"
                                 FontSize="14" />
 
                             <Label
                                 Grid.Column="1"
-                                Text="Вт"
+                                Text="{localization:Translate TuesdayShort}"
                                 HorizontalTextAlignment="Center"
                                 TextColor="#AAAAAA"
                                 FontSize="14" />
 
                             <Label
                                 Grid.Column="2"
-                                Text="Ср"
+                                Text="{localization:Translate WednesdayShort}"
                                 HorizontalTextAlignment="Center"
                                 TextColor="#AAAAAA"
                                 FontSize="14" />
 
                             <Label
                                 Grid.Column="3"
-                                Text="Чт"
+                                Text="{localization:Translate ThursdayShort}"
                                 HorizontalTextAlignment="Center"
                                 TextColor="#AAAAAA"
                                 FontSize="14" />
 
                             <Label
                                 Grid.Column="4"
-                                Text="Пт"
+                                Text="{localization:Translate FridayShort}"
                                 HorizontalTextAlignment="Center"
                                 TextColor="#AAAAAA"
                                 FontSize="14" />
 
                             <Label
                                 Grid.Column="5"
-                                Text="Сб"
+                                Text="{localization:Translate SaturdayShort}"
                                 HorizontalTextAlignment="Center"
                                 TextColor="#AAAAAA"
                                 FontSize="14" />
 
                             <Label
                                 Grid.Column="6"
-                                Text="Вс"
+                                Text="{localization:Translate SundayShort}"
                                 HorizontalTextAlignment="Center"
                                 TextColor="#AAAAAA"
                                 FontSize="14" />
@@ -179,7 +180,7 @@
                                     VerticalOptions="Center" />
 
                                 <Label
-                                    Text="120мг"
+                                    Text="{localization:Translate Caffeine120}"
                                     FontSize="14"
                                     TextColor="#AAAAAA"
                                     VerticalOptions="Center" />
@@ -202,7 +203,7 @@
                                     VerticalOptions="Center" />
 
                                 <Label
-                                    Text="150мг"
+                                    Text="{localization:Translate Caffeine150}"
                                     FontSize="14"
                                     TextColor="#AAAAAA"
                                     VerticalOptions="Center" />
@@ -225,7 +226,7 @@
                                     VerticalOptions="Center" />
 
                                 <Label
-                                    Text="280мг"
+                                    Text="{localization:Translate Caffeine280}"
                                     FontSize="14"
                                     TextColor="#AAAAAA"
                                     VerticalOptions="Center" />
@@ -248,7 +249,7 @@
                                     VerticalOptions="Center" />
 
                                 <Label
-                                    Text="300мг"
+                                    Text="{localization:Translate Caffeine300}"
                                     FontSize="14"
                                     TextColor="#AAAAAA"
                                     VerticalOptions="Center" />
@@ -303,7 +304,7 @@
                 </Border>
 
                                 <Label Grid.Row="1"
-                                    Text="Пн"
+                                    Text="{localization:Translate MondayShort}"
                                     FontSize="11"
                                     TextColor="#AAAAAA"
                                     HorizontalTextAlignment="Center" />
@@ -343,7 +344,7 @@
 
                                 <Label
                                     Grid.Row="1"
-                                    Text="Вт"
+                                    Text="{localization:Translate TuesdayShort}"
                                     FontSize="11"
                                     TextColor="#AAAAAA"
                                     HorizontalTextAlignment="Center" />
@@ -385,7 +386,7 @@
 
                                 <Label
                                     Grid.Row="1"
-                                    Text="Ср"
+                                    Text="{localization:Translate WednesdayShort}"
                                     FontSize="11"
                                     TextColor="#AAAAAA"
                                     HorizontalTextAlignment="Center" />
@@ -427,7 +428,7 @@
 
                                 <Label
                                     Grid.Row="1"
-                                    Text="Чт"
+                                    Text="{localization:Translate ThursdayShort}"
                                     FontSize="11"
                                     TextColor="#AAAAAA"
                                     HorizontalTextAlignment="Center" />
@@ -469,7 +470,7 @@
 
                                 <Label
                                     Grid.Row="1"
-                                    Text="Пт"
+                                    Text="{localization:Translate FridayShort}"
                                     FontSize="11"
                                     TextColor="#AAAAAA"
                                     HorizontalTextAlignment="Center" />
@@ -511,7 +512,7 @@
 
                                 <Label
                                     Grid.Row="1"
-                                    Text="Сб"
+                                    Text="{localization:Translate SaturdayShort}"
                                     FontSize="11"
                                     TextColor="#AAAAAA"
                                     HorizontalTextAlignment="Center" />
@@ -553,7 +554,7 @@
 
                                 <Label
                                     Grid.Row="1"
-                                    Text="Вс"
+                                    Text="{localization:Translate SundayShort}"
                                     FontSize="11"
                                     TextColor="#AAAAAA"
                                     HorizontalTextAlignment="Center" />
@@ -580,7 +581,7 @@
                                     VerticalOptions="Center" />
 
                                 <Label
-                                    Text="Кофе"
+                                    Text="{localization:Translate Coffee}"
                                     FontSize="14"
                                     TextColor="#AAAAAA"
                                     VerticalOptions="Center" />
@@ -600,7 +601,7 @@
                                     VerticalOptions="Center" />
 
                                 <Label
-                                    Text="Чай"
+                                    Text="{localization:Translate Tea}"
                                     FontSize="14"
                                     TextColor="#AAAAAA"
                                     VerticalOptions="Center" />
@@ -620,7 +621,7 @@
                                     VerticalOptions="Center" />
 
                                 <Label
-                                    Text="Энергетики"
+                                    Text="{localization:Translate EnergyDrinks}"
                                     FontSize="14"
                                     TextColor="#AAAAAA"
                                     VerticalOptions="Center" />

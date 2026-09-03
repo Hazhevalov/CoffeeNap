@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using CoffeeNap.Models;
+using CoffeeNap.Services;
 
 namespace CoffeeNap.Helpers;
 
@@ -12,22 +13,24 @@ public static partial class UserNameValidator
         var name = value?.Trim() ?? string.Empty;
         if (name.Length == 0)
         {
-            return "Введите имя";
+            return LocalizationService.Current["NameRequired"];
         }
 
         if (name.Length < MinimumLength)
         {
-            return $"Имя должно содержать минимум {MinimumLength} символа";
+            return LocalizationService.Current.Format("NameTooShort", MinimumLength);
         }
 
         if (name.Length > UserProfile.MaximumUserNameLength)
         {
-            return $"Имя должно содержать не более {UserProfile.MaximumUserNameLength} символов";
+            return LocalizationService.Current.Format(
+                "NameTooLong",
+                UserProfile.MaximumUserNameLength);
         }
 
         return AllowedNameRegex().IsMatch(name)
             ? null
-            : "Используйте только латинские буквы и цифры";
+            : LocalizationService.Current["NameInvalidCharacters"];
     }
 
     [GeneratedRegex("^[a-zA-Z0-9]+$", RegexOptions.CultureInvariant)]

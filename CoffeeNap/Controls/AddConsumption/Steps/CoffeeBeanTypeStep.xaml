@@ -3,6 +3,7 @@
     x:Class="CoffeeNap.Controls.AddConsumption.Steps.CoffeeBeanTypeStep"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:AddConsumptionPageViewModel">
@@ -45,13 +46,13 @@
                             Grid.Row="1"
                             FontAttributes="Bold"
                             FontSize="32"
-                            Text="Какой кофе?"
+                            Text="{localization:Translate CoffeeBeanQuestion}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Label
                             Grid.Row="2"
                             FontSize="16"
-                            Text="Вкусный"
+                            Text="{localization:Translate Tasty}"
                             TextColor="{StaticResource InkColor}" />
                     </Grid>
 
@@ -74,7 +75,7 @@
                                 HorizontalOptions="Fill"
                                 Command="{Binding SelectBeanTypeCommand}"
                                 CommandParameter="{x:Static models:CoffeeBeanType.Arabica}"
-                                Text="Арабика"
+                                Text="{localization:Translate Arabica}"
                                 TextColor="{StaticResource InkColor}" />
                         </Border>
 
@@ -90,7 +91,7 @@
                                 HorizontalOptions="Fill"
                                 Command="{Binding SelectBeanTypeCommand}"
                                 CommandParameter="{x:Static models:CoffeeBeanType.Robusta}"
-                                Text="Робуста"
+                                Text="{localization:Translate Robusta}"
                                 TextColor="{StaticResource InkColor}" />
                         </Border>
                     </Grid>

@@ -1,3 +1,5 @@
+using CoffeeNap.Services;
+
 namespace CoffeeNap.Helpers;
 
 /// <summary>
@@ -16,23 +18,38 @@ public static class RelativeTimeFormatter
         var elapsed = now - consumedAt;
         if (elapsed < TimeSpan.FromMinutes(1))
         {
-            return "только что";
+            return LocalizationService.Current["JustNow"];
         }
 
         if (elapsed < TimeSpan.FromHours(1))
         {
             var minutes = Math.Max(1, (int)elapsed.TotalMinutes);
-            return $"{minutes} {GetWordForm(minutes, "минуту", "минуты", "минут")} назад";
+            return FormatElapsed(minutes, "MinuteOne", "MinuteFew", "MinuteMany");
         }
 
         if (elapsed < TimeSpan.FromDays(1))
         {
             var hours = Math.Max(1, (int)elapsed.TotalHours);
-            return $"{hours} {GetWordForm(hours, "час", "часа", "часов")} назад";
+            return FormatElapsed(hours, "HourOne", "HourFew", "HourMany");
         }
 
         var days = Math.Max(1, (int)elapsed.TotalDays);
-        return $"{days} {GetWordForm(days, "день", "дня", "дней")} назад";
+        return FormatElapsed(days, "DayOne", "DayFew", "DayMany");
+    }
+
+    private static string FormatElapsed(
+        int value,
+        string singularKey,
+        string paucalKey,
+        string pluralKey)
+    {
+        var localization = LocalizationService.Current;
+        var unit = GetWordForm(
+            value,
+            localization[singularKey],
+            localization[paucalKey],
+            localization[pluralKey]);
+        return localization.Format("AgoFormat", value, unit);
     }
 
     private static string GetWordForm(int value, string singular, string paucal, string plural)

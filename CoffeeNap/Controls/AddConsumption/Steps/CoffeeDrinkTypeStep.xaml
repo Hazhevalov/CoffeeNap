@@ -3,6 +3,7 @@
     x:Class="CoffeeNap.Controls.AddConsumption.Steps.CoffeeDrinkTypeStep"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:AddConsumptionPageViewModel">
@@ -39,20 +40,20 @@
                         <Label
                             Grid.Row="0"
                             FontSize="16"
-                            Text="Кофе вне дома"
+                            Text="{localization:Translate OutsideCoffee}"
                             TextColor="{StaticResource MutedTextColor}" />
 
                         <Label
                             Grid.Row="1"
                             FontAttributes="Bold"
                             FontSize="32"
-                            Text="Какой вид напитка вы пили?"
+                            Text="{localization:Translate DrinkTypeQuestion}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Label
                             Grid.Row="2"
                             FontSize="16"
-                            Text="Он вас порадовал?"
+                            Text="{localization:Translate EnjoyedHint}"
                             TextColor="{StaticResource InkColor}" />
                     </Grid>
 
@@ -74,7 +75,7 @@
                             FontSize="16"
                             Command="{Binding SelectCoffeeDrinkTypeCommand}"
                             CommandParameter="{x:Static models:CoffeeDrinkType.Espresso}"
-                            Text="Еспрессо"
+                            Text="{localization:Translate Espresso}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Button
@@ -86,7 +87,7 @@
                             FontSize="16"
                             Command="{Binding SelectCoffeeDrinkTypeCommand}"
                             CommandParameter="{x:Static models:CoffeeDrinkType.Macchiato}"
-                            Text="Макиато"
+                            Text="{localization:Translate Macchiato}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Button
@@ -98,7 +99,7 @@
                             FontSize="16"
                             Command="{Binding SelectCoffeeDrinkTypeCommand}"
                             CommandParameter="{x:Static models:CoffeeDrinkType.Americano}"
-                            Text="Американо"
+                            Text="{localization:Translate Americano}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Button
@@ -110,7 +111,7 @@
                             FontSize="16"
                             Command="{Binding SelectCoffeeDrinkTypeCommand}"
                             CommandParameter="{x:Static models:CoffeeDrinkType.Cappuccino}"
-                            Text="Капучино"
+                            Text="{localization:Translate Cappuccino}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Button
@@ -122,7 +123,7 @@
                             FontSize="16"
                             Command="{Binding SelectCoffeeDrinkTypeCommand}"
                             CommandParameter="{x:Static models:CoffeeDrinkType.Latte}"
-                            Text="Латте"
+                            Text="{localization:Translate Latte}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Button
@@ -134,7 +135,7 @@
                             FontSize="16"
                             Command="{Binding SelectCoffeeDrinkTypeCommand}"
                             CommandParameter="{x:Static models:CoffeeDrinkType.FlatWhite}"
-                            Text="Флэт-Уайт"
+                            Text="{localization:Translate FlatWhite}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Button
@@ -146,7 +147,7 @@
                             FontSize="16"
                             Command="{Binding SelectCoffeeDrinkTypeCommand}"
                             CommandParameter="{x:Static models:CoffeeDrinkType.Mocha}"
-                            Text="Мокко"
+                            Text="{localization:Translate Mocha}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Button
@@ -158,7 +159,7 @@
                             FontSize="16"
                             Command="{Binding SelectCoffeeDrinkTypeCommand}"
                             CommandParameter="{x:Static models:CoffeeDrinkType.Affogato}"
-                            Text="Аффогато"
+                            Text="{localization:Translate Affogato}"
                             TextColor="{StaticResource InkColor}" />
 
                     </FlexLayout>

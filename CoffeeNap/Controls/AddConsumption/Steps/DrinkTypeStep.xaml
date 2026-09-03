@@ -3,6 +3,7 @@
     x:Class="CoffeeNap.Controls.AddConsumption.Steps.DrinkTypeStep"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:AddConsumptionPageViewModel">
@@ -52,7 +53,7 @@
                                 FontAttributes="Bold"
                                 FontSize="32"
                                 HorizontalOptions="Start"
-                                Text="Какой напиток&#10;вы пили?"
+                                Text="{localization:Translate DrinkQuestion}"
                                 TextColor="{StaticResource InkColor}"
                                 VerticalOptions="Start" />
 
@@ -108,7 +109,7 @@
                                             FontAttributes="Bold"
                                             FontSize="16"
                                             HorizontalTextAlignment="Center"
-                                            Text="Кофе"
+                                            Text="{localization:Translate Coffee}"
                                             TextColor="{StaticResource InkColor}" />
                                     </VerticalStackLayout>
                                 </Border>
@@ -159,7 +160,7 @@
                                             HorizontalTextAlignment="Center"
                                             LineBreakMode="TailTruncation"
                                             MaxLines="1"
-                                            Text="Энергетик"
+                                            Text="{localization:Translate EnergyDrink}"
                                             TextColor="{StaticResource InkColor}" />
                                     </VerticalStackLayout>
                                 </Border>
@@ -208,7 +209,7 @@
                                             FontAttributes="Bold"
                                             FontSize="16"
                                             HorizontalTextAlignment="Center"
-                                            Text="Чай"
+                                            Text="{localization:Translate Tea}"
                                             TextColor="{StaticResource InkColor}" />
                                     </VerticalStackLayout>
                                 </Border>
@@ -232,7 +233,7 @@
                                 FontAttributes="Bold"
                                 FontSize="16"
                                 HorizontalOptions="Fill"
-                                Text="Использовать старый рецепт"
+                                Text="{localization:Translate UseOldRecipe}"
                                 TextColor="{StaticResource InkColor}"
                                 VerticalOptions="Center" />
                         </Border>

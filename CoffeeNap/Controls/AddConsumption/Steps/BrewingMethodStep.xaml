@@ -3,6 +3,7 @@
     x:Class="CoffeeNap.Controls.AddConsumption.Steps.BrewingMethodStep"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:AddConsumptionPageViewModel">
@@ -38,20 +39,20 @@
                         <Label
                             Grid.Row="0"
                             FontSize="16"
-                            Text="Домашний кофе"
+                            Text="{localization:Translate HomeCoffee}"
                             TextColor="{StaticResource MutedTextColor}" />
 
                         <Label
                             Grid.Row="1"
                             FontAttributes="Bold"
                             FontSize="32"
-                            Text="Как вы заваривали?"
+                            Text="{localization:Translate BrewingQuestion}"
                             TextColor="{StaticResource InkColor}" />
 
                         <Label
                             Grid.Row="2"
                             FontSize="16"
-                            Text="Это повысит нашу точность до 75%!"
+                            Text="{localization:Translate AccuracyHint}"
                             TextColor="{StaticResource InkColor}" />
                     </Grid>
 
@@ -114,7 +115,7 @@
                                         FontAttributes="Bold"
                                         FontSize="16"
                                         HorizontalTextAlignment="Center"
-                                        Text="Чайник"
+                                        Text="{localization:Translate Kettle}"
                                         TextColor="{StaticResource InkColor}" />
                                 </VerticalStackLayout>
                             </Border>
@@ -163,7 +164,7 @@
                                         FontAttributes="Bold"
                                         FontSize="16"
                                         HorizontalTextAlignment="Center"
-                                        Text="Эспрессо-машина"
+                                        Text="{localization:Translate EspressoMachine}"
                                         TextColor="{StaticResource InkColor}" />
                                 </VerticalStackLayout>
                             </Border>
@@ -212,7 +213,7 @@
                                         FontAttributes="Bold"
                                         FontSize="16"
                                         HorizontalTextAlignment="Center"
-                                        Text="Cold brew"
+                                        Text="{localization:Translate ColdBrew}"
                                         TextColor="{StaticResource InkColor}" />
                                 </VerticalStackLayout>
                             </Border>
@@ -261,7 +262,7 @@
                                         FontAttributes="Bold"
                                         FontSize="16"
                                         HorizontalTextAlignment="Center"
-                                        Text="Гейзер"
+                                        Text="{localization:Translate MokaPot}"
                                         TextColor="{StaticResource InkColor}" />
                                 </VerticalStackLayout>
                             </Border>
@@ -310,7 +311,7 @@
                                         FontAttributes="Bold"
                                         FontSize="16"
                                         HorizontalTextAlignment="Center"
-                                        Text="Френч-пресс"
+                                        Text="{localization:Translate FrenchPress}"
                                         TextColor="{StaticResource InkColor}" />
                                 </VerticalStackLayout>
                             </Border>
@@ -359,7 +360,7 @@
                                         FontAttributes="Bold"
                                         FontSize="16"
                                         HorizontalTextAlignment="Center"
-                                        Text="Турка"
+                                        Text="{localization:Translate Turkish}"
                                         TextColor="{StaticResource InkColor}" />
                                 </VerticalStackLayout>
                             </Border>
@@ -408,7 +409,7 @@
                                         FontAttributes="Bold"
                                         FontSize="16"
                                         HorizontalTextAlignment="Center"
-                                        Text="Воронка"
+                                        Text="{localization:Translate PourOver}"
                                         TextColor="{StaticResource InkColor}" />
                                 </VerticalStackLayout>
                             </Border>
