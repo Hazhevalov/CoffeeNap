@@ -3,6 +3,7 @@
     x:Class="CoffeeNap.Controls.BottomNavigationBar"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:CoffeeNap.Behaviors"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:BottomNavigationViewModel">
 
@@ -39,6 +40,9 @@
                 Command="{Binding OpenAddConsumptionCommand}"
                 ImageSource="add_ico.png"
                 TextColor="{StaticResource InkColor}">
+                <Button.Behaviors>
+                    <behaviors:PressAnimationBehavior />
+                </Button.Behaviors>
                 <Button.Triggers>
                     <DataTrigger
                             TargetType="Button"
@@ -65,6 +69,9 @@
                 Command="{Binding OpenHomeCommand}"
                 ImageSource="home_ico.png"
                 Opacity="1">
+                <Button.Behaviors>
+                    <behaviors:PressAnimationBehavior />
+                </Button.Behaviors>
                 <Button.Triggers>
                     <DataTrigger
                             TargetType="Button"
@@ -90,6 +97,9 @@
                 BackgroundColor="Transparent"
                 Command="{Binding OpenCalendarCommand}"
                 ImageSource="calendar_ico.png">
+                <Button.Behaviors>
+                    <behaviors:PressAnimationBehavior />
+                </Button.Behaviors>
                 <Button.Triggers>
                     <DataTrigger
                             TargetType="Button"

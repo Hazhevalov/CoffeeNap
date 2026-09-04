@@ -38,6 +38,22 @@ public sealed class AppNavigationService : IAppNavigationService
         await navigationPage.PushAsync(privacyPage, true);
     });
 
+    public Task GoBackAsync() => RunNavigationAsync(async shell =>
+    {
+        if (shell.Navigation.ModalStack.LastOrDefault() is not NavigationPage navigationPage)
+        {
+            return;
+        }
+
+        if (navigationPage.Navigation.NavigationStack.Count > 1)
+        {
+            await navigationPage.PopAsync(false);
+            return;
+        }
+
+        await shell.Navigation.PopModalAsync(false);
+    });
+
     public async Task NavigateToTopLevelAsync(string absoluteRoute)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(absoluteRoute);

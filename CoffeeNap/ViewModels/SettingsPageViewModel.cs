@@ -122,6 +122,11 @@ public partial class SettingsPageViewModel : ObservableObject
     }
 
     [RelayCommand(AllowConcurrentExecutions = false)]
+    private Task BackAsync() => IsDeletingData
+        ? Task.CompletedTask
+        : _navigationService.GoBackAsync();
+
+    [RelayCommand(AllowConcurrentExecutions = false)]
     private Task OpenPrivacyPolicyAsync() => IsDeletingData
         ? Task.CompletedTask
         : _navigationService.OpenPrivacyPolicyAsync();

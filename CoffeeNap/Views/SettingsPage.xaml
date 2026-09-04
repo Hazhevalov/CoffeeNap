@@ -32,11 +32,15 @@
                     Grid.Column="0"
                     Padding="15"
                     BackgroundColor="{StaticResource SurfaceColor}"
-                    Command="{Binding ShowPreviousMonthCommand}"
+                    Command="{Binding BackCommand}"
                     CornerRadius="15"
                     HeightRequest="54"
                     ImageSource="back_ico.png"
-                    WidthRequest="54" />
+                    WidthRequest="54">
+                    <Button.Behaviors>
+                        <behaviors:PressAnimationBehavior PressedScale="0.96" />
+                    </Button.Behaviors>
+                </Button>
 
                 <Label
                     Grid.Column="1"
@@ -44,7 +48,7 @@
                     FontFamily="Inter"
                     FontSize="18"
                     HorizontalTextAlignment="Center"
-                    Text="Настройки"
+                    Text="{localization:Translate SettingsTitle}"
                     TextColor="{StaticResource InkColor}"
                     VerticalTextAlignment="Center" />
             </Grid>
