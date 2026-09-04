@@ -19,7 +19,7 @@
         <converters:ProgressStageToColorConverter x:Key="ProgressStageToColorConverter" />
     </ContentPage.Resources>
 
-    <Grid RowSpacing="0">
+    <Grid RowSpacing="0" Padding="12,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -37,7 +37,7 @@
         <!--  Контент под header'ом  -->
         <Grid
             Grid.Row="1"
-            Padding="10"
+            Padding="0,10"
             IsVisible="True"
             RowDefinitions="Auto,*,Auto"
             RowSpacing="20"

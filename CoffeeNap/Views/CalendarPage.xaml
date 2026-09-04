@@ -26,6 +26,7 @@
                     Stroke="{StaticResource DividerColor}"
                     StrokeShape="RoundRectangle 30"
                     StrokeThickness="1">
+
                     <Grid ColumnDefinitions="54,*,54" ColumnSpacing="12">
                         <Button
                             Grid.Column="0"
@@ -68,31 +69,31 @@
                     StrokeThickness="1">
                     <VerticalStackLayout Spacing="14">
                         <Grid ColumnDefinitions="*,*,*,*,*,*,*">
-                            <Label FontSize="12" HorizontalTextAlignment="Center" Text="{localization:Translate MondayShort}" TextColor="{StaticResource MutedTextColor}" />
-                            <Label Grid.Column="1" FontSize="12" HorizontalTextAlignment="Center" Text="{localization:Translate TuesdayShort}" TextColor="{StaticResource MutedTextColor}" />
-                            <Label Grid.Column="2" FontSize="12" HorizontalTextAlignment="Center" Text="{localization:Translate WednesdayShort}" TextColor="{StaticResource MutedTextColor}" />
-                            <Label Grid.Column="3" FontSize="12" HorizontalTextAlignment="Center" Text="{localization:Translate ThursdayShort}" TextColor="{StaticResource MutedTextColor}" />
-                            <Label Grid.Column="4" FontSize="12" HorizontalTextAlignment="Center" Text="{localization:Translate FridayShort}" TextColor="{StaticResource MutedTextColor}" />
-                            <Label Grid.Column="5" FontSize="12" HorizontalTextAlignment="Center" Text="{localization:Translate SaturdayShort}" TextColor="{StaticResource MutedTextColor}" />
-                            <Label Grid.Column="6" FontSize="12" HorizontalTextAlignment="Center" Text="{localization:Translate SundayShort}" TextColor="{StaticResource MutedTextColor}" />
+                            <Label FontSize="12" HorizontalTextAlignment="Center" VerticalOptions="Center" Text="{localization:Translate MondayShort}" TextColor="{StaticResource MutedTextColor}" />
+                            <Label Grid.Column="1" FontSize="12" HorizontalTextAlignment="Center" VerticalOptions="Center" Text="{localization:Translate TuesdayShort}" TextColor="{StaticResource MutedTextColor}" />
+                            <Label Grid.Column="2" FontSize="12" HorizontalTextAlignment="Center" VerticalOptions="Center" Text="{localization:Translate WednesdayShort}" TextColor="{StaticResource MutedTextColor}" />
+                            <Label Grid.Column="3" FontSize="12" HorizontalTextAlignment="Center" VerticalOptions="Center" Text="{localization:Translate ThursdayShort}" TextColor="{StaticResource MutedTextColor}" />
+                            <Label Grid.Column="4" FontSize="12" HorizontalTextAlignment="Center" VerticalOptions="Center" Text="{localization:Translate FridayShort}" TextColor="{StaticResource MutedTextColor}" />
+                            <Label Grid.Column="5" FontSize="12" HorizontalTextAlignment="Center" VerticalOptions="Center" Text="{localization:Translate SaturdayShort}" TextColor="{StaticResource MutedTextColor}" />
+                            <Label Grid.Column="6" FontSize="12" HorizontalTextAlignment="Center" VerticalOptions="Center" Text="{localization:Translate SundayShort}" TextColor="{StaticResource MutedTextColor}" />
                         </Grid>
 
                         <controls:CalendarMonthView ItemsSource="{Binding Days}" />
 
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="8">
-                            <HorizontalStackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="Center" Spacing="6">
+                        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10" RowDefinitions="Auto">
+                            <HorizontalStackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
                                 <BoxView BackgroundColor="{StaticResource CaffeineProgressLow}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
                                 <Label FontSize="11" Text="{Binding LowRangeLabel}" TextColor="{StaticResource MutedTextColor}" />
                             </HorizontalStackLayout>
-                            <HorizontalStackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="Center" Spacing="6">
+                            <HorizontalStackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
                                 <BoxView BackgroundColor="{StaticResource CaffeineProgressMedium}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
                                 <Label FontSize="11" Text="{Binding MediumRangeLabel}" TextColor="{StaticResource MutedTextColor}" />
                             </HorizontalStackLayout>
-                            <HorizontalStackLayout Grid.Row="1" Grid.Column="0" HorizontalOptions="Center" Spacing="6">
+                            <HorizontalStackLayout Grid.Row="0" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
                                 <BoxView BackgroundColor="{StaticResource CaffeineProgressHigh}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
                                 <Label FontSize="11" Text="{Binding HighRangeLabel}" TextColor="{StaticResource MutedTextColor}" />
                             </HorizontalStackLayout>
-                            <HorizontalStackLayout Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" Spacing="6">
+                            <HorizontalStackLayout Grid.Row="0" Grid.Column="3" HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
                                 <BoxView BackgroundColor="{StaticResource CaffeineProgressLimit}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
                                 <Label FontSize="11" Text="{Binding ExceededRangeLabel}" TextColor="{StaticResource MutedTextColor}" />
                             </HorizontalStackLayout>
@@ -109,16 +110,16 @@
                     <VerticalStackLayout Spacing="16">
                         <controls:WeeklyConsumptionChartView ItemsSource="{Binding WeeklyDays}" />
 
-                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="18">
-                            <HorizontalStackLayout Spacing="6">
+                        <HorizontalStackLayout HorizontalOptions="Start" Spacing="20">
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                                 <BoxView BackgroundColor="{StaticResource CaffeeIcoFill}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
                                 <Label FontSize="12" Text="{localization:Translate Coffee}" TextColor="{StaticResource MutedTextColor}" />
                             </HorizontalStackLayout>
-                            <HorizontalStackLayout Spacing="6">
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                                 <BoxView BackgroundColor="{StaticResource TeaIcoFill}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
                                 <Label FontSize="12" Text="{localization:Translate Tea}" TextColor="{StaticResource MutedTextColor}" />
                             </HorizontalStackLayout>
-                            <HorizontalStackLayout Spacing="6">
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                                 <BoxView BackgroundColor="{StaticResource EnergyDrinkIcoFill}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
                                 <Label FontSize="12" Text="{localization:Translate EnergyDrinks}" TextColor="{StaticResource MutedTextColor}" />
                             </HorizontalStackLayout>

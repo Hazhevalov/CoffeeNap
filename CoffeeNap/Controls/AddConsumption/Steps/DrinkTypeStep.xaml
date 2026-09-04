@@ -7,7 +7,7 @@
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:AddConsumptionPageViewModel">
-<!--  Step 1 "Какой?"  -->
+    <!--  Step 1 "Какой?"  -->
             <!--  Сетка всего контента (Без Нав/Топ бара)  -->
             <Grid
                 Grid.Row="1"

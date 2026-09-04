@@ -4,10 +4,310 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
-    Title="{localization:Translate PrivacyPolicy}"
     BackgroundColor="{StaticResource SurfaceColor}"
-    Shell.NavBarIsVisible="True">
+    Shell.NavBarIsVisible="False"
+    NavigationPage.HasNavigationBar="False">
 
-    <!-- Контент политики намеренно пуст до появления утверждённого юридического текста. -->
-    <Grid />
+    <ScrollView Padding="10,12">
+        <VerticalStackLayout>
+
+        <!-- Топ бар экрана -->
+        <Border Margin="0,0,0,20"
+                Padding="10"
+                BackgroundColor="{StaticResource SurfaceColor}"
+                Stroke="{StaticResource DividerColor}"
+                StrokeShape="RoundRectangle 300"
+                StrokeThickness="1">
+
+            <Grid ColumnDefinitions="54,*,54" ColumnSpacing="12">
+                <Button
+                    Grid.Column="0"
+                    Padding="15"
+                    BackgroundColor="{StaticResource SurfaceColor}"
+                    Command="{Binding BackCommand}"
+                    CornerRadius="15"
+                    HeightRequest="54"
+                    ImageSource="back_ico.png"
+                    WidthRequest="54" />
+
+                <Label
+                    Grid.Column="1"
+                    FontAttributes="Bold"
+                    FontFamily="Inter"
+                    FontSize="18"
+                    HorizontalTextAlignment="Center"
+                    Text="{localization:Translate PrivacyPolicy}"
+                    TextColor="{StaticResource InkColor}"
+                    VerticalTextAlignment="Center" />
+            </Grid>
+        </Border>
+
+            <Label
+                Text="Политика конфиденциальности Coffee Nap"
+                FontSize="24"
+                FontAttributes="Bold"
+                TextColor="{StaticResource InkColor}"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,10" />
+
+            <Label
+                Text="Разрабочик: Гажевалов Артём"
+                FontSize="16"
+                FontAttributes="Bold"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0" />
+
+            <Label
+                Text="Мл. разрабочик, дизайнер: Шарый Владислав"
+                FontSize="16"
+                FontAttributes="Bold"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,10" />
+
+            <Label
+                Text="Дата вступления в силу: 4 сентября 2026 года"
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,32" />
+
+            <Label
+                Text="Coffee Nap («Приложение») уважает вашу конфиденциальность. Мы разработали приложение таким образом, чтобы ваши данные оставались на вашем устройстве и не передавались нам или третьим лицам."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,30" />
+
+            <!-- 1 -->
+            <Label
+                Text="1. Какие данные собирает Coffee Nap"
+                FontSize="20"
+                FontAttributes="Bold"
+                TextColor="{StaticResource InkColor}"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Coffee Nap не собирает и не передаёт персональные данные на внешние серверы."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Приложение может сохранять на вашем устройстве информацию, которую вы вводите или создаёте при использовании приложения, включая:"
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,10" />
+
+            <Label
+                Text="• записи об употреблении кофеина;&#x0a;• количество и время употребления кофеина;&#x0a;• настройки приложения;&#x0a;• историю и статистику, отображаемую в приложении;&#x0a;• другие данные, необходимые для работы функций Coffee Nap."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Эти данные хранятся локально на вашем устройстве."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,30" />
+
+            <!-- 2 -->
+            <Label
+                Text="2. Передача данных"
+                FontSize="20"
+                FontAttributes="Bold"
+                TextColor="{StaticResource InkColor}"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Coffee Nap не подключается к собственным серверам для сбора или хранения пользовательских данных."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Мы не передаём, не продаём и не предоставляем доступ к вашим данным третьим лицам."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Поскольку пользовательские данные не передаются на наши серверы, мы не имеем доступа к вашим локальным записям, истории употребления кофеина или другой информации, сохранённой внутри приложения."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,30" />
+
+            <!-- 3 -->
+            <Label
+                Text="3. Сторонние сервисы"
+                FontSize="20"
+                FontAttributes="Bold"
+                TextColor="{StaticResource InkColor}"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Coffee Nap не использует сторонние аналитические сервисы, рекламные сети или системы отслеживания, предназначенные для сбора пользовательских данных."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Если в будущих версиях приложения будут добавлены сторонние сервисы, соответствующая информация будет отражена в обновлённой версии настоящей Политики конфиденциальности."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,30" />
+
+            <!-- 4 -->
+            <Label
+                Text="4. Хранение данных"
+                FontSize="20"
+                FontAttributes="Bold"
+                TextColor="{StaticResource InkColor}"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Все данные, создаваемые Coffee Nap, хранятся локально на устройстве пользователя."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Удаление приложения или очистка его данных может привести к удалению локально сохранённой информации. В зависимости от настроек операционной системы и устройства резервные копии могут создаваться средствами самой операционной системы."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Coffee Nap не контролирует и не имеет доступа к резервным копиям, создаваемым операционной системой или сторонними сервисами резервного копирования."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,30" />
+
+            <!-- 5 -->
+            <Label
+                Text="5. Безопасность"
+                FontSize="20"
+                FontAttributes="Bold"
+                TextColor="{StaticResource InkColor}"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Поскольку данные Coffee Nap хранятся локально и не передаются на наши серверы, приложение не осуществляет централизованное хранение пользовательских данных."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Безопасность локально сохранённых данных также зависит от настроек безопасности вашего устройства, включая пароль, код-пароль, биометрическую аутентификацию и другие механизмы защиты операционной системы."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,30" />
+
+            <!-- 6 -->
+            <Label
+                Text="6. Данные детей"
+                FontSize="20"
+                FontAttributes="Bold"
+                TextColor="{StaticResource InkColor}"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Coffee Nap не предназначен для целенаправленного сбора персональных данных детей и не осуществляет такой сбор."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Поскольку приложение не передаёт пользовательские данные на наши серверы, мы не собираем персональную информацию пользователей через онлайн-сервисы Coffee Nap."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,30" />
+
+            <!-- 7 -->
+            <Label
+                Text="7. Изменения в Политике конфиденциальности"
+                FontSize="20"
+                FontAttributes="Bold"
+                TextColor="{StaticResource InkColor}"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Мы можем время от времени обновлять настоящую Политику конфиденциальности, например, при добавлении новых функций в приложение."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Обновлённая версия будет опубликована вместе с указанием новой даты вступления в силу."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,30" />
+
+            <!-- 8 -->
+            <Label
+                Text="8. Контакты"
+                FontSize="20"
+                FontAttributes="Bold"
+                TextColor="{StaticResource InkColor}"
+                Margin="0,0,0,12" />
+
+            <Label
+                Text="Если у вас есть вопросы относительно конфиденциальности или обработки данных в Coffee Nap, вы можете связаться с разработчиком по контактному адресу, указанному на странице приложения."
+                FontSize="16"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,30" />
+
+            <!-- Summary -->
+            <Label
+                Text="Кратко: Coffee Nap работает преимущественно локально. Ваши записи и статистика остаются на вашем устройстве и не отправляются разработчику или на сторонние серверы."
+                FontSize="16"
+                FontAttributes="Bold"
+                TextColor="{StaticResource InkColor}"
+                LineHeight="1.4"
+                LineBreakMode="WordWrap"
+                Margin="0,0,0,10" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
