@@ -8,11 +8,10 @@
     Shell.NavBarIsVisible="False"
     NavigationPage.HasNavigationBar="False">
 
-    <ScrollView Padding="10,12">
-        <VerticalStackLayout>
-
+    <Grid RowDefinitions="Auto, *" RowSpacing="20" Padding="12,0">
+        
         <!-- Топ бар экрана -->
-        <Border Margin="0,0,0,20"
+        <Border Grid.Row="0"
                 Padding="10"
                 BackgroundColor="{StaticResource SurfaceColor}"
                 Stroke="{StaticResource DividerColor}"
@@ -42,29 +41,14 @@
             </Grid>
         </Border>
 
+        <!-- Privacy Policy -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout>
             <Label
                 Text="Политика конфиденциальности Coffee Nap"
                 FontSize="24"
                 FontAttributes="Bold"
                 TextColor="{StaticResource InkColor}"
-                LineBreakMode="WordWrap"
-                Margin="0,0,0,10" />
-
-            <Label
-                Text="Разрабочик: Гажевалов Артём"
-                FontSize="16"
-                FontAttributes="Bold"
-                TextColor="{StaticResource InkColor}"
-                LineHeight="1.4"
-                LineBreakMode="WordWrap"
-                Margin="0" />
-
-            <Label
-                Text="Мл. разрабочик, дизайнер: Шарый Владислав"
-                FontSize="16"
-                FontAttributes="Bold"
-                TextColor="{StaticResource InkColor}"
-                LineHeight="1.4"
                 LineBreakMode="WordWrap"
                 Margin="0,0,0,10" />
 
@@ -308,6 +292,27 @@
                 LineHeight="1.4"
                 LineBreakMode="WordWrap"
                 Margin="0,0,0,10" />
+
+            <VerticalStackLayout
+                Margin="4,10,4,30"
+                Spacing="2">
+
+                <Label
+                    FontSize="16"
+                    Text="Made with ☕"
+                    TextColor="{StaticResource InkColor}" />
+
+                <Label
+                    FontSize="16"
+                    Text="Artyom Gazhevalov · C# &amp; App Logic"
+                    TextColor="{StaticResource InkColor}" />
+
+                <Label
+                    FontSize="16"
+                    Text="Vladyslav Sharyi · UI &amp; Interface"
+                    TextColor="{StaticResource InkColor}" />
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
+    </Grid>
 </ContentPage>

@@ -12,7 +12,7 @@
     BackgroundColor="{StaticResource SurfaceColor}"
     Shell.NavBarIsVisible="False">
 
-    <Grid Padding="10,0" RowSpacing="20">
+    <Grid Padding="12,0" RowSpacing="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
