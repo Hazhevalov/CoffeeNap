@@ -49,6 +49,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IApplicationLifecycleService, DefaultApplicationLifecycleService>();
 #endif
         builder.Services.AddSingleton<ICaffeineCalculator, CaffeineCalculator>();
+        builder.Services.AddSingleton<CalendarStatisticsService>();
 
         builder.Services.AddTransient<MainHeaderViewModel>();
         builder.Services.AddTransient<BottomNavigationViewModel>();

@@ -21,6 +21,25 @@ public sealed class CalendarDayItem
     public CaffeineLevel Level { get; init; }
 }
 
+/// <summary>Aggregated immutable statistics for one local calendar day.</summary>
+public readonly record struct CalendarDailyStatistics(
+    int TotalCaffeineMg,
+    ConsumptionTypeDistribution Distribution);
+
+/// <summary>Runtime-cached statistics for one calendar month.</summary>
+public sealed record CalendarMonthStatistics(
+    DateTime Month,
+    IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> Days);
+
+/// <summary>Runtime-cached statistics for the current real week.</summary>
+public sealed record CalendarWeekStatistics(
+    DateTime WeekStart,
+    IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> Days);
+
+public readonly record struct CalendarInitialStatistics(
+    CalendarMonthStatistics Month,
+    CalendarWeekStatistics Week);
+
 public readonly record struct ConsumptionTypeDistribution(
     int CoffeeCount,
     int TeaCount,

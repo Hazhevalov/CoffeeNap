@@ -4,20 +4,13 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:CoffeeNap.Controls"
-    xmlns:converters="clr-namespace:CoffeeNap.Converters"
     xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
-    xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:CalendarPageViewModel"
     Title="{localization:Translate CalendarTitle}"
     BackgroundColor="{StaticResource PageBackgroundColor}"
     SafeAreaEdges="All"
     Shell.NavBarIsVisible="False">
-
-    <ContentPage.Resources>
-        <converters:CaffeineLevelToColorConverter x:Key="CaffeineLevelToColorConverter" />
-        <converters:RatioToGridLengthConverter x:Key="RatioToGridLengthConverter" />
-    </ContentPage.Resources>
 
     <Grid Padding="12,0" RowDefinitions="Auto,*,Auto" RowSpacing="10">
         <controls:MainHeaderView
@@ -84,48 +77,7 @@
                             <Label Grid.Column="6" FontSize="12" HorizontalTextAlignment="Center" Text="{localization:Translate SundayShort}" TextColor="{StaticResource MutedTextColor}" />
                         </Grid>
 
-                        <CollectionView
-                            HeightRequest="{Binding CalendarHeight}"
-                            HorizontalScrollBarVisibility="Never"
-                            ItemsSource="{Binding Days}"
-                            SelectionMode="None"
-                            VerticalScrollBarVisibility="Never">
-                            <CollectionView.ItemsLayout>
-                                <GridItemsLayout
-                                    HorizontalItemSpacing="3"
-                                    Orientation="Vertical"
-                                    Span="7"
-                                    VerticalItemSpacing="6" />
-                            </CollectionView.ItemsLayout>
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="models:CalendarDayItem">
-                                    <Grid HeightRequest="40">
-                                        <Border
-                                            Margin="1"
-                                            BackgroundColor="{Binding Level, Converter={StaticResource CaffeineLevelToColorConverter}}"
-                                            IsVisible="{Binding IsCurrentMonth}"
-                                            Stroke="{StaticResource DividerColor}"
-                                            StrokeShape="RoundRectangle 20"
-                                            StrokeThickness="1">
-                                            <Border.Triggers>
-                                                <DataTrigger Binding="{Binding IsToday}" TargetType="Border" Value="True">
-                                                    <Setter Property="Stroke" Value="{StaticResource InkColor}" />
-                                                    <Setter Property="StrokeThickness" Value="2" />
-                                                </DataTrigger>
-                                            </Border.Triggers>
-                                            <Label
-                                                FontAttributes="Bold"
-                                                FontFamily="Inter"
-                                                FontSize="14"
-                                                HorizontalTextAlignment="Center"
-                                                Text="{Binding DayNumber}"
-                                                TextColor="{StaticResource InkColor}"
-                                                VerticalTextAlignment="Center" />
-                                        </Border>
-                                    </Grid>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
+                        <controls:CalendarMonthView ItemsSource="{Binding Days}" />
 
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="8">
                             <HorizontalStackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="Center" Spacing="6">
@@ -155,50 +107,7 @@
                     StrokeShape="RoundRectangle 30"
                     StrokeThickness="1">
                     <VerticalStackLayout Spacing="16">
-                        <VerticalStackLayout
-                            Spacing="9"
-                            BindableLayout.ItemsSource="{Binding WeeklyDays}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="models:WeeklyConsumptionItem">
-                                    <Grid ColumnDefinitions="34,*" ColumnSpacing="10">
-                                        <Label
-                                            FontFamily="Inter"
-                                            FontSize="12"
-                                            HorizontalTextAlignment="Center"
-                                            Text="{Binding DayLabel}"
-                                            TextColor="{StaticResource MutedTextColor}"
-                                            VerticalTextAlignment="Center">
-                                            <Label.Triggers>
-                                                <DataTrigger Binding="{Binding IsToday}" TargetType="Label" Value="True">
-                                                    <Setter Property="FontAttributes" Value="Bold" />
-                                                    <Setter Property="TextColor" Value="{StaticResource InkColor}" />
-                                                </DataTrigger>
-                                            </Label.Triggers>
-                                        </Label>
-
-                                        <Border
-                                            Grid.Column="1"
-                                            HeightRequest="20"
-                                            BackgroundColor="{StaticResource SurfaceColor}"
-                                            Stroke="{StaticResource DividerColor}"
-                                            StrokeShape="RoundRectangle 10"
-                                            StrokeThickness="1">
-                                            <Grid ColumnSpacing="0">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="{Binding CoffeeRatio, Converter={StaticResource RatioToGridLengthConverter}}" />
-                                                    <ColumnDefinition Width="{Binding TeaRatio, Converter={StaticResource RatioToGridLengthConverter}}" />
-                                                    <ColumnDefinition Width="{Binding EnergyDrinkRatio, Converter={StaticResource RatioToGridLengthConverter}}" />
-                                                    <ColumnDefinition Width="{Binding EmptyRatio, Converter={StaticResource RatioToGridLengthConverter}}" />
-                                                </Grid.ColumnDefinitions>
-                                                <BoxView Grid.Column="0" BackgroundColor="{StaticResource CaffeeIcoFill}" />
-                                                <BoxView Grid.Column="1" BackgroundColor="{StaticResource TeaIcoFill}" />
-                                                <BoxView Grid.Column="2" BackgroundColor="{StaticResource EnergyDrinkIcoFill}" />
-                                            </Grid>
-                                        </Border>
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </VerticalStackLayout>
+                        <controls:WeeklyConsumptionChartView ItemsSource="{Binding WeeklyDays}" />
 
                         <HorizontalStackLayout HorizontalOptions="Center" Spacing="18">
                             <HorizontalStackLayout Spacing="6">

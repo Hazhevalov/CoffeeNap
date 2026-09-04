@@ -39,19 +39,37 @@ public partial class App : Application
             await _localization.InitializeAsync();
             await _userState.InitializeAsync();
 
+            var calendarPage = _pageFactory.CreateCalendarPage();
             await MainThread.InvokeOnMainThreadAsync(() =>
+            {
                 window.Page = new AppShell(
                     _userState,
                     _pageFactory.CreateOnboardingPage(),
                     _pageFactory.CreateMainPage(),
                     _pageFactory.CreateAddConsumptionPage(),
-                    _pageFactory.CreateCalendarPage()));
+                    calendarPage);
+            });
+            _ = WarmUpCalendarAsync(calendarPage);
         }
         catch (Exception exception)
         {
             _logger.LogError(exception, "Application data initialization failed.");
             await MainThread.InvokeOnMainThreadAsync(() =>
                 window.Page = CreateStartupErrorPage());
+        }
+    }
+
+    private async Task WarmUpCalendarAsync(CalendarPage calendarPage)
+    {
+        try
+        {
+            // Let the initially selected page render before doing hidden-page work.
+            await Task.Delay(500);
+            await calendarPage.WarmUpAsync();
+        }
+        catch (Exception exception)
+        {
+            _logger.LogDebug(exception, "Calendar background warm-up failed.");
         }
     }
 

@@ -139,10 +139,10 @@ public sealed class AppDataService : IAppDataService
                 "The end of the range must be later than the start.");
         }
 
-        await InitializeAsync();
+        await InitializeAsync().ConfigureAwait(false);
         return await _database.GetConsumptionsBetweenAsync(
             fromInclusive.ToUniversalTime(),
-            toExclusive.ToUniversalTime());
+            toExclusive.ToUniversalTime()).ConfigureAwait(false);
     }
 
     public async Task AddConsumptionAsync(CaffeineConsumption consumption)

@@ -33,4 +33,6 @@ public partial class CalendarPage : ContentPage
         _viewModel.StopDateChangeMonitor();
         base.OnDisappearing();
     }
+
+    internal Task WarmUpAsync() => _viewModel.WarmUpAsync();
 }

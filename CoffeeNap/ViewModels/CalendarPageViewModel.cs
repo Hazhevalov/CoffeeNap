@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using CoffeeNap.Models;
 using CoffeeNap.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,31 +8,35 @@ namespace CoffeeNap.ViewModels;
 
 public partial class CalendarPageViewModel : ObservableObject
 {
-    private const double CalendarRowHeight = 46;
     private static readonly TimeSpan DateChangeCheckInterval = TimeSpan.FromMinutes(1);
 
-    private readonly IAppDataService _dataService;
+    private readonly CalendarStatisticsService _statisticsService;
     private readonly LocalizationService _localization;
     private readonly ILogger<CalendarPageViewModel> _logger;
-    private readonly SemaphoreSlim _refreshLock = new(1, 1);
+    private readonly SemaphoreSlim _initializationLock = new(1, 1);
     private IReadOnlyList<CalendarDayItem> _days = [];
     private IReadOnlyList<WeeklyConsumptionItem> _weeklyDays = [];
-    private DateTime _displayedMonth;
+    private DateTime _requestedMonth;
+    private DateTime _publishedMonth;
+    private DateTime _presentationDate;
+    private DateTime _weekPresentationDate;
+    private CalendarMonthStatistics? _publishedMonthStatistics;
+    private CalendarWeekStatistics? _publishedWeekStatistics;
     private string _monthTitle = string.Empty;
     private string? _loadError;
     private bool _isLoading;
-    private int _refreshVersion;
+    private int _monthRequestVersion;
     private CancellationTokenSource? _dateMonitorCancellation;
     private DateTime _lastObservedDate = DateTime.Today;
 
     public CalendarPageViewModel(
-        IAppDataService dataService,
+        CalendarStatisticsService statisticsService,
         LocalizationService localization,
         ILogger<CalendarPageViewModel> logger,
         MainHeaderViewModel header,
         BottomNavigationViewModel navigation)
     {
-        _dataService = dataService;
+        _statisticsService = statisticsService;
         _localization = localization;
         _logger = logger;
         Header = header;
@@ -41,11 +44,17 @@ public partial class CalendarPageViewModel : ObservableObject
         Navigation.ActiveTab = NavigationTab.Calendar;
 
         var today = DateTime.Today;
-        _displayedMonth = new DateTime(today.Year, today.Month, 1);
-        UpdateLocalizedText();
-        PublishPresentation(BuildDailyStatistics([]), today);
+        _requestedMonth = new DateTime(today.Year, today.Month, 1);
+        _publishedMonth = _requestedMonth;
+        _presentationDate = today;
+        MonthTitle = FormatMonthTitle(_publishedMonth);
+        Days = BuildCalendarDays(_publishedMonth, today, EmptyStatistics);
+        WeeklyDays = BuildWeeklyDays(today, EmptyStatistics);
         _localization.CultureChanged += OnCultureChanged;
     }
+
+    private static IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> EmptyStatistics { get; } =
+        new Dictionary<DateOnly, CalendarDailyStatistics>();
 
     public MainHeaderViewModel Header { get; }
 
@@ -54,13 +63,7 @@ public partial class CalendarPageViewModel : ObservableObject
     public IReadOnlyList<CalendarDayItem> Days
     {
         get => _days;
-        private set
-        {
-            if (SetProperty(ref _days, value))
-            {
-                OnPropertyChanged(nameof(CalendarHeight));
-            }
-        }
+        private set => SetProperty(ref _days, value);
     }
 
     public IReadOnlyList<WeeklyConsumptionItem> WeeklyDays
@@ -87,8 +90,6 @@ public partial class CalendarPageViewModel : ObservableObject
     public string ExceededRangeLabel =>
         $"{CaffeineLevelResolver.LimitExceededMinimumMg}+{_localization["MilligramShort"]}";
 
-    public double CalendarHeight => Math.Ceiling(Days.Count / 7d) * CalendarRowHeight;
-
     public bool IsLoading
     {
         get => _isLoading;
@@ -109,50 +110,40 @@ public partial class CalendarPageViewModel : ObservableObject
 
     public bool HasLoadError => !string.IsNullOrEmpty(LoadError);
 
-    public async Task RefreshAsync()
+    /// <summary>
+    /// Reuses cached month/week instances on repeated appearances and reloads
+    /// only the range invalidated by a data change.
+    /// </summary>
+    public Task RefreshAsync() => LoadCurrentStateAsync(prefetchAdjacentMonths: true);
+
+    public Task WarmUpAsync() => LoadCurrentStateAsync(prefetchAdjacentMonths: false);
+
+    private async Task LoadCurrentStateAsync(bool prefetchAdjacentMonths)
     {
-        var requestVersion = Interlocked.Increment(ref _refreshVersion);
-        await _refreshLock.WaitAsync();
+        await _initializationLock.WaitAsync();
         try
         {
-            if (requestVersion != Volatile.Read(ref _refreshVersion))
-            {
-                return;
-            }
-
             await SetLoadingStateAsync(true, null);
-            var stopwatch = Stopwatch.StartNew();
             var today = DateTime.Today;
-            var monthStart = _displayedMonth;
-            var monthEnd = monthStart.AddMonths(1);
-            var weekStart = GetWeekStart(today);
-            var weekEnd = weekStart.AddDays(7);
-            var rangeStart = monthStart < weekStart ? monthStart : weekStart;
-            var rangeEnd = monthEnd > weekEnd ? monthEnd : weekEnd;
-
-            var consumptions = await _dataService.GetConsumptionsBetweenAsync(
-                ToUtcBoundary(rangeStart),
-                ToUtcBoundary(rangeEnd));
-            var queryElapsed = stopwatch.Elapsed;
-            var statistics = BuildDailyStatistics(consumptions);
-
-            if (requestVersion != Volatile.Read(ref _refreshVersion))
-            {
-                return;
-            }
+            var targetMonth = _requestedMonth;
+            var result = await _statisticsService.GetInitialAsync(targetMonth, today)
+                .ConfigureAwait(false);
 
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                PublishPresentation(statistics, today);
+                if (targetMonth == _requestedMonth)
+                {
+                    PublishMonthIfChanged(result.Month, today);
+                }
+
+                PublishWeekIfChanged(result.Week, today);
                 LoadError = null;
             });
 
-            stopwatch.Stop();
-            _logger.LogDebug(
-                "Calendar refreshed with one range query in {QueryMs} ms; total {TotalMs} ms ({Count} rows).",
-                queryElapsed.TotalMilliseconds,
-                stopwatch.Elapsed.TotalMilliseconds,
-                consumptions.Count);
+            if (prefetchAdjacentMonths)
+            {
+                _statisticsService.PrefetchAdjacentMonths(targetMonth);
+            }
         }
         catch (Exception exception)
         {
@@ -162,7 +153,7 @@ public partial class CalendarPageViewModel : ObservableObject
         finally
         {
             await SetLoadingStateAsync(false, LoadError);
-            _refreshLock.Release();
+            _initializationLock.Release();
         }
     }
 
@@ -186,21 +177,11 @@ public partial class CalendarPageViewModel : ObservableObject
         cancellation?.Dispose();
     }
 
-    [RelayCommand(AllowConcurrentExecutions = false)]
-    private async Task ShowPreviousMonthAsync()
-    {
-        _displayedMonth = _displayedMonth.AddMonths(-1);
-        UpdateLocalizedText();
-        await RefreshAsync();
-    }
+    [RelayCommand(AllowConcurrentExecutions = true)]
+    private Task ShowPreviousMonthAsync() => ChangeMonthAsync(-1);
 
-    [RelayCommand(AllowConcurrentExecutions = false)]
-    private async Task ShowNextMonthAsync()
-    {
-        _displayedMonth = _displayedMonth.AddMonths(1);
-        UpdateLocalizedText();
-        await RefreshAsync();
-    }
+    [RelayCommand(AllowConcurrentExecutions = true)]
+    private Task ShowNextMonthAsync() => ChangeMonthAsync(1);
 
     public static DateTime GetWeekStart(DateTime date)
     {
@@ -208,48 +189,105 @@ public partial class CalendarPageViewModel : ObservableObject
         return date.Date.AddDays(-mondayOffset);
     }
 
-    private void PublishPresentation(
-        IReadOnlyDictionary<DateTime, DailyStatistics> statistics,
+    private async Task ChangeMonthAsync(int offset)
+    {
+        var targetMonth = _requestedMonth.AddMonths(offset);
+        _requestedMonth = targetMonth;
+        var requestVersion = Interlocked.Increment(ref _monthRequestVersion);
+        IsLoading = true;
+        LoadError = null;
+
+        try
+        {
+            var statistics = await _statisticsService.GetMonthAsync(targetMonth)
+                .ConfigureAwait(false);
+            if (requestVersion != Volatile.Read(ref _monthRequestVersion) ||
+                targetMonth != _requestedMonth)
+            {
+                return;
+            }
+
+            var today = DateTime.Today;
+            await MainThread.InvokeOnMainThreadAsync(() =>
+                PublishMonthIfChanged(statistics, today));
+            _statisticsService.PrefetchAdjacentMonths(targetMonth);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Calendar month load failed for {Month:yyyy-MM}.", targetMonth);
+            if (requestVersion == Volatile.Read(ref _monthRequestVersion))
+            {
+                await SetLoadingStateAsync(false, _localization["LoadDataFailed"]);
+            }
+        }
+        finally
+        {
+            if (requestVersion == Volatile.Read(ref _monthRequestVersion))
+            {
+                await SetLoadingStateAsync(false, LoadError);
+            }
+        }
+    }
+
+    private void PublishMonthIfChanged(
+        CalendarMonthStatistics statistics,
         DateTime today)
     {
-        Days = BuildCalendarDays(_displayedMonth, today, statistics);
-        WeeklyDays = BuildWeeklyDays(today, statistics);
+        if (ReferenceEquals(_publishedMonthStatistics, statistics) &&
+            _presentationDate == today)
+        {
+            return;
+        }
+
+        var models = BuildCalendarDays(statistics.Month, today, statistics.Days);
+        _publishedMonthStatistics = statistics;
+        _publishedMonth = statistics.Month;
+        _presentationDate = today;
+        MonthTitle = FormatMonthTitle(_publishedMonth);
+        Days = models;
+    }
+
+    private void PublishWeekIfChanged(
+        CalendarWeekStatistics statistics,
+        DateTime today)
+    {
+        if (ReferenceEquals(_publishedWeekStatistics, statistics) &&
+            _weekPresentationDate == today)
+        {
+            return;
+        }
+
+        _publishedWeekStatistics = statistics;
+        _weekPresentationDate = today;
+        WeeklyDays = BuildWeeklyDays(today, statistics.Days);
     }
 
     private static IReadOnlyList<CalendarDayItem> BuildCalendarDays(
         DateTime month,
         DateTime today,
-        IReadOnlyDictionary<DateTime, DailyStatistics> statistics)
+        IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> statistics)
     {
+        const int slotCount = 42;
         var firstDayOffset = ((int)month.DayOfWeek + 6) % 7;
-        var daysInMonth = DateTime.DaysInMonth(month.Year, month.Month);
-        var result = new List<CalendarDayItem>(firstDayOffset + daysInMonth + 6);
-
-        for (var index = 0; index < firstDayOffset; index++)
+        var firstSlotDate = month.AddDays(-firstDayOffset);
+        var result = new CalendarDayItem[slotCount];
+        for (var index = 0; index < slotCount; index++)
         {
-            result.Add(new CalendarDayItem());
-        }
-
-        for (var day = 1; day <= daysInMonth; day++)
-        {
-            var date = new DateTime(month.Year, month.Month, day);
-            var total = date <= today && statistics.TryGetValue(date, out var value)
+            var date = firstSlotDate.AddDays(index);
+            var isCurrentMonth = date.Year == month.Year && date.Month == month.Month;
+            var dateOnly = DateOnly.FromDateTime(date);
+            var total = isCurrentMonth && date <= today && statistics.TryGetValue(dateOnly, out var value)
                 ? value.TotalCaffeineMg
                 : 0;
-            result.Add(new CalendarDayItem
+            result[index] = new CalendarDayItem
             {
                 Date = date,
-                DayNumber = day,
-                IsCurrentMonth = true,
-                IsToday = date == today,
+                DayNumber = isCurrentMonth ? date.Day : 0,
+                IsCurrentMonth = isCurrentMonth,
+                IsToday = isCurrentMonth && date == today,
                 TotalCaffeineMg = total,
                 Level = CaffeineLevelResolver.ResolveDailyTotal(total)
-            });
-        }
-
-        while (result.Count % 7 != 0)
-        {
-            result.Add(new CalendarDayItem());
+            };
         }
 
         return result;
@@ -257,53 +295,30 @@ public partial class CalendarPageViewModel : ObservableObject
 
     private IReadOnlyList<WeeklyConsumptionItem> BuildWeeklyDays(
         DateTime today,
-        IReadOnlyDictionary<DateTime, DailyStatistics> statistics)
+        IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> statistics)
     {
         var weekStart = GetWeekStart(today);
-        var result = new List<WeeklyConsumptionItem>(7);
-        for (var index = 0; index < 7; index++)
+        var result = new WeeklyConsumptionItem[7];
+        for (var index = 0; index < result.Length; index++)
         {
             var date = weekStart.AddDays(index);
-            statistics.TryGetValue(date, out var daily);
-            result.Add(new WeeklyConsumptionItem
+            statistics.TryGetValue(DateOnly.FromDateTime(date), out var daily);
+            result[index] = new WeeklyConsumptionItem
             {
                 Date = date,
                 DayLabel = GetWeekdayLabel(date.DayOfWeek),
                 IsToday = date == today,
-                Distribution = daily?.Distribution ?? default
-            });
+                Distribution = daily.Distribution
+            };
         }
 
         return result;
     }
 
-    private static IReadOnlyDictionary<DateTime, DailyStatistics> BuildDailyStatistics(
-        IEnumerable<CaffeineConsumption> consumptions)
+    private string FormatMonthTitle(DateTime month)
     {
-        var result = new Dictionary<DateTime, DailyStatistics>();
-        foreach (var consumption in consumptions)
-        {
-            var localDate = consumption.ConsumedAt.ToLocalTime().Date;
-            if (!result.TryGetValue(localDate, out var statistics))
-            {
-                statistics = new DailyStatistics();
-                result.Add(localDate, statistics);
-            }
-
-            statistics.Add(consumption);
-        }
-
-        return result;
-    }
-
-    private void UpdateLocalizedText()
-    {
-        var title = _displayedMonth.ToString("MMMM yyyy", _localization.CurrentCulture);
-        MonthTitle = _localization.CurrentCulture.TextInfo.ToTitleCase(title);
-        OnPropertyChanged(nameof(LowRangeLabel));
-        OnPropertyChanged(nameof(MediumRangeLabel));
-        OnPropertyChanged(nameof(HighRangeLabel));
-        OnPropertyChanged(nameof(ExceededRangeLabel));
+        var title = month.ToString("MMMM yyyy", _localization.CurrentCulture);
+        return _localization.CurrentCulture.TextInfo.ToTitleCase(title);
     }
 
     private string GetWeekdayLabel(DayOfWeek dayOfWeek) => dayOfWeek switch
@@ -320,7 +335,12 @@ public partial class CalendarPageViewModel : ObservableObject
 
     private void OnCultureChanged(object? sender, EventArgs eventArgs)
     {
-        UpdateLocalizedText();
+        MonthTitle = FormatMonthTitle(_publishedMonth);
+        OnPropertyChanged(nameof(LowRangeLabel));
+        OnPropertyChanged(nameof(MediumRangeLabel));
+        OnPropertyChanged(nameof(HighRangeLabel));
+        OnPropertyChanged(nameof(ExceededRangeLabel));
+
         var today = DateTime.Today;
         WeeklyDays = WeeklyDays.Select(item => new WeeklyConsumptionItem
         {
@@ -334,15 +354,6 @@ public partial class CalendarPageViewModel : ObservableObject
         {
             LoadError = _localization["LoadDataFailed"];
         }
-    }
-
-    private static DateTimeOffset ToUtcBoundary(DateTime localDate)
-    {
-        var unspecified = DateTime.SpecifyKind(localDate, DateTimeKind.Unspecified);
-        var localBoundary = new DateTimeOffset(
-            unspecified,
-            TimeZoneInfo.Local.GetUtcOffset(unspecified));
-        return localBoundary.ToUniversalTime();
     }
 
     private async Task SetLoadingStateAsync(bool isLoading, string? error)
@@ -368,10 +379,10 @@ public partial class CalendarPageViewModel : ObservableObject
                 }
 
                 _lastObservedDate = today;
-                if (_displayedMonth.Year != today.Year || _displayedMonth.Month != today.Month)
+                if (_requestedMonth.Year != today.Year || _requestedMonth.Month != today.Month)
                 {
-                    _displayedMonth = new DateTime(today.Year, today.Month, 1);
-                    await MainThread.InvokeOnMainThreadAsync(UpdateLocalizedText);
+                    _requestedMonth = new DateTime(today.Year, today.Month, 1);
+                    Interlocked.Increment(ref _monthRequestVersion);
                 }
 
                 await RefreshAsync();
@@ -384,38 +395,6 @@ public partial class CalendarPageViewModel : ObservableObject
         catch (Exception exception)
         {
             _logger.LogError(exception, "Calendar date-change monitor stopped unexpectedly.");
-        }
-    }
-
-    private sealed class DailyStatistics
-    {
-        private int _coffeeCount;
-        private int _teaCount;
-        private int _energyDrinkCount;
-
-        public int TotalCaffeineMg { get; private set; }
-
-        public ConsumptionTypeDistribution Distribution =>
-            new(_coffeeCount, _teaCount, _energyDrinkCount);
-
-        public void Add(CaffeineConsumption consumption)
-        {
-            TotalCaffeineMg = (int)Math.Min(
-                int.MaxValue,
-                (long)TotalCaffeineMg + Math.Max(0, consumption.CaffeineMg));
-
-            switch (consumption.Type)
-            {
-                case CaffeineConsumptionType.Coffee:
-                    _coffeeCount++;
-                    break;
-                case CaffeineConsumptionType.Tea:
-                    _teaCount++;
-                    break;
-                case CaffeineConsumptionType.EnergyDrink:
-                    _energyDrinkCount++;
-                    break;
-            }
         }
     }
 }
