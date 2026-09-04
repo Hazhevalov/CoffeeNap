@@ -5,8 +5,11 @@ namespace CoffeeNap.Services;
 /// <summary>Serializes root and modal application navigation.</summary>
 public sealed class AppNavigationService : IAppNavigationService
 {
+    private static readonly TimeSpan BackNavigationDebounce = TimeSpan.FromMilliseconds(350);
+
     private readonly IServiceProvider _services;
     private readonly SemaphoreSlim _navigationLock = new(1, 1);
+    private long _lastBackNavigationTimestamp;
 
     public AppNavigationService(IServiceProvider services)
     {
@@ -44,6 +47,17 @@ public sealed class AppNavigationService : IAppNavigationService
         {
             return;
         }
+
+        var currentTimestamp = System.Diagnostics.Stopwatch.GetTimestamp();
+        if (_lastBackNavigationTimestamp != 0 &&
+            System.Diagnostics.Stopwatch.GetElapsedTime(
+                _lastBackNavigationTimestamp,
+                currentTimestamp) < BackNavigationDebounce)
+        {
+            return;
+        }
+
+        _lastBackNavigationTimestamp = currentTimestamp;
 
         if (navigationPage.Navigation.NavigationStack.Count > 1)
         {

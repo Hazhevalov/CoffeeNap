@@ -23,7 +23,7 @@
                     Grid.Column="0"
                     Padding="15"
                     BackgroundColor="{StaticResource SurfaceColor}"
-                    Command="{Binding BackCommand}"
+                    Clicked="OnBackClicked"
                     CornerRadius="15"
                     HeightRequest="54"
                     ImageSource="back_ico.png"
@@ -283,16 +283,6 @@
                 LineBreakMode="WordWrap"
                 Margin="0,0,0,30" />
 
-            <!-- Summary -->
-            <Label
-                Text="Кратко: Coffee Nap работает преимущественно локально. Ваши записи и статистика остаются на вашем устройстве и не отправляются разработчику или на сторонние серверы."
-                FontSize="16"
-                FontAttributes="Bold"
-                TextColor="{StaticResource InkColor}"
-                LineHeight="1.4"
-                LineBreakMode="WordWrap"
-                Margin="0,0,0,10" />
-
             <VerticalStackLayout
                 Margin="4,10,4,30"
                 Spacing="2">
@@ -304,7 +294,7 @@
 
                 <Label
                     FontSize="16"
-                    Text="Artyom Gazhevalov · C# &amp; App Logic"
+                    Text="Artem Hazhevalov · C# &amp; App Logic"
                     TextColor="{StaticResource InkColor}" />
 
                 <Label
