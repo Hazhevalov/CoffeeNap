@@ -5,8 +5,8 @@ namespace CoffeeNap.Services;
 /// <summary>Single source of caffeine thresholds used throughout the application.</summary>
 public static class CaffeineLevelResolver
 {
-    public const int MediumMinimumMg = 150;
-    public const int HighMinimumMg = 280;
+    public const int MediumMinimumMg = 120;
+    public const int HighMinimumMg = 210;
     public const int LimitExceededMinimumMg = 300;
 
     public const double LowProgressMaximum = 0.40;
