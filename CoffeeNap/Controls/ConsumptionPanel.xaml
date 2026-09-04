@@ -4,11 +4,13 @@
     x:Name="Panel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:CoffeeNap.Behaviors"
+    xmlns:controls="clr-namespace:CoffeeNap.Controls"
     xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     BackgroundColor="Transparent">
 
-    <!-- Белая карточка занимает всю высоту контрола; её положение меняет code-behind. -->
+    <!-- Белая карточка занимает всю доступную высоту фиксированного блока. -->
     <Border
         Padding="0"
         BackgroundColor="{StaticResource SurfaceColor}"
@@ -24,28 +26,13 @@
         </Border.Shadow>
 
         <Grid RowSpacing="0">
-            <!-- Строки: ручка фиксированной высоты, заголовок и прокручиваемый список. -->
+            <!-- Заголовок остаётся на месте, список занимает остальную высоту. -->
             <Grid.RowDefinitions>
-                <RowDefinition Height="36" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <!-- Жест обрабатывается только в области ручки, чтобы не мешать прокрутке списка. -->
-            <Grid x:Name="DragHandleArea" Grid.Row="0" BackgroundColor="Transparent">
-                <Grid.GestureRecognizers>
-                    <PanGestureRecognizer PanUpdated="OnDragHandlePanUpdated" />
-                </Grid.GestureRecognizers>
-                <BoxView
-                    WidthRequest="42"
-                    HeightRequest="4"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    BackgroundColor="{StaticResource InkColor}"
-                    CornerRadius="2" />
-            </Grid>
-
-            <Grid Grid.Row="1" Padding="10,0,10,6">
+            <Grid Grid.Row="0" Padding="10,16,10,10">
                 <!-- Заголовок панели и декоративный информационный значок. -->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -65,7 +52,7 @@
                        Grid.Column="1"/>
             </Grid>
 
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="1">
                 <!-- Список получает данные снаружи через ItemsSource самого контрола. -->
                 <CollectionView
                     x:Name="ConsumptionList"
@@ -74,70 +61,118 @@
                     ItemsSource="{Binding Source={x:Reference Panel}, Path=ItemsSource}"
                     SelectionMode="None"
                     VerticalScrollBarVisibility="Never">
+                    <CollectionView.EmptyView>
+                        <Grid Padding="20" VerticalOptions="Center">
+                            <Label
+                                FontFamily="Inter"
+                                FontSize="14"
+                                HorizontalTextAlignment="Center"
+                                Text="{localization:Translate EmptyConsumptions}"
+                                TextColor="{StaticResource MutedTextColor}"
+                                VerticalTextAlignment="Center" />
+                        </Grid>
+                    </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>
                         <!-- x:DataType включает проверку привязок элемента при компиляции. -->
                         <DataTemplate x:DataType="viewModels:ConsumptionItemViewModel">
-                            <Border
-                                Margin="10,3"
-                                MinimumHeightRequest="64"
-                                Padding="10"
-                                BackgroundColor="{StaticResource SurfaceColor}"
-                                Stroke="{StaticResource DividerColor}"
-                                StrokeThickness="1">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="16" />
-                                </Border.StrokeShape>
-                                <Border.Shadow>
-                                    <Shadow Brush="{StaticResource CardShadowBrush}" Offset="0,1" Opacity="0.06" Radius="3" />
-                                </Border.Shadow>
-                                <Grid ColumnSpacing="10">
-                                    <!-- Карточка записи: иконка, название/время и доза кофеина. -->
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="44" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Border
-                                        WidthRequest="44"
-                                        HeightRequest="44"
-                                        Padding="10"
-                                        BackgroundColor="{Binding IconBackground}"
-                                        StrokeThickness="0"
-                                        VerticalOptions="Center">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="22" />
-                                        </Border.StrokeShape>
-                                        <Image Source="{Binding Icon}" Aspect="AspectFit" />
-                                    </Border>
-                                    <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                            <SwipeView
+                                BindingContextChanged="OnSwipeBindingContextChanged"
+                                SwipeEnded="OnSwipeEnded"
+                                SwipeStarted="OnSwipeStarted">
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItemView>
+                                            <Border
+                                                Margin="0,3,10,3"
+                                                Padding="18"
+                                                BackgroundColor="{StaticResource CaffeineProgressLimit}"
+                                                StrokeThickness="0"
+                                                WidthRequest="72">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="16" />
+                                                </Border.StrokeShape>
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type controls:ConsumptionPanel}}, Path=DeleteCommand}"
+                                                        CommandParameter="{Binding .}"
+                                                        Tapped="OnDeleteActionTapped" />
+                                                </Border.GestureRecognizers>
+                                                <Border.Behaviors>
+                                                    <behaviors:PressAnimationBehavior PressedScale="0.94" />
+                                                </Border.Behaviors>
+                                                <Image
+                                                    Aspect="AspectFit"
+                                                    HeightRequest="64"
+                                                    InputTransparent="True"
+                                                    Source="trash.png"
+                                                    WidthRequest="64" />
+                                            </Border>
+                                        </SwipeItemView>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+
+                                <Border
+                                    Margin="10,3"
+                                    MinimumHeightRequest="64"
+                                    Padding="10"
+                                    BackgroundColor="{StaticResource SurfaceColor}"
+                                    Stroke="{StaticResource DividerColor}"
+                                    StrokeThickness="1">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16" />
+                                    </Border.StrokeShape>
+                                    <Border.Shadow>
+                                        <Shadow Brush="{StaticResource CardShadowBrush}" Offset="0,1" Opacity="0.06" Radius="3" />
+                                    </Border.Shadow>
+                                    <Grid ColumnSpacing="10">
+                                        <!-- Карточка записи: иконка, название/время и доза кофеина. -->
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="44" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border
+                                            WidthRequest="44"
+                                            HeightRequest="44"
+                                            Padding="10"
+                                            BackgroundColor="{Binding IconBackground}"
+                                            StrokeThickness="0"
+                                            VerticalOptions="Center">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="22" />
+                                            </Border.StrokeShape>
+                                            <Image Source="{Binding Icon}" Aspect="AspectFit" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                                            <Label
+                                                FontFamily="Inter"
+                                                FontSize="14"
+                                                FontAttributes="Bold"
+                                                LineBreakMode="TailTruncation"
+                                                MaxLines="1"
+                                                Text="{Binding Name}"
+                                                TextColor="{StaticResource InkColor}" />
                                         <Label
                                             FontFamily="Inter"
-                                            FontSize="14"
+                                                FontSize="11"
+                                                Text="{Binding RelativeTime}"
+                                                TextColor="{StaticResource MutedTextColor}" />
+                                        </VerticalStackLayout>
+                                        <Label
+                                            Grid.Column="2"
+                                            Margin="4,0,0,0"
+                                            FontFamily="Inter"
+                                            FontSize="16"
                                             FontAttributes="Bold"
-                                            LineBreakMode="TailTruncation"
-                                            MaxLines="1"
-                                            Text="{Binding Name}"
-                                            TextColor="{StaticResource InkColor}" />
-                                        <Label
-                                            FontFamily="Inter"
-                                            FontSize="11"
-                                            Text="{Binding RelativeTime}"
-                                            TextColor="{StaticResource MutedTextColor}" />
-                                    </VerticalStackLayout>
-                                    <Label
-                                        Grid.Column="2"
-                                        Margin="4,0,0,0"
-                                        FontFamily="Inter"
-                                        FontSize="16"
-                                        FontAttributes="Bold"
-                                        Text="{Binding CaffeineDisplay}"
-                                        TextColor="{StaticResource InkColor}"
-                                        VerticalOptions="Center" />
-                                </Grid>
-                            </Border>
+                                            Text="{Binding CaffeineDisplay}"
+                                            TextColor="{StaticResource InkColor}"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
+                            </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-                    <!-- Высота футера меняется из code-behind с учётом положения панели. -->
+                    <!-- Фиксированный отступ позволяет полностью показать последнюю карточку. -->
                     <CollectionView.Footer>
                         <BoxView
                             x:Name="BottomScrollSpacer"

@@ -4,6 +4,7 @@ using CoffeeNap.Models;
 using CoffeeNap.Services;
 using CoffeeNap.Converters;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 
 namespace CoffeeNap.ViewModels;
@@ -53,6 +54,7 @@ public partial class MainPageViewModel : ObservableObject
         Navigation.ActiveTab = NavigationTab.Home;
         Consumptions.CollectionChanged += OnConsumptionsCollectionChanged;
         _dataService.ConsumptionAdded += OnConsumptionAdded;
+        _dataService.ConsumptionDeleted += OnConsumptionDeleted;
         _dataService.UserDataDeleted += OnUserDataDeleted;
         _localization.CultureChanged += OnCultureChanged;
     }
@@ -179,6 +181,34 @@ public partial class MainPageViewModel : ObservableObject
         }
     }
 
+    [RelayCommand(AllowConcurrentExecutions = false)]
+    private async Task DeleteConsumptionAsync(ConsumptionItemViewModel? consumption)
+    {
+        if (consumption is null || consumption.Id <= 0)
+        {
+            return;
+        }
+
+        await _operationLock.WaitAsync();
+        try
+        {
+            if (Consumptions.All(item => item.Id != consumption.Id))
+            {
+                return;
+            }
+
+            await _dataService.DeleteConsumptionAsync(consumption.Id);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Consumption {ConsumptionId} delete failed.", consumption.Id);
+        }
+        finally
+        {
+            _operationLock.Release();
+        }
+    }
+
     //public async Task AddConsumptionAsync(CaffeineConsumption consumption)
     //{
     //    await EnsureInitializedAsync();
@@ -204,26 +234,6 @@ public partial class MainPageViewModel : ObservableObject
     //    {
     //        await _dataService.UpdateConsumptionAsync(consumption);
     //        ReplaceConsumption(new ConsumptionItemViewModel(consumption));
-    //    }
-    //    finally
-    //    {
-    //        _operationLock.Release();
-    //    }
-    //}
-
-    //public async Task DeleteConsumptionAsync(int id)
-    //{
-    //    await EnsureInitializedAsync();
-
-    //    await _operationLock.WaitAsync();
-    //    try
-    //    {
-    //        await _dataService.DeleteConsumptionAsync(id);
-    //        var consumption = Consumptions.FirstOrDefault(item => item.Id == id);
-    //        if (consumption is not null)
-    //        {
-    //            Consumptions.Remove(consumption);
-    //        }
     //    }
     //    finally
     //    {
@@ -355,6 +365,27 @@ public partial class MainPageViewModel : ObservableObject
         else
         {
             MainThread.BeginInvokeOnMainThread(AddToRuntimeState);
+        }
+    }
+
+    private void OnConsumptionDeleted(object? sender, CaffeineConsumption consumption)
+    {
+        void RemoveFromRuntimeState()
+        {
+            var item = Consumptions.FirstOrDefault(candidate => candidate.Id == consumption.Id);
+            if (item is not null)
+            {
+                Consumptions.Remove(item);
+            }
+        }
+
+        if (MainThread.IsMainThread)
+        {
+            RemoveFromRuntimeState();
+        }
+        else
+        {
+            MainThread.BeginInvokeOnMainThread(RemoveFromRuntimeState);
         }
     }
 

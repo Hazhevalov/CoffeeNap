@@ -83,6 +83,9 @@ public sealed class AppDatabase
             .OrderByDescending(consumption => consumption.ConsumedAt)
             .ToListAsync();
 
+    public async Task<CaffeineConsumption?> GetConsumptionAsync(int id) =>
+        await _connection.FindAsync<CaffeineConsumption>(id);
+
     public Task<List<CaffeineConsumption>> GetConsumptionsBetweenAsync(
         DateTimeOffset fromInclusive,
         DateTimeOffset toExclusive) =>

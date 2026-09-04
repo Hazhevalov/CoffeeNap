@@ -25,6 +25,7 @@ public partial class MainPage : ContentPage
         await _viewModel.InitializeAsync();
         if (_isPageVisible)
         {
+            ConsumptionPanel.ScrollToNewest();
             _viewModel.StartRelativeTimeTimer();
         }
     }

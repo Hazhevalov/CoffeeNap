@@ -6,6 +6,7 @@ namespace CoffeeNap.Services;
 public interface IAppDataService
 {
     event EventHandler<CaffeineConsumption>? ConsumptionAdded;
+    event EventHandler<CaffeineConsumption>? ConsumptionDeleted;
     event EventHandler? UserDataDeleted;
 
     Task InitializeAsync();

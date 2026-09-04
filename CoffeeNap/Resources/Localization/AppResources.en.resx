@@ -23,6 +23,7 @@
   <data name="Milligrams" xml:space="preserve"><value> milligrams</value></data>
   <data name="CaffeineSources" xml:space="preserve"><value>Your caffeine&#10;sources</value></data>
   <data name="Consumptions" xml:space="preserve"><value>Your consumptions</value></data>
+  <data name="EmptyConsumptions" xml:space="preserve"><value>Your entries will appear here soon</value></data>
   <data name="OnboardingGreeting" xml:space="preserve"><value>Good vibes and&#10;great coffee!</value></data>
   <data name="OnboardingDescription" xml:space="preserve"><value>We'll help you know when it's time&#10;to recharge and when it's time&#10;to take a break.</value></data>
   <data name="Start" xml:space="preserve"><value>Let's get started</value></data>

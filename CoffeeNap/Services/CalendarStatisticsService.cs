@@ -31,6 +31,7 @@ public sealed class CalendarStatisticsService
         _dataService = dataService;
         _logger = logger;
         _dataService.ConsumptionAdded += OnConsumptionAdded;
+        _dataService.ConsumptionDeleted += OnConsumptionDeleted;
         _dataService.UserDataDeleted += OnUserDataDeleted;
     }
 
@@ -336,7 +337,13 @@ public sealed class CalendarStatisticsService
         }
     }
 
-    private void OnConsumptionAdded(object? sender, CaffeineConsumption consumption)
+    private void OnConsumptionAdded(object? sender, CaffeineConsumption consumption) =>
+        InvalidateConsumptionDate(consumption);
+
+    private void OnConsumptionDeleted(object? sender, CaffeineConsumption consumption) =>
+        InvalidateConsumptionDate(consumption);
+
+    private void InvalidateConsumptionDate(CaffeineConsumption consumption)
     {
         var localDate = consumption.ConsumedAt.ToLocalTime().Date;
         var monthKey = MonthKey.From(localDate);

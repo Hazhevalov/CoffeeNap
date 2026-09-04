@@ -24,17 +24,15 @@
                     BindingContext="{Binding Header}"
                     SafeAreaEdges="Container" />
 
-        <!--
-            Grid задаёт панели конечную высоту строки и позволяет ей раскрываться
-            поверх верхних карточек. Сами карточки остаются в VerticalStackLayout.
-        -->
+        <!-- Верхние карточки фиксированы, а список употреблений занимает оставшуюся высоту. -->
         <Grid
             Grid.Row="1"
-            IsClippedToBounds="True">
+            RowDefinitions="Auto,*"
+            RowSpacing="10">
 
         <VerticalStackLayout
             x:Name="FixedTopContent"
-            Grid.Row="1"
+            Grid.Row="0"
             Spacing="10"
             VerticalOptions="Start">
             
@@ -331,14 +329,11 @@
             </Border>
         </VerticalStackLayout>
 
-        <Border StrokeThickness="0" StrokeShape="30">
-            <controls:ConsumptionPanel
-                x:Name="ConsumptionPanel"
-                ZIndex="10"
-                CollapsedTopInset="{Binding Source={x:Reference FixedTopContent}, Path=Height}"
-                ItemsSource="{Binding Consumptions}" 
-                Margin="0,10"/>
-        </Border>
+        <controls:ConsumptionPanel
+            x:Name="ConsumptionPanel"
+            Grid.Row="1"
+            DeleteCommand="{Binding DeleteConsumptionCommand}"
+            ItemsSource="{Binding Consumptions}" />
 
         </Grid>
 

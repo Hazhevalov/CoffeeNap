@@ -11,6 +11,7 @@ namespace CoffeeNap.Services;
 public sealed class AppDataService : IAppDataService
 {
     public event EventHandler<CaffeineConsumption>? ConsumptionAdded;
+    public event EventHandler<CaffeineConsumption>? ConsumptionDeleted;
     public event EventHandler? UserDataDeleted;
 
     private const string LegacyUserNameKey = "coffee_nap.user_name";
@@ -181,7 +182,15 @@ public sealed class AppDataService : IAppDataService
         }
 
         await InitializeAsync();
-        await _database.DeleteConsumptionAsync(id);
+        var consumption = await _database.GetConsumptionAsync(id) ??
+            throw new InvalidOperationException($"Consumption with Id {id} was not found.");
+        var deletedRows = await _database.DeleteConsumptionAsync(id);
+        if (deletedRows == 0)
+        {
+            throw new InvalidOperationException($"Consumption with Id {id} was not deleted.");
+        }
+
+        ConsumptionDeleted?.Invoke(this, consumption);
     }
 
     public async Task DeleteAllUserDataAsync()
