@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CoffeeNap.Controls.AddConsumption.Steps.EnergyDrinkVolume"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
+    xmlns:models="clr-namespace:CoffeeNap.Models"
+    xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
+    x:DataType="viewModels:AddConsumptionPageViewModel">
+
+    <Grid Padding="10" IsVisible="{Binding IsEnergyDrinkVolumeStep}" VerticalOptions="Fill">
+        <Grid RowDefinitions="Auto,Auto" RowSpacing="20" VerticalOptions="Center">
+            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="5">
+                <Label FontSize="16" Text="{localization:Translate EnergyDrink}" TextColor="{StaticResource MutedTextColor}" />
+                <Label Grid.Row="1" FontAttributes="Bold" FontSize="32" Text="{localization:Translate EnergyDrinkVolumeQuestion}" TextColor="{StaticResource InkColor}" />
+                <Label Grid.Row="2" FontSize="16" Text="{localization:Translate SizeMatters}" TextColor="{StaticResource InkColor}" />
+            </Grid>
+
+            <Grid Grid.Row="1" ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                <Border Grid.Column="0" Padding="10,18" BackgroundColor="{StaticResource White}" Stroke="{StaticResource DividerColor}">
+                    <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SelectEnergyDrinkVolumeCommand}" CommandParameter="{x:Static models:EnergyDrinkQuizCatalog.SmallVolumeMl}" /></Border.GestureRecognizers>
+                    <Border.StrokeShape><RoundRectangle CornerRadius="20" /></Border.StrokeShape>
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="10" VerticalOptions="Center">
+                        <Border BackgroundColor="{StaticResource EnergyDrinkIcoFill}" HeightRequest="56" StrokeThickness="0" WidthRequest="56">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="28" /></Border.StrokeShape>
+                            <Image Aspect="AspectFit" HeightRequest="28" Source="smal_energy_ico.png" WidthRequest="28" />
+                        </Border>
+                        <Label FontAttributes="Bold" FontSize="15" Text="{localization:Translate EnergyDrinkVolume250}" TextColor="{StaticResource InkColor}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" Padding="10,18" BackgroundColor="{StaticResource White}" Stroke="{StaticResource DividerColor}">
+                    <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SelectEnergyDrinkVolumeCommand}" CommandParameter="{x:Static models:EnergyDrinkQuizCatalog.MediumVolumeMl}" /></Border.GestureRecognizers>
+                    <Border.StrokeShape><RoundRectangle CornerRadius="20" /></Border.StrokeShape>
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="10" VerticalOptions="Center">
+                        <Border BackgroundColor="{StaticResource EnergyDrinkIcoFill}" HeightRequest="56" StrokeThickness="0" WidthRequest="56">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="28" /></Border.StrokeShape>
+                            <Image Aspect="AspectFit" HeightRequest="28" Source="medium_energy_ico.png" WidthRequest="28" />
+                        </Border>
+                        <Label FontAttributes="Bold" FontSize="15" Text="{localization:Translate EnergyDrinkVolume330}" TextColor="{StaticResource InkColor}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2" Padding="10,18" BackgroundColor="{StaticResource White}" Stroke="{StaticResource DividerColor}">
+                    <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding SelectEnergyDrinkVolumeCommand}" CommandParameter="{x:Static models:EnergyDrinkQuizCatalog.LargeVolumeMl}" /></Border.GestureRecognizers>
+                    <Border.StrokeShape><RoundRectangle CornerRadius="20" /></Border.StrokeShape>
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="10" VerticalOptions="Center">
+                        <Border BackgroundColor="{StaticResource EnergyDrinkIcoFill}" HeightRequest="56" StrokeThickness="0" WidthRequest="56">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="28" /></Border.StrokeShape>
+                            <Image Aspect="AspectFit" HeightRequest="28" Source="big_energy_ico.png" WidthRequest="28" />
+                        </Border>
+                        <Label FontAttributes="Bold" FontSize="15" Text="{localization:Translate EnergyDrinkVolume500}" TextColor="{StaticResource InkColor}" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentView>

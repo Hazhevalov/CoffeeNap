@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="CoffeeNap.Controls.AddConsumption.Steps.TeaAmount"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
+    xmlns:models="clr-namespace:CoffeeNap.Models"
+    xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
+    x:DataType="viewModels:AddConsumptionPageViewModel">
+
+    <Grid Padding="10,10,10,0" IsVisible="{Binding IsTeaAmountStep}" VerticalOptions="Fill">
+        <Grid RowDefinitions="Auto,*" RowSpacing="20" VerticalOptions="Center">
+            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="5">
+                <Label FontSize="16" Text="{localization:Translate Tea}" TextColor="{StaticResource MutedTextColor}" />
+                <Label Grid.Row="1" FontAttributes="Bold" FontSize="32" Text="{localization:Translate TeaAmountQuestion}" TextColor="{StaticResource InkColor}" />
+                <Label Grid.Row="2" FontSize="16" Text="{localization:Translate ApproximateHint}" TextColor="{StaticResource InkColor}" />
+            </Grid>
+
+            <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="5">
+                <Border Grid.Row="0" Padding="16,12" BackgroundColor="{StaticResource White}" Stroke="{StaticResource DividerColor}" StrokeThickness="1">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+                    <Entry
+                        BackgroundColor="{StaticResource White}"
+                        ClearButtonVisibility="WhileEditing"
+                        FontSize="16"
+                        Keyboard="Numeric"
+                        MaxLength="4"
+                        Placeholder="{localization:Translate KnowGrams}"
+                        ReturnCommand="{Binding ConfirmManualTeaAmountCommand}"
+                        ReturnType="Next"
+                        Text="{Binding ManualTeaAmountText, Mode=TwoWay}"
+                        TextColor="{StaticResource InkColor}" />
+                </Border>
+
+                <Button Grid.Row="1" Padding="0,25" BackgroundColor="{StaticResource White}" BorderColor="{StaticResource DividerColor}" BorderWidth="1" Command="{Binding SelectTeaAmountCommand}" CommandParameter="{x:Static models:CoffeeQuizCatalog.One}" CornerRadius="20" FontSize="16" Text="{localization:Translate OneSpoon}" TextColor="{StaticResource InkColor}" />
+                <Button Grid.Row="2" Padding="0,25" BackgroundColor="{StaticResource White}" BorderColor="{StaticResource DividerColor}" BorderWidth="1" Command="{Binding SelectTeaAmountCommand}" CommandParameter="{x:Static models:CoffeeQuizCatalog.Two}" CornerRadius="20" FontSize="16" Text="{localization:Translate TwoSpoons}" TextColor="{StaticResource InkColor}" />
+                <Button Grid.Row="3" Padding="0,25" BackgroundColor="{StaticResource White}" BorderColor="{StaticResource DividerColor}" BorderWidth="1" Command="{Binding SelectTeaAmountCommand}" CommandParameter="{x:Static models:CoffeeQuizCatalog.Three}" CornerRadius="20" FontSize="16" Text="{localization:Translate ThreeSpoons}" TextColor="{StaticResource InkColor}" />
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentView>

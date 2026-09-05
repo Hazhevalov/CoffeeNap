@@ -18,12 +18,75 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
     public ConsumptionCalculationResult Calculate(AddConsumptionQuizState state)
     {
         ArgumentNullException.ThrowIfNull(state);
-        return state.CoffeeLocation switch
+        return state.DrinkType switch
+        {
+            CaffeineConsumptionType.Coffee => CalculateCoffee(state),
+            CaffeineConsumptionType.Tea => CalculateTea(state),
+            CaffeineConsumptionType.EnergyDrink => CalculateEnergyDrink(state),
+            _ => throw new InvalidOperationException("Drink type is required.")
+        };
+    }
+
+    private static ConsumptionCalculationResult CalculateCoffee(AddConsumptionQuizState state) =>
+        state.CoffeeLocation switch
         {
             CoffeeLocation.Home => CalculateHome(state),
             CoffeeLocation.Outside => CalculateOutside(state),
             _ => throw new InvalidOperationException("Coffee location is required.")
         };
+
+    private static ConsumptionCalculationResult CalculateTea(AddConsumptionQuizState state)
+    {
+        if (state.TeaType is not { } teaType || state.TeaAmountGrams is not > 0)
+        {
+            throw new InvalidOperationException("Tea answers are incomplete.");
+        }
+
+        var caffeine = (int)Math.Round(
+            state.TeaAmountGrams.Value * TeaQuizCatalog.GetCaffeineMgPerGram(teaType));
+        var teaTypeDisplay = TeaQuizCatalog.GetTypeDisplay(teaType);
+        var gramsDisplay = $"{state.TeaAmountGrams:0.#} {LocalizationService.Current["GramShort"]}";
+        var amountDisplay = state.TeaAmountDisplay ?? gramsDisplay;
+        var amountValue = string.Equals(amountDisplay, gramsDisplay, StringComparison.Ordinal)
+            ? string.Empty
+            : gramsDisplay;
+
+        return new ConsumptionCalculationResult(
+            Math.Max(1, caffeine),
+            TeaQuizCatalog.GetDrinkDisplay(teaType),
+            CaffeineConsumptionType.Tea,
+            LocalizationService.Current["Tea"],
+            teaTypeDisplay,
+            amountDisplay,
+            amountValue,
+            string.Empty,
+            string.Empty,
+            string.Empty);
+    }
+
+    private static ConsumptionCalculationResult CalculateEnergyDrink(AddConsumptionQuizState state)
+    {
+        if (state.EnergyDrinkVolumeMl is not > 0)
+        {
+            throw new InvalidOperationException("Energy drink volume is required.");
+        }
+
+        var volumeMl = state.EnergyDrinkVolumeMl.Value;
+        var caffeine = (int)Math.Round(
+            volumeMl * EnergyDrinkQuizCatalog.CaffeineMgPer100Ml / 100d);
+        var volumeDisplay = $"{volumeMl} {LocalizationService.Current["MilliliterShort"]}";
+
+        return new ConsumptionCalculationResult(
+            Math.Max(1, caffeine),
+            LocalizationService.Current["EnergyDrink"],
+            CaffeineConsumptionType.EnergyDrink,
+            LocalizationService.Current["EnergyDrink"],
+            volumeDisplay,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty);
     }
 
     // Подсчёт кофе вне дома

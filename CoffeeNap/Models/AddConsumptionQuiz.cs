@@ -11,6 +11,9 @@ public enum AddConsumptionStep
     CoffeeDrinkType,
     CoffeeVolume,
     CoffeeBeanType,
+    TeaSort,
+    TeaAmount,
+    EnergyDrinkVolume,
     Result
 }
 
@@ -43,6 +46,8 @@ public enum CoffeeDrinkType
 
 public enum ServingSize { Small, Medium, Large }
 
+public enum TeaType { Black, Green }
+
 public sealed class AddConsumptionQuizState
 {
     public CaffeineConsumptionType? DrinkType { get; set; }
@@ -55,6 +60,10 @@ public sealed class AddConsumptionQuizState
     public double? CoffeeAmountGrams { get; set; }
     public string? CoffeeAmountDisplay { get; set; }
     public CoffeeBeanType? BeanType { get; set; }
+    public TeaType? TeaType { get; set; }
+    public double? TeaAmountGrams { get; set; }
+    public string? TeaAmountDisplay { get; set; }
+    public int? EnergyDrinkVolumeMl { get; set; }
 
     public void Reset()
     {
@@ -68,12 +77,18 @@ public sealed class AddConsumptionQuizState
         CoffeeAmountGrams = null;
         CoffeeAmountDisplay = null;
         BeanType = null;
+        TeaType = null;
+        TeaAmountGrams = null;
+        TeaAmountDisplay = null;
+        EnergyDrinkVolumeMl = null;
     }
 
     public void ClearAfterDrinkType()
     {
         CoffeeLocation = null;
         ClearCoffeeBranches();
+        ClearTeaBranch();
+        ClearEnergyDrinkBranch();
     }
 
     public void ClearCoffeeBranches()
@@ -87,6 +102,55 @@ public sealed class AddConsumptionQuizState
         CoffeeAmountDisplay = null;
         BeanType = null;
     }
+
+    public void ClearTeaBranch()
+    {
+        TeaType = null;
+        TeaAmountGrams = null;
+        TeaAmountDisplay = null;
+    }
+
+    public void ClearEnergyDrinkBranch() => EnergyDrinkVolumeMl = null;
+}
+
+public static class TeaQuizCatalog
+{
+    public const double GramsPerSpoon = 2.5;
+    public const double BlackCaffeineMgPerGram = 6;
+    public const double GreenCaffeineMgPerGram = 5;
+
+    public static double GetSpoonGrams(int spoonCount) => spoonCount * GramsPerSpoon;
+
+    public static string GetSpoonDisplay(int spoonCount) => CoffeeQuizCatalog.GetSpoonDisplay(spoonCount);
+
+    public static string GetTypeDisplay(TeaType type) => type switch
+    {
+        TeaType.Black => LocalizationService.Current["BlackTea"],
+        TeaType.Green => LocalizationService.Current["GreenTea"],
+        _ => throw new ArgumentOutOfRangeException(nameof(type))
+    };
+
+    public static string GetDrinkDisplay(TeaType type) => type switch
+    {
+        TeaType.Black => LocalizationService.Current["BlackTeaDrink"],
+        TeaType.Green => LocalizationService.Current["GreenTeaDrink"],
+        _ => throw new ArgumentOutOfRangeException(nameof(type))
+    };
+
+    public static double GetCaffeineMgPerGram(TeaType type) => type switch
+    {
+        TeaType.Black => BlackCaffeineMgPerGram,
+        TeaType.Green => GreenCaffeineMgPerGram,
+        _ => throw new ArgumentOutOfRangeException(nameof(type))
+    };
+}
+
+public static class EnergyDrinkQuizCatalog
+{
+    public const int SmallVolumeMl = 250;
+    public const int MediumVolumeMl = 330;
+    public const int LargeVolumeMl = 500;
+    public const double CaffeineMgPer100Ml = 32;
 }
 
 public sealed record ConsumptionCalculationResult(

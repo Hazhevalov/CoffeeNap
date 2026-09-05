@@ -25,6 +25,18 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         AddConsumptionStep.CoffeeBeanType, AddConsumptionStep.Result
     ];
 
+    private static readonly AddConsumptionStep[] TeaFlow =
+    [
+        AddConsumptionStep.DrinkType, AddConsumptionStep.TeaSort,
+        AddConsumptionStep.TeaAmount, AddConsumptionStep.Result
+    ];
+
+    private static readonly AddConsumptionStep[] EnergyDrinkFlow =
+    [
+        AddConsumptionStep.DrinkType, AddConsumptionStep.EnergyDrinkVolume,
+        AddConsumptionStep.Result
+    ];
+
     private readonly IAppDataService _dataService;
     private readonly IAppNavigationService _appNavigation;
     private readonly ICaffeineCalculator _calculator;
@@ -35,6 +47,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     private ConsumptionCalculationResult? _calculationResult;
     private string _manualVolumeText = string.Empty;
     private string _manualCoffeeAmountText = string.Empty;
+    private string _manualTeaAmountText = string.Empty;
     private string _validationMessage = string.Empty;
     private bool _isSaving;
 
@@ -87,6 +100,12 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         set => SetProperty(ref _manualCoffeeAmountText, value);
     }
 
+    public string ManualTeaAmountText
+    {
+        get => _manualTeaAmountText;
+        set => SetProperty(ref _manualTeaAmountText, value);
+    }
+
     public string ValidationMessage
     {
         get => _validationMessage;
@@ -115,20 +134,21 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     public bool IsResultStep => CurrentStep == AddConsumptionStep.Result;
     public bool IsCoffeeDrinkTypeStep => CurrentStep == AddConsumptionStep.CoffeeDrinkType;
     public bool IsCoffeeVolumeStep => CurrentStep == AddConsumptionStep.CoffeeVolume;
+    public bool IsTeaSortStep => CurrentStep == AddConsumptionStep.TeaSort;
+    public bool IsTeaAmountStep => CurrentStep == AddConsumptionStep.TeaAmount;
+    public bool IsEnergyDrinkVolumeStep => CurrentStep == AddConsumptionStep.EnergyDrinkVolume;
 
-    public int ProgressStage
+    public int ProgressPosition
     {
         get
         {
             var flow = GetCurrentFlow();
             var index = Array.IndexOf(flow, CurrentStep);
-            return index < 0
-                ? 1
-                : Math.Clamp((int)Math.Ceiling((index + 1d) / flow.Length * 6), 1, 6);
+            return index < 0 ? 1 : index + 1;
         }
     }
 
-    public int ProgressColumnSpan => ProgressStage * 2 - 1;
+    public int ProgressStepCount => GetCurrentFlow().Length;
 
     public ConsumptionCalculationResult? CalculationResult => _calculationResult;
     public string CoffeeContext => QuizState.CoffeeLocation switch
@@ -157,13 +177,19 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         InvalidateResult();
         QuizState.DrinkType = type;
         QuizState.ClearAfterDrinkType();
-        if (type != CaffeineConsumptionType.Coffee)
-        {
-            ValidationMessage = _localization["CoffeeOnlySupported"];
-            return;
-        }
+        ManualVolumeText = string.Empty;
+        ManualCoffeeAmountText = string.Empty;
+        ManualTeaAmountText = string.Empty;
 
-        TransitionTo(AddConsumptionStep.CoffeeLocation);
+        var nextStep = type switch
+        {
+            CaffeineConsumptionType.Coffee => AddConsumptionStep.CoffeeLocation,
+            CaffeineConsumptionType.Tea => AddConsumptionStep.TeaSort,
+            CaffeineConsumptionType.EnergyDrink => AddConsumptionStep.EnergyDrinkVolume,
+            _ => throw new ArgumentOutOfRangeException(nameof(type))
+        };
+
+        TransitionTo(nextStep);
     }
 
     [RelayCommand]
@@ -288,6 +314,59 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     private void SelectBeanType(CoffeeBeanType type)
     {
         QuizState.BeanType = type;
+        CompleteQuiz();
+    }
+
+    [RelayCommand]
+    private void SelectTeaType(TeaType type)
+    {
+        ClearValidation();
+        InvalidateResult();
+        QuizState.TeaType = type;
+        QuizState.TeaAmountGrams = null;
+        QuizState.TeaAmountDisplay = null;
+        ManualTeaAmountText = string.Empty;
+        TransitionTo(AddConsumptionStep.TeaAmount);
+    }
+
+    [RelayCommand]
+    private void SelectTeaAmount(int spoonCount)
+    {
+        QuizState.TeaAmountGrams = TeaQuizCatalog.GetSpoonGrams(spoonCount);
+        QuizState.TeaAmountDisplay = TeaQuizCatalog.GetSpoonDisplay(spoonCount);
+        ManualTeaAmountText = string.Empty;
+        CompleteQuiz();
+    }
+
+    [RelayCommand]
+    private void ConfirmManualTeaAmount()
+    {
+        if (!TryParsePositiveDouble(ManualTeaAmountText, out var grams))
+        {
+            ValidationMessage = _localization["TeaAmountInvalid"];
+            return;
+        }
+
+        QuizState.TeaAmountGrams = grams;
+        QuizState.TeaAmountDisplay = $"{grams:0.#} {_localization["GramShort"]}";
+        CompleteQuiz();
+    }
+
+    [RelayCommand]
+    private void SelectEnergyDrinkVolume(int volumeMl)
+    {
+        if (volumeMl <= 0)
+        {
+            ValidationMessage = _localization["EnergyDrinkVolumeInvalid"];
+            return;
+        }
+
+        QuizState.EnergyDrinkVolumeMl = volumeMl;
+        CompleteQuiz();
+    }
+
+    private void CompleteQuiz()
+    {
         ClearValidation();
         if (!TryValidateQuiz(out var validationMessage))
         {
@@ -330,6 +409,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         _stepHistory.Clear();
         ManualVolumeText = string.Empty;
         ManualCoffeeAmountText = string.Empty;
+        ManualTeaAmountText = string.Empty;
         ClearValidation();
         InvalidateResult();
         CurrentStep = AddConsumptionStep.DrinkType;
@@ -371,26 +451,41 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     // Дебаг тема для поиска ошибок
     private bool TryValidateQuiz(out string message)
     {
-        if (QuizState.DrinkType != CaffeineConsumptionType.Coffee)
+        if (QuizState.DrinkType is not { } drinkType)
         {
-            message = _localization["SelectCoffee"];
+            message = _localization["SelectDrinkTypeFirst"];
             return false;
         }
 
-        var isValid = QuizState.CoffeeLocation switch
+        var isValid = drinkType switch
         {
-            CoffeeLocation.Home =>
-                QuizState.BrewingMethod is not null &&
-                QuizState.CoffeeAmountGrams is > 0 &&
-                QuizState.BeanType is not null,
-            CoffeeLocation.Outside =>
-                QuizState.CoffeeDrinkType is not null &&
-                QuizState.VolumeMl is > 0 &&
-                QuizState.BeanType is not null,
+            CaffeineConsumptionType.Coffee => QuizState.CoffeeLocation switch
+            {
+                CoffeeLocation.Home =>
+                    QuizState.BrewingMethod is not null &&
+                    QuizState.CoffeeAmountGrams is > 0 &&
+                    QuizState.BeanType is not null,
+                CoffeeLocation.Outside =>
+                    QuizState.CoffeeDrinkType is not null &&
+                    QuizState.VolumeMl is > 0 &&
+                    QuizState.BeanType is not null,
+                _ => false
+            },
+            CaffeineConsumptionType.Tea =>
+                QuizState.TeaType is not null && QuizState.TeaAmountGrams is > 0,
+            CaffeineConsumptionType.EnergyDrink => QuizState.EnergyDrinkVolumeMl is > 0,
             _ => false
         };
 
-        message = isValid ? string.Empty : _localization["CompleteCoffeeParameters"];
+        message = isValid
+            ? string.Empty
+            : drinkType switch
+            {
+                CaffeineConsumptionType.Coffee => _localization["CompleteCoffeeParameters"],
+                CaffeineConsumptionType.Tea => _localization["CompleteTeaParameters"],
+                CaffeineConsumptionType.EnergyDrink => _localization["CompleteEnergyDrinkParameters"],
+                _ => _localization["SelectDrinkTypeFirst"]
+            };
         return isValid;
     }
 
@@ -406,13 +501,24 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     // Переход к следующему шагу
     private void TransitionTo(AddConsumptionStep nextStep)
     {
+        if (CurrentStep == nextStep)
+        {
+            return;
+        }
+
         _stepHistory.Push(CurrentStep);
         CurrentStep = nextStep;
         ClearValidation();
         _logger.LogDebug("Add consumption quiz transitioned to {Step}.", nextStep);
     }
 
-    private AddConsumptionStep[] GetCurrentFlow() => QuizState.CoffeeLocation == CoffeeLocation.Home ? HomeFlow : OutsideFlow;
+    private AddConsumptionStep[] GetCurrentFlow() => QuizState.DrinkType switch
+    {
+        CaffeineConsumptionType.Tea => TeaFlow,
+        CaffeineConsumptionType.EnergyDrink => EnergyDrinkFlow,
+        CaffeineConsumptionType.Coffee when QuizState.CoffeeLocation == CoffeeLocation.Outside => OutsideFlow,
+        _ => HomeFlow
+    };
     private void ClearValidation() => ValidationMessage = string.Empty;
 
     private void InvalidateResult()
@@ -427,8 +533,10 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         OnPropertyChanged(nameof(IsBrewingMethodStep)); OnPropertyChanged(nameof(IsCoffeeAmountStep));
         OnPropertyChanged(nameof(IsCoffeeBeanTypeStep));
         OnPropertyChanged(nameof(IsResultStep)); OnPropertyChanged(nameof(IsCoffeeDrinkTypeStep));
-        OnPropertyChanged(nameof(IsCoffeeVolumeStep)); OnPropertyChanged(nameof(ProgressStage));
-        OnPropertyChanged(nameof(ProgressColumnSpan));
+        OnPropertyChanged(nameof(IsCoffeeVolumeStep)); OnPropertyChanged(nameof(ProgressPosition));
+        OnPropertyChanged(nameof(IsTeaSortStep)); OnPropertyChanged(nameof(IsTeaAmountStep));
+        OnPropertyChanged(nameof(IsEnergyDrinkVolumeStep));
+        OnPropertyChanged(nameof(ProgressStepCount));
     }
 
     private void NotifyResultChanged()
@@ -464,6 +572,15 @@ public partial class AddConsumptionPageViewModel : ObservableObject
                                              Math.Abs(grams - spoonCount * CoffeeQuizCatalog.GramsPerSpoon) < 0.01
                 ? CoffeeQuizCatalog.GetSpoonDisplay(spoonCount)
                 : $"{grams:0.#} {_localization["GramShort"]}";
+        }
+
+        if (QuizState.TeaAmountGrams is { } teaGrams)
+        {
+            var spoonCount = (int)Math.Round(teaGrams / TeaQuizCatalog.GramsPerSpoon);
+            QuizState.TeaAmountDisplay = spoonCount is >= 1 and <= 3 &&
+                                         Math.Abs(teaGrams - spoonCount * TeaQuizCatalog.GramsPerSpoon) < 0.01
+                ? TeaQuizCatalog.GetSpoonDisplay(spoonCount)
+                : $"{teaGrams:0.#} {_localization["GramShort"]}";
         }
 
         OnPropertyChanged(nameof(CoffeeContext));

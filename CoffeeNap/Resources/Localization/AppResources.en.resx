@@ -44,6 +44,20 @@
   <data name="AddConsumptionTitle" xml:space="preserve"><value>Add consumption</value></data>
   <data name="DrinkQuestion" xml:space="preserve"><value>What did&#10;you drink?</value></data>
   <data name="EnergyDrink" xml:space="preserve"><value>Energy drink</value></data>
+  <data name="EnergyDrinkVolumeQuestion" xml:space="preserve"><value>How much did you drink?</value></data>
+  <data name="EnergyDrinkVolume250" xml:space="preserve"><value>250 ml</value></data>
+  <data name="EnergyDrinkVolume330" xml:space="preserve"><value>330 ml</value></data>
+  <data name="EnergyDrinkVolume500" xml:space="preserve"><value>500 ml</value></data>
+  <data name="EnergyDrinkVolumeInvalid" xml:space="preserve"><value>Select an energy drink volume greater than 0 ml</value></data>
+  <data name="CompleteEnergyDrinkParameters" xml:space="preserve"><value>Select an energy drink volume</value></data>
+  <data name="TeaSortQuestion" xml:space="preserve"><value>What type of tea?</value></data>
+  <data name="BlackTea" xml:space="preserve"><value>Black</value></data>
+  <data name="GreenTea" xml:space="preserve"><value>Green</value></data>
+  <data name="BlackTeaDrink" xml:space="preserve"><value>Black tea</value></data>
+  <data name="GreenTeaDrink" xml:space="preserve"><value>Green tea</value></data>
+  <data name="TeaAmountQuestion" xml:space="preserve"><value>How much tea did you use?</value></data>
+  <data name="TeaAmountInvalid" xml:space="preserve"><value>Enter a tea amount greater than 0 g</value></data>
+  <data name="CompleteTeaParameters" xml:space="preserve"><value>Select a tea type and amount</value></data>
   <data name="UseOldRecipe" xml:space="preserve"><value>Use a previous recipe</value></data>
   <data name="HomeCoffee" xml:space="preserve"><value>Home-brewed coffee</value></data>
   <data name="CoffeeAmountQuestion" xml:space="preserve"><value>How much coffee did you use?</value></data>

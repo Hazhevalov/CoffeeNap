@@ -44,6 +44,20 @@
   <data name="AddConsumptionTitle" xml:space="preserve"><value>Добавление употребления</value></data>
   <data name="DrinkQuestion" xml:space="preserve"><value>Какой напиток&#10;вы пили?</value></data>
   <data name="EnergyDrink" xml:space="preserve"><value>Энергетик</value></data>
+  <data name="EnergyDrinkVolumeQuestion" xml:space="preserve"><value>Какой объём вы выпили?</value></data>
+  <data name="EnergyDrinkVolume250" xml:space="preserve"><value>250 мл</value></data>
+  <data name="EnergyDrinkVolume330" xml:space="preserve"><value>330 мл</value></data>
+  <data name="EnergyDrinkVolume500" xml:space="preserve"><value>500 мл</value></data>
+  <data name="EnergyDrinkVolumeInvalid" xml:space="preserve"><value>Выберите объём энергетика больше 0 мл</value></data>
+  <data name="CompleteEnergyDrinkParameters" xml:space="preserve"><value>Выберите объём энергетика</value></data>
+  <data name="TeaSortQuestion" xml:space="preserve"><value>Какой сорт чая?</value></data>
+  <data name="BlackTea" xml:space="preserve"><value>Чёрный</value></data>
+  <data name="GreenTea" xml:space="preserve"><value>Зелёный</value></data>
+  <data name="BlackTeaDrink" xml:space="preserve"><value>Чёрный чай</value></data>
+  <data name="GreenTeaDrink" xml:space="preserve"><value>Зелёный чай</value></data>
+  <data name="TeaAmountQuestion" xml:space="preserve"><value>Сколько заварки использовали?</value></data>
+  <data name="TeaAmountInvalid" xml:space="preserve"><value>Введите количество заварки больше 0 г</value></data>
+  <data name="CompleteTeaParameters" xml:space="preserve"><value>Выберите сорт и количество заварки</value></data>
   <data name="UseOldRecipe" xml:space="preserve"><value>Использовать старый рецепт</value></data>
   <data name="HomeCoffee" xml:space="preserve"><value>Домашний кофе</value></data>
   <data name="CoffeeAmountQuestion" xml:space="preserve"><value>Сколько кофе использовали?</value></data>

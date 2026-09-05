@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:controls="clr-namespace:CoffeeNap.Controls"
-    xmlns:converters="clr-namespace:CoffeeNap.Converters"
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:steps="clr-namespace:CoffeeNap.Controls.AddConsumption.Steps"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
@@ -14,10 +13,6 @@
     BackgroundColor="{StaticResource PageBackgroundColor}"
     SafeAreaEdges="All"
     Shell.NavBarIsVisible="False">
-
-    <ContentPage.Resources>
-        <converters:ProgressStageToColorConverter x:Key="ProgressStageToColorConverter" />
-    </ContentPage.Resources>
 
     <Grid RowSpacing="0" Padding="12,0">
         <Grid.RowDefinitions>
@@ -59,108 +54,12 @@
                     VerticalOptions="Center"
                     WidthRequest="54" />
 
-                <!--  Прогресс-бар расположен в центре всего Grid  -->
-                <Grid
-                    ColumnDefinitions="15,12,15,12,15,12,15,12,15,12,15"
-                    HeightRequest="20"
+                <!-- Количество точек соответствует длине выбранной ветки quiz. -->
+                <controls:QuizProgressView
+                    CurrentPosition="{Binding ProgressPosition}"
                     HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    WidthRequest="150">
-
-                    <!--  Серая линия  -->
-                    <BoxView
-                        Grid.ColumnSpan="11"
-                        Margin="7,0"
-                        BackgroundColor="#D6D6D6"
-                        HeightRequest="3"
-                        VerticalOptions="Center" />
-
-                    <!--  Пройденная часть  -->
-                    <BoxView
-                        Grid.ColumnSpan="{Binding ProgressColumnSpan}"
-                        Margin="7,0"
-                        BackgroundColor="#151515"
-                        HeightRequest="3"
-                        VerticalOptions="Center" />
-
-                    <Border
-                        Grid.Column="0"
-                        BackgroundColor="White"
-                        HeightRequest="15"
-                        Stroke="{Binding ProgressStage, Converter={StaticResource ProgressStageToColorConverter}, ConverterParameter=1}"
-                        StrokeThickness="2"
-                        WidthRequest="15"
-                        ZIndex="1">
-                        <Border.StrokeShape>
-                            <Ellipse />
-                        </Border.StrokeShape>
-                    </Border>
-
-                    <Border
-                        Grid.Column="2"
-                        BackgroundColor="White"
-                        HeightRequest="15"
-                        Stroke="{Binding ProgressStage, Converter={StaticResource ProgressStageToColorConverter}, ConverterParameter=2}"
-                        StrokeThickness="2"
-                        WidthRequest="15"
-                        ZIndex="1">
-                        <Border.StrokeShape>
-                            <Ellipse />
-                        </Border.StrokeShape>
-                    </Border>
-
-                    <Border
-                        Grid.Column="4"
-                        BackgroundColor="White"
-                        HeightRequest="15"
-                        Stroke="{Binding ProgressStage, Converter={StaticResource ProgressStageToColorConverter}, ConverterParameter=3}"
-                        StrokeThickness="2"
-                        WidthRequest="15"
-                        ZIndex="1">
-                        <Border.StrokeShape>
-                            <Ellipse />
-                        </Border.StrokeShape>
-                    </Border>
-
-                    <Border
-                        Grid.Column="6"
-                        BackgroundColor="White"
-                        HeightRequest="15"
-                        Stroke="{Binding ProgressStage, Converter={StaticResource ProgressStageToColorConverter}, ConverterParameter=4}"
-                        StrokeThickness="2"
-                        WidthRequest="15"
-                        ZIndex="1">
-                        <Border.StrokeShape>
-                            <Ellipse />
-                        </Border.StrokeShape>
-                    </Border>
-
-                    <Border
-                        Grid.Column="8"
-                        BackgroundColor="White"
-                        HeightRequest="15"
-                        Stroke="{Binding ProgressStage, Converter={StaticResource ProgressStageToColorConverter}, ConverterParameter=5}"
-                        StrokeThickness="2"
-                        WidthRequest="15"
-                        ZIndex="1">
-                        <Border.StrokeShape>
-                            <Ellipse />
-                        </Border.StrokeShape>
-                    </Border>
-
-                    <Border
-                        Grid.Column="10"
-                        BackgroundColor="White"
-                        HeightRequest="15"
-                        Stroke="{Binding ProgressStage, Converter={StaticResource ProgressStageToColorConverter}, ConverterParameter=6}"
-                        StrokeThickness="2"
-                        WidthRequest="15"
-                        ZIndex="1">
-                        <Border.StrokeShape>
-                            <Ellipse />
-                        </Border.StrokeShape>
-                    </Border>
-                </Grid>
+                    StepCount="{Binding ProgressStepCount}"
+                    VerticalOptions="Center" />
             </Grid>
 
             <steps:DrinkTypeStep Grid.Row="1" />
@@ -178,6 +77,12 @@
             <steps:CoffeeDrinkTypeStep Grid.Row="1" />
 
             <steps:CoffeeVolumeStep Grid.Row="1" />
+
+            <steps:TeaSort Grid.Row="1" />
+
+            <steps:TeaAmount Grid.Row="1" />
+
+            <steps:EnergyDrinkVolume Grid.Row="1" />
 
             <!-- Надпись ошибки -->
             <Label
