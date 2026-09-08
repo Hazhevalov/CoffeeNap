@@ -58,10 +58,12 @@ public sealed class AddConsumptionQuizState
     public int? VolumeMl { get; set; }
     public string? VolumeDisplay { get; set; }
     public double? CoffeeAmountGrams { get; set; }
+    public int? CoffeeSpoonCount { get; set; }
     public string? CoffeeAmountDisplay { get; set; }
     public CoffeeBeanType? BeanType { get; set; }
     public TeaType? TeaType { get; set; }
     public double? TeaAmountGrams { get; set; }
+    public int? TeaSpoonCount { get; set; }
     public string? TeaAmountDisplay { get; set; }
     public int? EnergyDrinkVolumeMl { get; set; }
 
@@ -75,10 +77,12 @@ public sealed class AddConsumptionQuizState
         VolumeMl = null;
         VolumeDisplay = null;
         CoffeeAmountGrams = null;
+        CoffeeSpoonCount = null;
         CoffeeAmountDisplay = null;
         BeanType = null;
         TeaType = null;
         TeaAmountGrams = null;
+        TeaSpoonCount = null;
         TeaAmountDisplay = null;
         EnergyDrinkVolumeMl = null;
     }
@@ -99,6 +103,7 @@ public sealed class AddConsumptionQuizState
         VolumeDisplay = null;
         BrewingMethod = null;
         CoffeeAmountGrams = null;
+        CoffeeSpoonCount = null;
         CoffeeAmountDisplay = null;
         BeanType = null;
     }
@@ -107,6 +112,7 @@ public sealed class AddConsumptionQuizState
     {
         TeaType = null;
         TeaAmountGrams = null;
+        TeaSpoonCount = null;
         TeaAmountDisplay = null;
     }
 

@@ -230,6 +230,7 @@
                             <Button
                                 Padding="25"
                                 BackgroundColor="{StaticResource White}"
+                                Command="{Binding UseLastRecipeCommand}"
                                 FontAttributes="Bold"
                                 FontSize="16"
                                 HorizontalOptions="Fill"

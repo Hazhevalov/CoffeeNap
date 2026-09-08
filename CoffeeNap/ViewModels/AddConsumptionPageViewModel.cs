@@ -50,6 +50,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     private string _manualTeaAmountText = string.Empty;
     private string _validationMessage = string.Empty;
     private bool _isSaving;
+    private bool _isUsingLastRecipe;
 
     public AddConsumptionPageViewModel(
         MainHeaderViewModel header,
@@ -148,6 +149,12 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         }
     }
 
+    public bool IsUsingLastRecipe
+    {
+        get => _isUsingLastRecipe;
+        private set => SetProperty(ref _isUsingLastRecipe, value);
+    }
+
     public int ProgressStepCount => GetCurrentFlow().Length;
 
     public ConsumptionCalculationResult? CalculationResult => _calculationResult;
@@ -210,6 +217,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     {
         QuizState.BrewingMethod = method;
         QuizState.CoffeeAmountGrams = null;
+        QuizState.CoffeeSpoonCount = null;
         QuizState.BeanType = null;
         InvalidateResult();
         TransitionTo(AddConsumptionStep.CoffeeAmount);
@@ -219,6 +227,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     private void SelectCoffeeAmount(int spoonCount)
     {
         QuizState.CoffeeAmountGrams = CoffeeQuizCatalog.GetSpoonGrams(spoonCount);
+        QuizState.CoffeeSpoonCount = spoonCount;
         QuizState.CoffeeAmountDisplay = CoffeeQuizCatalog.GetSpoonDisplay(spoonCount);
         ManualCoffeeAmountText = string.Empty;
         QuizState.BeanType = null;
@@ -237,6 +246,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
 
         ClearValidation();
         QuizState.CoffeeAmountGrams = grams;
+        QuizState.CoffeeSpoonCount = null;
         QuizState.CoffeeAmountDisplay = $"{grams:0.#} {_localization["GramShort"]}";
         QuizState.BeanType = null;
         InvalidateResult();
@@ -324,6 +334,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         InvalidateResult();
         QuizState.TeaType = type;
         QuizState.TeaAmountGrams = null;
+        QuizState.TeaSpoonCount = null;
         QuizState.TeaAmountDisplay = null;
         ManualTeaAmountText = string.Empty;
         TransitionTo(AddConsumptionStep.TeaAmount);
@@ -333,6 +344,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     private void SelectTeaAmount(int spoonCount)
     {
         QuizState.TeaAmountGrams = TeaQuizCatalog.GetSpoonGrams(spoonCount);
+        QuizState.TeaSpoonCount = spoonCount;
         QuizState.TeaAmountDisplay = TeaQuizCatalog.GetSpoonDisplay(spoonCount);
         ManualTeaAmountText = string.Empty;
         CompleteQuiz();
@@ -348,6 +360,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         }
 
         QuizState.TeaAmountGrams = grams;
+        QuizState.TeaSpoonCount = null;
         QuizState.TeaAmountDisplay = $"{grams:0.#} {_localization["GramShort"]}";
         CompleteQuiz();
     }
@@ -383,6 +396,53 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         catch (InvalidOperationException exception)
         {
             ValidationMessage = exception.Message;
+        }
+    }
+
+    [RelayCommand(AllowConcurrentExecutions = false)]
+    private async Task UseLastRecipeAsync()
+    {
+        if (IsUsingLastRecipe)
+        {
+            return;
+        }
+
+        IsUsingLastRecipe = true;
+        ClearValidation();
+        try
+        {
+            var recipe = await _dataService.GetLastConsumptionRecipeAsync();
+            if (recipe is null)
+            {
+                ValidationMessage = _localization["NoSavedRecipe"];
+                return;
+            }
+
+            RestartQuiz();
+            ConsumptionRecipeMapper.ApplyTo(recipe, QuizState);
+            if (!TryValidateQuiz(out _))
+            {
+                RestartQuiz();
+                ValidationMessage = _localization["SavedRecipeUnavailable"];
+                return;
+            }
+
+            _calculationResult = _calculator.Calculate(QuizState);
+            _stepHistory.Clear();
+            _stepHistory.Push(AddConsumptionStep.DrinkType);
+            NotifyResultChanged();
+            CurrentStep = AddConsumptionStep.Result;
+            ClearValidation();
+        }
+        catch (Exception exception)
+        {
+            RestartQuiz();
+            ValidationMessage = _localization["SavedRecipeUnavailable"];
+            _logger.LogError(exception, "Last consumption recipe could not be loaded.");
+        }
+        finally
+        {
+            IsUsingLastRecipe = false;
         }
     }
 
@@ -432,7 +492,8 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         {
             var snapshot = CalculationResult;
             var consumption = BuildConsumption(snapshot);
-            await _dataService.AddConsumptionAsync(consumption);
+            var recipe = ConsumptionRecipeMapper.CreateFrom(QuizState);
+            await _dataService.AddConsumptionAndSaveRecipeAsync(consumption, recipe);
             _logger.LogInformation("Consumption {Name} saved with {CaffeineMg} mg.", consumption.Name, consumption.CaffeineMg);
             RestartQuiz();
             await _appNavigation.NavigateToTopLevelAsync(AppShell.MainAbsoluteRoute);
@@ -567,19 +628,15 @@ public partial class AddConsumptionPageViewModel : ObservableObject
 
         if (QuizState.CoffeeAmountGrams is { } grams)
         {
-            var spoonCount = (int)Math.Round(grams / CoffeeQuizCatalog.GramsPerSpoon);
-            QuizState.CoffeeAmountDisplay = spoonCount is >= 1 and <= 3 &&
-                                             Math.Abs(grams - spoonCount * CoffeeQuizCatalog.GramsPerSpoon) < 0.01
-                ? CoffeeQuizCatalog.GetSpoonDisplay(spoonCount)
+            QuizState.CoffeeAmountDisplay = QuizState.CoffeeSpoonCount is > 0
+                ? CoffeeQuizCatalog.GetSpoonDisplay(QuizState.CoffeeSpoonCount.Value)
                 : $"{grams:0.#} {_localization["GramShort"]}";
         }
 
         if (QuizState.TeaAmountGrams is { } teaGrams)
         {
-            var spoonCount = (int)Math.Round(teaGrams / TeaQuizCatalog.GramsPerSpoon);
-            QuizState.TeaAmountDisplay = spoonCount is >= 1 and <= 3 &&
-                                         Math.Abs(teaGrams - spoonCount * TeaQuizCatalog.GramsPerSpoon) < 0.01
-                ? TeaQuizCatalog.GetSpoonDisplay(spoonCount)
+            QuizState.TeaAmountDisplay = QuizState.TeaSpoonCount is > 0
+                ? TeaQuizCatalog.GetSpoonDisplay(QuizState.TeaSpoonCount.Value)
                 : $"{teaGrams:0.#} {_localization["GramShort"]}";
         }
 

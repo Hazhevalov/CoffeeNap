@@ -23,6 +23,10 @@ public interface IAppDataService
         DateTimeOffset fromInclusive,
         DateTimeOffset toExclusive);
     Task AddConsumptionAsync(CaffeineConsumption consumption);
+    Task AddConsumptionAndSaveRecipeAsync(
+        CaffeineConsumption consumption,
+        LastConsumptionRecipe recipe);
+    Task<LastConsumptionRecipe?> GetLastConsumptionRecipeAsync();
     Task UpdateConsumptionAsync(CaffeineConsumption consumption);
     Task DeleteConsumptionAsync(int id);
     Task DeleteAllUserDataAsync();

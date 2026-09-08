@@ -1,0 +1,133 @@
+using CoffeeNap.Data;
+using CoffeeNap.Services;
+using SQLite;
+
+namespace CoffeeNap.Models;
+
+/// <summary>
+/// Последние успешно сохранённые исходные ответы quiz. В таблице всегда не более
+/// одной строки; вычисляемые и локализованные значения сюда не записываются.
+/// </summary>
+[Table("LastConsumptionRecipes")]
+public sealed class LastConsumptionRecipe
+{
+    [PrimaryKey]
+    public int Id { get; set; } = DatabaseConstants.LastConsumptionRecipeId;
+
+    public CaffeineConsumptionType DrinkType { get; set; }
+
+    public CoffeeLocation? CoffeeLocation { get; set; }
+    public CoffeeDrinkType? CoffeeDrinkType { get; set; }
+    public CoffeeBrewingMethod? BrewingMethod { get; set; }
+    public CoffeeBeanType? BeanType { get; set; }
+    public double? CoffeeAmountGrams { get; set; }
+    public int? CoffeeSpoonCount { get; set; }
+    public int? VolumeMl { get; set; }
+    public ServingSize? ServingSize { get; set; }
+
+    public TeaType? TeaType { get; set; }
+    public double? TeaAmountGrams { get; set; }
+    public int? TeaSpoonCount { get; set; }
+
+    public int? EnergyDrinkVolumeMl { get; set; }
+}
+
+/// <summary>Единая двусторонняя проекция persistent recipe и runtime QuizState.</summary>
+public static class ConsumptionRecipeMapper
+{
+    public static LastConsumptionRecipe CreateFrom(AddConsumptionQuizState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        if (state.DrinkType is not { } drinkType)
+        {
+            throw new InvalidOperationException("Drink type is required to create a recipe.");
+        }
+
+        return new LastConsumptionRecipe
+        {
+            Id = DatabaseConstants.LastConsumptionRecipeId,
+            DrinkType = drinkType,
+            CoffeeLocation = state.CoffeeLocation,
+            CoffeeDrinkType = state.CoffeeDrinkType,
+            BrewingMethod = state.BrewingMethod,
+            BeanType = state.BeanType,
+            CoffeeAmountGrams = state.CoffeeAmountGrams,
+            CoffeeSpoonCount = state.CoffeeSpoonCount,
+            VolumeMl = state.VolumeMl,
+            ServingSize = state.ServingSize,
+            TeaType = state.TeaType,
+            TeaAmountGrams = state.TeaAmountGrams,
+            TeaSpoonCount = state.TeaSpoonCount,
+            EnergyDrinkVolumeMl = state.EnergyDrinkVolumeMl
+        };
+    }
+
+    public static void ApplyTo(LastConsumptionRecipe recipe, AddConsumptionQuizState state)
+    {
+        ArgumentNullException.ThrowIfNull(recipe);
+        ArgumentNullException.ThrowIfNull(state);
+
+        state.Reset();
+        state.DrinkType = recipe.DrinkType;
+
+        switch (recipe.DrinkType)
+        {
+            case CaffeineConsumptionType.Coffee:
+                ApplyCoffee(recipe, state);
+                break;
+            case CaffeineConsumptionType.Tea:
+                state.TeaType = recipe.TeaType;
+                state.TeaAmountGrams = recipe.TeaAmountGrams;
+                state.TeaSpoonCount = recipe.TeaSpoonCount;
+                state.TeaAmountDisplay = BuildAmountDisplay(
+                    recipe.TeaAmountGrams,
+                    recipe.TeaSpoonCount);
+                break;
+            case CaffeineConsumptionType.EnergyDrink:
+                state.EnergyDrinkVolumeMl = recipe.EnergyDrinkVolumeMl;
+                break;
+            default:
+                throw new InvalidOperationException("The saved recipe has an unsupported drink type.");
+        }
+    }
+
+    private static void ApplyCoffee(LastConsumptionRecipe recipe, AddConsumptionQuizState state)
+    {
+        state.CoffeeLocation = recipe.CoffeeLocation;
+        state.BeanType = recipe.BeanType;
+
+        if (recipe.CoffeeLocation == CoffeeLocation.Home)
+        {
+            state.BrewingMethod = recipe.BrewingMethod;
+            state.CoffeeAmountGrams = recipe.CoffeeAmountGrams;
+            state.CoffeeSpoonCount = recipe.CoffeeSpoonCount;
+            state.CoffeeAmountDisplay = BuildAmountDisplay(
+                recipe.CoffeeAmountGrams,
+                recipe.CoffeeSpoonCount);
+            return;
+        }
+
+        state.CoffeeDrinkType = recipe.CoffeeDrinkType;
+        state.VolumeMl = recipe.VolumeMl;
+        state.ServingSize = recipe.ServingSize;
+        state.VolumeDisplay = recipe.ServingSize is { } servingSize
+            ? CoffeeQuizCatalog.GetServingSizeDisplay(servingSize)
+            : BuildVolumeDisplay(recipe.VolumeMl);
+    }
+
+    private static string? BuildAmountDisplay(double? grams, int? spoonCount)
+    {
+        if (spoonCount is > 0)
+        {
+            return CoffeeQuizCatalog.GetSpoonDisplay(spoonCount.Value);
+        }
+
+        return grams is > 0
+            ? $"{grams:0.#} {LocalizationService.Current["GramShort"]}"
+            : null;
+    }
+
+    private static string? BuildVolumeDisplay(int? volumeMl) => volumeMl is > 0
+        ? $"{volumeMl} {LocalizationService.Current["MilliliterShort"]}"
+        : null;
+}

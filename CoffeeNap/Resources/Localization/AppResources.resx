@@ -59,6 +59,8 @@
   <data name="TeaAmountInvalid" xml:space="preserve"><value>Введите количество заварки больше 0 г</value></data>
   <data name="CompleteTeaParameters" xml:space="preserve"><value>Выберите сорт и количество заварки</value></data>
   <data name="UseOldRecipe" xml:space="preserve"><value>Использовать старый рецепт</value></data>
+  <data name="NoSavedRecipe" xml:space="preserve"><value>У вас пока нет сохранённого рецепта</value></data>
+  <data name="SavedRecipeUnavailable" xml:space="preserve"><value>Не удалось открыть сохранённый рецепт</value></data>
   <data name="HomeCoffee" xml:space="preserve"><value>Домашний кофе</value></data>
   <data name="CoffeeAmountQuestion" xml:space="preserve"><value>Сколько кофе использовали?</value></data>
   <data name="ApproximateHint" xml:space="preserve"><value>Можно примерно, это не проблема</value></data>

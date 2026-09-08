@@ -59,6 +59,8 @@
   <data name="TeaAmountInvalid" xml:space="preserve"><value>Enter a tea amount greater than 0 g</value></data>
   <data name="CompleteTeaParameters" xml:space="preserve"><value>Select a tea type and amount</value></data>
   <data name="UseOldRecipe" xml:space="preserve"><value>Use a previous recipe</value></data>
+  <data name="NoSavedRecipe" xml:space="preserve"><value>You don't have a saved recipe yet</value></data>
+  <data name="SavedRecipeUnavailable" xml:space="preserve"><value>Couldn't open the saved recipe</value></data>
   <data name="HomeCoffee" xml:space="preserve"><value>Home-brewed coffee</value></data>
   <data name="CoffeeAmountQuestion" xml:space="preserve"><value>How much coffee did you use?</value></data>
   <data name="ApproximateHint" xml:space="preserve"><value>An estimate is perfectly fine</value></data>

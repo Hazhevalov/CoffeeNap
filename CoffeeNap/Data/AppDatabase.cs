@@ -48,6 +48,7 @@ public sealed class AppDatabase
             await _connection.CreateTableAsync<UserProfile>();
             await _connection.CreateTableAsync<AppSettings>();
             await _connection.CreateTableAsync<CaffeineConsumption>();
+            await _connection.CreateTableAsync<LastConsumptionRecipe>();
             await _connection.ExecuteAsync(
                 "CREATE INDEX IF NOT EXISTS IX_CaffeineConsumptions_ConsumedAt " +
                 "ON CaffeineConsumptions (ConsumedAt)");
@@ -99,6 +100,22 @@ public sealed class AppDatabase
     public Task<int> InsertConsumptionAsync(CaffeineConsumption consumption) =>
         _connection.InsertAsync(consumption);
 
+    public async Task<LastConsumptionRecipe?> GetLastConsumptionRecipeAsync() =>
+        await _connection.FindAsync<LastConsumptionRecipe>(
+            DatabaseConstants.LastConsumptionRecipeId);
+
+    /// <summary>
+    /// Записывает новое употребление и заменяет singleton-рецепт одной SQLite-транзакцией.
+    /// </summary>
+    public Task SaveConsumptionAndRecipeAsync(
+        CaffeineConsumption consumption,
+        LastConsumptionRecipe recipe) =>
+        _connection.RunInTransactionAsync(connection =>
+        {
+            connection.Insert(consumption);
+            connection.InsertOrReplace(recipe);
+        });
+
     public Task<int> UpdateConsumptionAsync(CaffeineConsumption consumption) =>
         _connection.UpdateAsync(consumption);
 
@@ -110,6 +127,7 @@ public sealed class AppDatabase
         _connection.RunInTransactionAsync(connection =>
         {
             connection.DeleteAll<CaffeineConsumption>();
+            connection.DeleteAll<LastConsumptionRecipe>();
             connection.DeleteAll<UserProfile>();
             connection.DeleteAll<AppSettings>();
         });

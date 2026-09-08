@@ -25,8 +25,11 @@ public sealed class AppDataService : IAppDataService
     ];
     private readonly AppDatabase _database;
     private readonly SemaphoreSlim _initializationLock = new(1, 1);
+    private readonly SemaphoreSlim _lastRecipeLock = new(1, 1);
     private readonly ILogger<AppDataService> _logger;
     private bool _isInitialized;
+    private bool _isLastRecipeLoaded;
+    private LastConsumptionRecipe? _lastRecipe;
 
     public AppDataService(
         AppDatabase database,
@@ -157,6 +160,49 @@ public sealed class AppDataService : IAppDataService
         ConsumptionAdded?.Invoke(this, consumption);
     }
 
+    public async Task AddConsumptionAndSaveRecipeAsync(
+        CaffeineConsumption consumption,
+        LastConsumptionRecipe recipe)
+    {
+        ValidateConsumption(consumption);
+        ValidateRecipe(recipe);
+        await InitializeAsync();
+
+        consumption.Id = 0;
+        consumption.ConsumedAt = consumption.ConsumedAt.ToUniversalTime();
+        recipe.Id = DatabaseConstants.LastConsumptionRecipeId;
+        await _database.SaveConsumptionAndRecipeAsync(consumption, recipe);
+
+        _lastRecipe = recipe;
+        _isLastRecipeLoaded = true;
+        ConsumptionAdded?.Invoke(this, consumption);
+    }
+
+    public async Task<LastConsumptionRecipe?> GetLastConsumptionRecipeAsync()
+    {
+        await InitializeAsync();
+        if (_isLastRecipeLoaded)
+        {
+            return _lastRecipe;
+        }
+
+        await _lastRecipeLock.WaitAsync();
+        try
+        {
+            if (!_isLastRecipeLoaded)
+            {
+                _lastRecipe = await _database.GetLastConsumptionRecipeAsync();
+                _isLastRecipeLoaded = true;
+            }
+
+            return _lastRecipe;
+        }
+        finally
+        {
+            _lastRecipeLock.Release();
+        }
+    }
+
     public async Task UpdateConsumptionAsync(CaffeineConsumption consumption)
     {
         ValidateConsumption(consumption);
@@ -197,6 +243,8 @@ public sealed class AppDataService : IAppDataService
     {
         await InitializeAsync();
         await _database.DeleteAllUserDataAsync();
+        _lastRecipe = null;
+        _isLastRecipeLoaded = true;
 
         foreach (var key in LegacyResetKeys)
         {
@@ -269,6 +317,36 @@ public sealed class AppDataService : IAppDataService
         if (consumption.ConsumedAt == default)
         {
             throw new ArgumentException("Consumption time is required.", nameof(consumption));
+        }
+    }
+
+    private static void ValidateRecipe(LastConsumptionRecipe recipe)
+    {
+        ArgumentNullException.ThrowIfNull(recipe);
+
+        var isValid = recipe.DrinkType switch
+        {
+            CaffeineConsumptionType.Coffee => recipe.CoffeeLocation switch
+            {
+                CoffeeLocation.Home =>
+                    recipe.BrewingMethod is not null &&
+                    recipe.CoffeeAmountGrams is > 0 &&
+                    recipe.BeanType is not null,
+                CoffeeLocation.Outside =>
+                    recipe.CoffeeDrinkType is not null &&
+                    recipe.VolumeMl is > 0 &&
+                    recipe.BeanType is not null,
+                _ => false
+            },
+            CaffeineConsumptionType.Tea =>
+                recipe.TeaType is not null && recipe.TeaAmountGrams is > 0,
+            CaffeineConsumptionType.EnergyDrink => recipe.EnergyDrinkVolumeMl is > 0,
+            _ => false
+        };
+
+        if (!isValid)
+        {
+            throw new ArgumentException("The recipe is incomplete.", nameof(recipe));
         }
     }
 }
