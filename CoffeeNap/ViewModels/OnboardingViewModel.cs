@@ -30,12 +30,10 @@ public partial class OnboardingViewModel : ObservableObject
         LocalizationService localization,
         ILogger<OnboardingViewModel> logger)
     {
-        var startedAt = PerformanceTrace.Start();
         _userState = userState;
         _appNavigation = appNavigation;
         _localization = localization;
         _logger = logger;
-        PerformanceTrace.Elapsed("OnboardingViewModel.ctor", startedAt);
     }
 
     public OnboardingStep CurrentStep

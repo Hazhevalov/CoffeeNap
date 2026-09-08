@@ -6,5 +6,4 @@ public interface IAppNavigationService
     Task OpenPrivacyPolicyAsync();
     Task GoBackAsync();
     Task NavigateToTopLevelAsync(string absoluteRoute);
-    Task NavigateBackFromTopLevelAsync();
 }

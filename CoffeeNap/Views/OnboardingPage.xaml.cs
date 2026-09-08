@@ -1,32 +1,26 @@
-using CoffeeNap.Helpers;
 using CoffeeNap.ViewModels;
 
 namespace CoffeeNap.Views;
 
 public partial class OnboardingPage : ContentPage
 {
-    private const uint StepTransitionDuration = 220;
+    private const uint ExitDuration = 100;
+    private const uint EnterDuration = 180;
     private bool _isTransitioning;
-    private bool _nameStepContentCreated;
 
     public OnboardingPage(OnboardingViewModel viewModel)
     {
-        var startedAt = PerformanceTrace.Start();
         InitializeComponent();
-        PerformanceTrace.Elapsed("OnboardingPage.InitializeComponent", startedAt);
-        PerformanceTrace.TrackFirstLayout(this, nameof(OnboardingPage), startedAt);
         BindingContext = viewModel;
     }
 
     protected override void OnAppearing()
     {
-        var startedAt = PerformanceTrace.Start();
         base.OnAppearing();
         if (BindingContext is OnboardingViewModel viewModel)
         {
             ApplyStepWithoutAnimation(viewModel.CurrentStep);
         }
-        PerformanceTrace.Elapsed("OnboardingPage.OnAppearing", startedAt);
     }
 
     // Возврат при свайпе назад
@@ -53,28 +47,25 @@ public partial class OnboardingPage : ContentPage
             return;
         }
 
-        var startedAt = PerformanceTrace.Start();
         _isTransitioning = true;
         WelcomeStepContainer.InputTransparent = true;
         try
         {
-            EnsureNameStepContent();
+            await AnimateOutAsync(WelcomeStepContainer, -48);
+            WelcomeStepContainer.IsVisible = false;
+
             if (viewModel.StartCommand.CanExecute(null))
             {
                 viewModel.StartCommand.Execute(null);
             }
 
             PrepareForEntrance(NameStepContainer, 64);
-            await Task.WhenAll(
-                AnimateOutAsync(WelcomeStepContainer, -48),
-                AnimateInAsync(NameStepContainer));
-            WelcomeStepContainer.IsVisible = false;
+            await AnimateInAsync(NameStepContainer);
             NameStepContainer.InputTransparent = false;
         }
         finally
         {
             _isTransitioning = false;
-            PerformanceTrace.Elapsed("Onboarding.Welcome-to-Name", startedAt);
         }
     }
 
@@ -90,16 +81,16 @@ public partial class OnboardingPage : ContentPage
         NameStepContainer.InputTransparent = true;
         try
         {
+            await AnimateOutAsync(NameStepContainer, 64);
+            NameStepContainer.IsVisible = false;
+
             if (viewModel.ReturnToWelcomeCommand.CanExecute(null))
             {
                 viewModel.ReturnToWelcomeCommand.Execute(null);
             }
 
             PrepareForEntrance(WelcomeStepContainer, -48);
-            await Task.WhenAll(
-                AnimateOutAsync(NameStepContainer, 64),
-                AnimateInAsync(WelcomeStepContainer));
-            NameStepContainer.IsVisible = false;
+            await AnimateInAsync(WelcomeStepContainer);
             WelcomeStepContainer.InputTransparent = false;
         }
         finally
@@ -110,13 +101,13 @@ public partial class OnboardingPage : ContentPage
 
     private static Task AnimateOutAsync(VisualElement element, double translationX) =>
         Task.WhenAll(
-            element.TranslateToAsync(translationX, 0, StepTransitionDuration, Easing.CubicIn),
-            element.FadeToAsync(0, StepTransitionDuration, Easing.CubicIn));
+            element.TranslateToAsync(translationX, 0, ExitDuration, Easing.CubicIn),
+            element.FadeToAsync(0, ExitDuration, Easing.CubicIn));
 
     private static Task AnimateInAsync(VisualElement element) =>
         Task.WhenAll(
-            element.TranslateToAsync(0, 0, StepTransitionDuration, Easing.CubicOut),
-            element.FadeToAsync(1, StepTransitionDuration, Easing.CubicOut));
+            element.TranslateToAsync(0, 0, EnterDuration, Easing.CubicOut),
+            element.FadeToAsync(1, EnterDuration, Easing.CubicOut));
 
     private static void PrepareForEntrance(VisualElement element, double translationX)
     {
@@ -129,10 +120,6 @@ public partial class OnboardingPage : ContentPage
     private void ApplyStepWithoutAnimation(OnboardingStep step)
     {
         var isWelcome = step == OnboardingStep.Welcome;
-        if (!isWelcome)
-        {
-            EnsureNameStepContent();
-        }
 
         WelcomeStepContainer.IsVisible = isWelcome;
         WelcomeStepContainer.InputTransparent = !isWelcome;
@@ -144,19 +131,5 @@ public partial class OnboardingPage : ContentPage
         NameStepContainer.TranslationX = 0;
         NameStepContainer.Opacity = isWelcome ? 0 : 1;
         _isTransitioning = false;
-    }
-
-    private void EnsureNameStepContent()
-    {
-        if (_nameStepContentCreated)
-        {
-            return;
-        }
-
-        var startedAt = PerformanceTrace.Start();
-        NameStepContainer.Content =
-            ((DataTemplate)Resources["NameStepTemplate"]).CreateContent() as View;
-        _nameStepContentCreated = true;
-        PerformanceTrace.Elapsed("Onboarding.NameStepContent", startedAt);
     }
 }

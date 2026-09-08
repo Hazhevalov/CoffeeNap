@@ -1,7 +1,6 @@
 using System.Globalization;
 using CoffeeNap.Models;
 using CoffeeNap.Services;
-using CoffeeNap.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
@@ -52,7 +51,6 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     private string _validationMessage = string.Empty;
     private bool _isSaving;
     private bool _isUsingLastRecipe;
-    private int _backOperationInProgress;
 
     public AddConsumptionPageViewModel(
         MainHeaderViewModel header,
@@ -63,7 +61,6 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         LocalizationService localization,
         ILogger<AddConsumptionPageViewModel> logger)
     {
-        var startedAt = PerformanceTrace.Start();
         Header = header;
         Navigation = navigation;
         _dataService = dataService;
@@ -74,7 +71,6 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         Navigation.ActiveTab = NavigationTab.AddConsumption;
         _dataService.UserDataDeleted += OnUserDataDeleted;
         _localization.CultureChanged += OnCultureChanged;
-        PerformanceTrace.Elapsed("AddConsumptionPageViewModel.ctor", startedAt);
     }
 
     public MainHeaderViewModel Header { get; }
@@ -451,37 +447,18 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     }
 
     // Кнопка вернуться назад
-    [RelayCommand(AllowConcurrentExecutions = false)]
-    private Task BackAsync() => HandleBackAsync();
-
-    /// <summary>Единая Back-операция для кнопки UI и Android system Back.</summary>
-    public async Task HandleBackAsync()
+    [RelayCommand]
+    private async Task BackAsync()
     {
-        if (Interlocked.CompareExchange(ref _backOperationInProgress, 1, 0) != 0)
+        ClearValidation();
+        if (_stepHistory.TryPop(out var previousStep))
         {
+            if (CurrentStep == AddConsumptionStep.Result) InvalidateResult();
+            CurrentStep = previousStep;
             return;
         }
 
-        try
-        {
-            ClearValidation();
-            if (_stepHistory.TryPop(out var previousStep))
-            {
-                if (CurrentStep == AddConsumptionStep.Result)
-                {
-                    InvalidateResult();
-                }
-
-                CurrentStep = previousStep;
-                return;
-            }
-
-            await _appNavigation.NavigateBackFromTopLevelAsync();
-        }
-        finally
-        {
-            Interlocked.Exchange(ref _backOperationInProgress, 0);
-        }
+        await _appNavigation.NavigateToTopLevelAsync(AppShell.MainAbsoluteRoute);
     }
 
     // Перезапуск квиза

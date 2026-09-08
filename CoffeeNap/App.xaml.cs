@@ -1,6 +1,5 @@
 using CoffeeNap.Services;
 using CoffeeNap.Views;
-using CoffeeNap.Helpers;
 using Microsoft.Extensions.Logging;
 
 namespace CoffeeNap;
@@ -35,26 +34,42 @@ public partial class App : Application
 
     private async Task CompleteStartupAsync(Window window)
     {
-        var startedAt = PerformanceTrace.Start();
         try
         {
-            var localizationStartedAt = PerformanceTrace.Start();
             await _localization.InitializeAsync();
-            PerformanceTrace.Elapsed("Startup.Localization", localizationStartedAt);
-
-            var userStateStartedAt = PerformanceTrace.Start();
             await _userState.InitializeAsync();
-            PerformanceTrace.Elapsed("Startup.UserState", userStateStartedAt);
 
+            var calendarPage = _pageFactory.CreateCalendarPage();
             await MainThread.InvokeOnMainThreadAsync(() =>
-                window.Page = new AppShell(_userState, _pageFactory));
-            PerformanceTrace.Elapsed("Startup.AppShell-ready", startedAt);
+            {
+                window.Page = new AppShell(
+                    _userState,
+                    _pageFactory.CreateOnboardingPage(),
+                    _pageFactory.CreateMainPage(),
+                    _pageFactory.CreateAddConsumptionPage(),
+                    calendarPage);
+            });
+            _ = WarmUpCalendarAsync(calendarPage);
         }
         catch (Exception exception)
         {
             _logger.LogError(exception, "Application data initialization failed.");
             await MainThread.InvokeOnMainThreadAsync(() =>
                 window.Page = CreateStartupErrorPage());
+        }
+    }
+
+    private async Task WarmUpCalendarAsync(CalendarPage calendarPage)
+    {
+        try
+        {
+            // Let the initially selected page render before doing hidden-page work.
+            await Task.Delay(500);
+            await calendarPage.WarmUpAsync();
+        }
+        catch (Exception exception)
+        {
+            _logger.LogDebug(exception, "Calendar background warm-up failed.");
         }
     }
 

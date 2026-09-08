@@ -12,19 +12,16 @@ public partial class AppShell : Shell
 
     public AppShell(
         UserStateService userState,
-        AppPageFactory pageFactory)
+        OnboardingPage onboardingPage,
+        MainPage mainPage,
+        AddConsumptionPage addConsumptionPage,
+        CalendarPage calendarPage)
     {
         InitializeComponent();
-        // Shell создаёт только выбранный root. Остальные разделы создаются при
-        // первом переходе и затем удерживаются самим Shell без дубликатов.
-        OnboardingShellContent.ContentTemplate =
-            new DataTemplate(pageFactory.CreateOnboardingPage);
-        MainShellContent.ContentTemplate =
-            new DataTemplate(pageFactory.CreateMainPage);
-        AddConsumptionShellContent.ContentTemplate =
-            new DataTemplate(pageFactory.CreateAddConsumptionPage);
-        CalendarShellContent.ContentTemplate =
-            new DataTemplate(pageFactory.CreateCalendarPage);
+        OnboardingShellContent.Content = onboardingPage;
+        MainShellContent.Content = mainPage;
+        AddConsumptionShellContent.Content = addConsumptionPage;
+        CalendarShellContent.Content = calendarPage;
 
         CurrentItem = userState.IsOnboardingCompleted && userState.HasUserName
             ? MainShellItem

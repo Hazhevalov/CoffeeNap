@@ -1,6 +1,5 @@
 using System.ComponentModel;
 
-using CoffeeNap.Helpers;
 using CoffeeNap.ViewModels;
 
 namespace CoffeeNap.Views;
@@ -23,15 +22,10 @@ public partial class SettingsPage : ContentPage
 
     private Task _languageMenuTransition = Task.CompletedTask;
     private Task _deleteWarningTransition = Task.CompletedTask;
-    private bool _languageMenuContentCreated;
-    private bool _deleteWarningContentCreated;
 
     public SettingsPage(SettingsPageViewModel viewModel)
     {
-        var startedAt = PerformanceTrace.Start();
         InitializeComponent();
-        PerformanceTrace.Elapsed("SettingsPage.InitializeComponent", startedAt);
-        PerformanceTrace.TrackFirstLayout(this, nameof(SettingsPage), startedAt);
 
         _viewModel = viewModel;
         BindingContext = viewModel;
@@ -53,23 +47,6 @@ public partial class SettingsPage : ContentPage
     {
         _viewModel.ResetTransientUiState();
         base.OnDisappearing();
-    }
-
-    protected override void OnAppearing()
-    {
-        var startedAt = PerformanceTrace.Start();
-        base.OnAppearing();
-        PerformanceTrace.Elapsed("SettingsPage.OnAppearing", startedAt);
-    }
-
-    protected override bool OnBackButtonPressed()
-    {
-        if (_viewModel.BackCommand.CanExecute(null))
-        {
-            _viewModel.BackCommand.Execute(null);
-        }
-
-        return true;
     }
 
     private void OnViewModelPropertyChanged(
@@ -112,7 +89,6 @@ public partial class SettingsPage : ContentPage
 
                 if (animatedTarget)
                 {
-                    EnsureLanguageMenuContent();
                     LanguageMenu.IsVisible = true;
                     LanguageMenu.InputTransparent = false;
                     LanguageMenu.Opacity = 0;
@@ -184,7 +160,6 @@ public partial class SettingsPage : ContentPage
 
                 if (animatedTarget)
                 {
-                    EnsureDeleteWarningContent();
                     DeleteWarning.IsVisible = true;
                     DeleteWarning.InputTransparent = false;
                     DeleteWarning.Opacity = 0;
@@ -235,28 +210,4 @@ public partial class SettingsPage : ContentPage
 
     private Task WaitForDeleteWarningTransitionAsync()
         => _deleteWarningTransition;
-
-    private void EnsureLanguageMenuContent()
-    {
-        if (_languageMenuContentCreated)
-        {
-            return;
-        }
-
-        LanguageMenu.Content =
-            ((DataTemplate)Resources["LanguageMenuTemplate"]).CreateContent() as View;
-        _languageMenuContentCreated = true;
-    }
-
-    private void EnsureDeleteWarningContent()
-    {
-        if (_deleteWarningContentCreated)
-        {
-            return;
-        }
-
-        DeleteWarning.Content =
-            ((DataTemplate)Resources["DeleteWarningTemplate"]).CreateContent() as View;
-        _deleteWarningContentCreated = true;
-    }
 }

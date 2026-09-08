@@ -123,25 +123,6 @@ public sealed class CalendarStatisticsService
         _ = ObservePrefetchAsync(month.AddMonths(1));
     }
 
-    /// <summary>
-    /// Подготавливает только текущие month/week ranges после первого кадра Main.
-    /// UI CalendarPage при этом не создаётся.
-    /// </summary>
-    public void PrefetchCurrent(DateTime today) =>
-        _ = ObserveInitialPrefetchAsync(today);
-
-    private async Task ObserveInitialPrefetchAsync(DateTime today)
-    {
-        try
-        {
-            await GetInitialAsync(FirstOfMonth(today), today).ConfigureAwait(false);
-        }
-        catch (Exception exception)
-        {
-            _logger.LogDebug(exception, "Calendar current-range prefetch failed.");
-        }
-    }
-
     private async Task<CalendarInitialStatistics> LoadCombinedAsync(
         DateTime month,
         DateTime weekStart,

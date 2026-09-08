@@ -1,5 +1,4 @@
 using CoffeeNap.Services;
-using CoffeeNap.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
@@ -30,7 +29,6 @@ public partial class SettingsPageViewModel : ObservableObject
         IDialogService dialogService,
         ILogger<SettingsPageViewModel> logger)
     {
-        var startedAt = PerformanceTrace.Start();
         Navigation = navigation;
         Navigation.ActiveTab = NavigationTab.None;
         _localization = localization;
@@ -39,7 +37,6 @@ public partial class SettingsPageViewModel : ObservableObject
         _lifecycleService = lifecycleService;
         _dialogService = dialogService;
         _logger = logger;
-        PerformanceTrace.Elapsed("SettingsPageViewModel.ctor", startedAt);
     }
 
     public BottomNavigationViewModel Navigation { get; }

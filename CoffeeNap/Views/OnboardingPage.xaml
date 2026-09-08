@@ -3,8 +3,8 @@
     x:Class="CoffeeNap.Views.OnboardingPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:CoffeeNap.Controls"
     xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
+    xmlns:controls="clr-namespace:CoffeeNap.Controls"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:OnboardingViewModel"
     BackgroundColor="{StaticResource PageBackgroundColor}"
@@ -12,15 +12,149 @@
     Shell.NavBarIsVisible="False"
     Shell.TabBarIsVisible="False">
 
-    <ContentPage.Resources>
-        <!-- Entry и второй шаг не создаются до фактического перехода. -->
-        <DataTemplate x:Key="NameStepTemplate" x:DataType="viewModels:OnboardingViewModel">
-            <Grid RowDefinitions="*,Auto">
+    <Grid Padding="12,20,12,25" RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Общий индикатор меняет состояние вместе с CurrentStep. -->
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+            <BoxView
+                WidthRequest="8"
+                HeightRequest="8"
+                BackgroundColor="#D0D0D0"
+                CornerRadius="4">
+                <BoxView.Triggers>
+                    <DataTrigger
+                        TargetType="BoxView"
+                        Binding="{Binding CurrentStep}"
+                        Value="{x:Static viewModels:OnboardingStep.Welcome}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
+                    </DataTrigger>
+                </BoxView.Triggers>
+            </BoxView>
+            <BoxView
+                WidthRequest="8"
+                HeightRequest="8"
+                BackgroundColor="#D0D0D0"
+                CornerRadius="4">
+                <BoxView.Triggers>
+                    <DataTrigger
+                        TargetType="BoxView"
+                        Binding="{Binding CurrentStep}"
+                        Value="{x:Static viewModels:OnboardingStep.NameSetup}">
+                        <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
+                    </DataTrigger>
+                </BoxView.Triggers>
+            </BoxView>
+        </HorizontalStackLayout>
+
+        <!-- Одинаковая область для обоих шагов предотвращает layout jump. -->
+        <Grid Grid.Row="1">
+            <Grid
+                x:Name="WelcomeStepContainer"
+                RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <VerticalStackLayout Spacing="7" VerticalOptions="Center">
+                    <Label
+                        FontAttributes="Bold"
+                        FontFamily="Inter"
+                        FontSize="27"
+                        LineHeight="1.12"
+                        Text="{localization:Translate OnboardingGreeting}"
+                        TextColor="{StaticResource InkColor}" />
+                    <Label
+                        FontFamily="Inter"
+                        FontSize="13"
+                        LineHeight="1.12"
+                        MaxLines="3"
+                        Text="{localization:Translate OnboardingDescription}"
+                        TextColor="#555555" />
+                </VerticalStackLayout>
+
+                <Grid
+                    x:Name="StartButtonContainer"
+                    Grid.Row="1"
+                    WidthRequest="191"
+                    HeightRequest="46"
+                    HorizontalOptions="Center">
+                    <Border
+                        Padding="20,0"
+                        BackgroundColor="{StaticResource InkColor}"
+                        InputTransparent="True"
+                        StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18" />
+                        </Border.StrokeShape>
+                        <HorizontalStackLayout
+                            HorizontalOptions="Center"
+                            Spacing="8"
+                            VerticalOptions="Center">
+                            <Label
+                                FontFamily="Inter"
+                                FontSize="13"
+                                Text="{localization:Translate Start}"
+                                TextColor="{StaticResource SurfaceColor}"
+                                VerticalTextAlignment="Center" />
+                            <Image
+                                WidthRequest="10"
+                                HeightRequest="10"
+                                Aspect="AspectFit"
+                                Source="more_ico.png" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <Button
+                        Padding="0"
+                        AutomationId="StartOnboardingButton"
+                        BackgroundColor="#01000000"
+                        BorderWidth="0"
+                        Clicked="OnStartButtonClicked"
+                        CornerRadius="18"
+                        SemanticProperties.Description="Давайте начнем, перейти к вводу имени"
+                        Text="" />
+                </Grid>
+            </Grid>
+
+            <Grid
+                x:Name="NameStepContainer"
+                IsVisible="False"
+                InputTransparent="True"
+                Opacity="0"
+                RowSpacing="0"
+                TranslationX="64">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
                 <VerticalStackLayout Spacing="11" VerticalOptions="Center">
-                    <Label FontAttributes="Bold" FontFamily="Inter" FontSize="27" Text="{localization:Translate NamePrompt}" TextColor="{StaticResource InkColor}" />
-                    <Border HeightRequest="55" Padding="10,0" BackgroundColor="{StaticResource SurfaceColor}" Stroke="#E1E1E1" StrokeShape="RoundRectangle 18" StrokeThickness="1">
+                    <Label
+                        FontAttributes="Bold"
+                        FontFamily="Inter"
+                        FontSize="27"
+                        Text="{localization:Translate NamePrompt}"
+                        TextColor="{StaticResource InkColor}" />
+
+                    <Border
+                        HeightRequest="55"
+                        Padding="10,0"
+                        BackgroundColor="{StaticResource SurfaceColor}"
+                        Stroke="#E1E1E1"
+                        StrokeThickness="1">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18" />
+                        </Border.StrokeShape>
                         <Border.Triggers>
-                            <DataTrigger TargetType="Border" Binding="{Binding HasValidationError}" Value="True">
+                            <DataTrigger
+                                TargetType="Border"
+                                Binding="{Binding HasValidationError}"
+                                Value="True">
                                 <Setter Property="Stroke" Value="{StaticResource ValidationErrorColor}" />
                             </DataTrigger>
                         </Border.Triggers>
@@ -39,15 +173,23 @@
                             Text="{Binding UserName, Mode=TwoWay}"
                             TextColor="{StaticResource InkColor}" />
                     </Border>
-                    <Label Margin="10,-5,0,0" FontFamily="Inter" FontSize="12" IsVisible="{Binding HasValidationError}" Text="{Binding ValidationMessage}" TextColor="{StaticResource ValidationErrorColor}" />
+
+                    <Label
+                        Margin="10,-5,0,0"
+                        FontFamily="Inter"
+                        FontSize="12"
+                        IsVisible="{Binding HasValidationError}"
+                        Text="{Binding ValidationMessage}"
+                        TextColor="{StaticResource ValidationErrorColor}" />
                 </VerticalStackLayout>
+
                 <Button
                     Grid.Row="1"
-                    AutomationId="ConfirmOnboardingButton"
                     WidthRequest="157"
                     HeightRequest="46"
                     Padding="18,0"
                     HorizontalOptions="Center"
+                    AutomationId="ConfirmOnboardingButton"
                     BackgroundColor="{StaticResource InkColor}"
                     Command="{Binding ConfirmNameCommand}"
                     CornerRadius="18"
@@ -56,58 +198,6 @@
                     Text="{localization:Translate Confirm}"
                     TextColor="{StaticResource SurfaceColor}" />
             </Grid>
-        </DataTemplate>
-    </ContentPage.Resources>
-
-    <Grid Padding="12,20,12,25" RowDefinitions="Auto,*">
-        <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
-            <BoxView WidthRequest="8" HeightRequest="8" BackgroundColor="#D0D0D0" CornerRadius="4">
-                <BoxView.Triggers>
-                    <DataTrigger TargetType="BoxView" Binding="{Binding CurrentStep}" Value="{x:Static viewModels:OnboardingStep.Welcome}">
-                        <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
-                    </DataTrigger>
-                </BoxView.Triggers>
-            </BoxView>
-            <BoxView WidthRequest="8" HeightRequest="8" BackgroundColor="#D0D0D0" CornerRadius="4">
-                <BoxView.Triggers>
-                    <DataTrigger TargetType="BoxView" Binding="{Binding CurrentStep}" Value="{x:Static viewModels:OnboardingStep.NameSetup}">
-                        <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
-                    </DataTrigger>
-                </BoxView.Triggers>
-            </BoxView>
-        </HorizontalStackLayout>
-
-        <!-- Одинаковая область обоих шагов не меняет геометрию страницы. -->
-        <Grid Grid.Row="1">
-            <Grid x:Name="WelcomeStepContainer" RowDefinitions="*,Auto">
-                <VerticalStackLayout Spacing="7" VerticalOptions="Center">
-                    <Label FontAttributes="Bold" FontFamily="Inter" FontSize="27" LineHeight="1.12" Text="{localization:Translate OnboardingGreeting}" TextColor="{StaticResource InkColor}" />
-                    <Label FontFamily="Inter" FontSize="13" LineHeight="1.12" MaxLines="3" Text="{localization:Translate OnboardingDescription}" TextColor="#555555" />
-                </VerticalStackLayout>
-                <Grid x:Name="StartButtonContainer" Grid.Row="1" WidthRequest="191" HeightRequest="46" HorizontalOptions="Center">
-                    <Border Padding="20,0" BackgroundColor="{StaticResource InkColor}" InputTransparent="True" StrokeShape="RoundRectangle 18" StrokeThickness="0">
-                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="8" VerticalOptions="Center">
-                            <Label FontFamily="Inter" FontSize="13" Text="{localization:Translate Start}" TextColor="{StaticResource SurfaceColor}" VerticalTextAlignment="Center" />
-                            <Image WidthRequest="10" HeightRequest="10" Aspect="AspectFit" Source="more_ico.png" />
-                        </HorizontalStackLayout>
-                    </Border>
-                    <Button
-                        AutomationId="StartOnboardingButton"
-                        Padding="0"
-                        BackgroundColor="#01000000"
-                        BorderWidth="0"
-                        Clicked="OnStartButtonClicked"
-                        CornerRadius="18"
-                        SemanticProperties.Description="Давайте начнем, перейти к вводу имени" />
-                </Grid>
-            </Grid>
-
-            <ContentView
-                x:Name="NameStepContainer"
-                IsVisible="False"
-                InputTransparent="True"
-                Opacity="0"
-                TranslationX="64" />
         </Grid>
     </Grid>
 </ContentPage>
