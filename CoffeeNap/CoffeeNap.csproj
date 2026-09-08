@@ -21,6 +21,8 @@
 		<!-- Стандартные using подключаются автоматически; nullable-анализ включён. -->
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<!-- Generate page/control construction code in both Debug and Release. -->
+		<MauiXamlInflator>SourceGen</MauiXamlInflator>
 
 		<!-- Отображаемое пользователю название приложения. -->
 		<ApplicationTitle>CoffeeNap</ApplicationTitle>

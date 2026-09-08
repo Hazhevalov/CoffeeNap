@@ -9,10 +9,10 @@
     x:DataType="viewModels:CalendarPageViewModel"
     Title="{localization:Translate CalendarTitle}"
     BackgroundColor="{StaticResource PageBackgroundColor}"
-    SafeAreaEdges="All"
+    SafeAreaEdges="{OnPlatform Default=All, Android=None}"
     Shell.NavBarIsVisible="False">
 
-    <Grid Padding="12,0" RowDefinitions="Auto,*,Auto" RowSpacing="10">
+    <Grid SafeAreaEdges="None" Padding="12,0" RowDefinitions="86,*,88" RowSpacing="10">
         <controls:MainHeaderView
             Grid.Row="0"
             HeightRequest="86"
@@ -27,7 +27,7 @@
                     StrokeShape="RoundRectangle 30"
                     StrokeThickness="1">
 
-                    <Grid ColumnDefinitions="54,*,54" ColumnSpacing="12">
+                    <Grid SafeAreaEdges="None" ColumnDefinitions="54,*,54" ColumnSpacing="12">
                         <Button
                             Grid.Column="0"
                             Padding="15"
@@ -68,7 +68,7 @@
                     StrokeShape="RoundRectangle 30"
                     StrokeThickness="1">
                     <VerticalStackLayout Spacing="14">
-                        <Grid ColumnDefinitions="*,*,*,*,*,*,*">
+                        <Grid SafeAreaEdges="None" ColumnDefinitions="*,*,*,*,*,*,*">
                             <Label FontSize="12" HorizontalTextAlignment="Center" VerticalOptions="Center" Text="{localization:Translate MondayShort}" TextColor="{StaticResource MutedTextColor}" />
                             <Label Grid.Column="1" FontSize="12" HorizontalTextAlignment="Center" VerticalOptions="Center" Text="{localization:Translate TuesdayShort}" TextColor="{StaticResource MutedTextColor}" />
                             <Label Grid.Column="2" FontSize="12" HorizontalTextAlignment="Center" VerticalOptions="Center" Text="{localization:Translate WednesdayShort}" TextColor="{StaticResource MutedTextColor}" />
@@ -80,7 +80,7 @@
 
                         <controls:CalendarMonthView ItemsSource="{Binding Days}" />
 
-                        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10" RowDefinitions="Auto">
+                        <Grid SafeAreaEdges="None" ColumnDefinitions="*,*,*,*" ColumnSpacing="10" RowDefinitions="Auto">
                             <HorizontalStackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
                                 <BoxView BackgroundColor="{StaticResource CaffeineProgressLow}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
                                 <Label FontSize="11" Text="{Binding LowRangeLabel}" TextColor="{StaticResource MutedTextColor}" />

@@ -38,7 +38,7 @@ public sealed class AppNavigationService : IAppNavigationService
         }
 
         var privacyPage = _services.GetRequiredService<PrivacyPolicyPage>();
-        await navigationPage.PushAsync(privacyPage, true);
+        await navigationPage.PushAsync(privacyPage, false);
     });
 
     public Task GoBackAsync() => RunNavigationAsync(async shell =>
@@ -74,12 +74,17 @@ public sealed class AppNavigationService : IAppNavigationService
 
         await RunNavigationAsync(async shell =>
         {
+            // Select the destination before uncovering it, avoiding a flash of the old tab.
+            if (!string.Equals(shell.CurrentState.Location.OriginalString, absoluteRoute,
+                    StringComparison.Ordinal))
+            {
+                await shell.GoToAsync(absoluteRoute, false);
+            }
+
             if (shell.Navigation.ModalStack.Count > 0)
             {
                 await shell.Navigation.PopModalAsync(false);
             }
-
-            await shell.GoToAsync(absoluteRoute, false);
         });
     }
 
@@ -88,10 +93,13 @@ public sealed class AppNavigationService : IAppNavigationService
         await _navigationLock.WaitAsync();
         try
         {
-            if (Shell.Current is { } shell)
+            await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                await navigation(shell);
-            }
+                if (Shell.Current is { } shell)
+                {
+                    await navigation(shell);
+                }
+            });
         }
         finally
         {

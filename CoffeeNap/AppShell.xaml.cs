@@ -12,16 +12,14 @@ public partial class AppShell : Shell
 
     public AppShell(
         UserStateService userState,
-        OnboardingPage onboardingPage,
-        MainPage mainPage,
-        AddConsumptionPage addConsumptionPage,
-        CalendarPage calendarPage)
+        AppPageFactory pageFactory)
     {
         InitializeComponent();
-        OnboardingShellContent.Content = onboardingPage;
-        MainShellContent.Content = mainPage;
-        AddConsumptionShellContent.Content = addConsumptionPage;
-        CalendarShellContent.Content = calendarPage;
+        // Shell materializes only the selected page and retains it for subsequent visits.
+        OnboardingShellContent.ContentTemplate = new DataTemplate(() => pageFactory.CreateOnboardingPage());
+        MainShellContent.ContentTemplate = new DataTemplate(() => pageFactory.CreateMainPage());
+        AddConsumptionShellContent.ContentTemplate = new DataTemplate(() => pageFactory.CreateAddConsumptionPage());
+        CalendarShellContent.ContentTemplate = new DataTemplate(() => pageFactory.CreateCalendarPage());
 
         CurrentItem = userState.IsOnboardingCompleted && userState.HasUserName
             ? MainShellItem

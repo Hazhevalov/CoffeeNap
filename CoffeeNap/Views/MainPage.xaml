@@ -8,24 +8,24 @@
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:MainPageViewModel"
     BackgroundColor="{StaticResource PageBackgroundColor}"
-    SafeAreaEdges="None"
+    SafeAreaEdges="{OnPlatform Default=All, Android=None}"
     Shell.NavBarIsVisible="False">
 
-    <Grid RowSpacing="10" Padding="12,0">
+    <Grid SafeAreaEdges="None" RowSpacing="10" Padding="12,0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="86" />
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="88" />
         </Grid.RowDefinitions>
         
         <!-- Нав Бар -->
         <controls:MainHeaderView Grid.Row="0"
                     HeightRequest="86"
                     BindingContext="{Binding Header}"
-                    SafeAreaEdges="Container" />
+                    SafeAreaEdges="None" />
 
         <!-- Верхние карточки фиксированы, а список употреблений занимает оставшуюся высоту. -->
-        <Grid
+        <Grid SafeAreaEdges="None"
             Grid.Row="1"
             RowDefinitions="Auto,*"
             RowSpacing="10">
@@ -55,14 +55,14 @@
                         Radius="6" />
                 </Border.Shadow>
 
-                <Grid RowSpacing="20">
+                <Grid SafeAreaEdges="None" RowSpacing="20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Grid ColumnSpacing="8">
+                    <Grid SafeAreaEdges="None" ColumnSpacing="8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="22" />
@@ -83,7 +83,7 @@
                             Source="more_ico.png" />
                     </Grid>
 
-                    <Grid
+                    <Grid SafeAreaEdges="None"
                         Grid.Row="1"
                         ColumnSpacing="7">
 
@@ -151,14 +151,14 @@
                         Radius="4" />
                 </Border.Shadow>
                 
-                <Grid RowSpacing="20">
+                <Grid SafeAreaEdges="None" RowSpacing="20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Grid ColumnSpacing="8">
+                    <Grid SafeAreaEdges="None" ColumnSpacing="8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="22" />
@@ -188,7 +188,7 @@
                             <RoundRectangle CornerRadius="10" />
                         </Border.StrokeShape>
 
-                        <Grid ColumnSpacing="0">
+                        <Grid SafeAreaEdges="None" ColumnSpacing="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition
                                     Width="{Binding CoffeeSource.SegmentWidth}" />
@@ -198,7 +198,7 @@
                                     Width="{Binding EnergyDrinkSource.SegmentWidth}" />
                             </Grid.ColumnDefinitions>
 
-                            <Grid
+                            <Grid SafeAreaEdges="None"
                                 Grid.Column="0"
                                 BackgroundColor="{Binding CoffeeSource.Color}"
                                 IsClippedToBounds="True">
@@ -217,7 +217,7 @@
                                     VerticalTextAlignment="Center" />
                             </Grid>
 
-                            <Grid
+                            <Grid SafeAreaEdges="None"
                                 Grid.Column="1"
                                 BackgroundColor="{Binding TeaSource.Color}"
                                 IsClippedToBounds="True">
@@ -236,7 +236,7 @@
                                     VerticalTextAlignment="Center" />
                             </Grid>
 
-                            <Grid
+                            <Grid SafeAreaEdges="None"
                                 Grid.Column="2"
                                 BackgroundColor="{Binding EnergyDrinkSource.Color}"
                                 IsClippedToBounds="True">
@@ -256,7 +256,7 @@
                             </Grid>
                         </Grid>
                     </Border>
-                    <Grid
+                    <Grid SafeAreaEdges="None"
                         Grid.Row="2"
                         ColumnSpacing="15">
 

@@ -31,7 +31,7 @@ public partial class MainPageViewModel : ObservableObject
 
     private CaffeineSourceStatViewModel _energyDrinkSource =
         new(CaffeineConsumptionType.EnergyDrink, 0, 0);
-    private bool _isReplacingConsumptions;
+    private ObservableCollection<ConsumptionItemViewModel> _consumptions = [];
 
     private bool _isInitialized;
 
@@ -140,7 +140,7 @@ public partial class MainPageViewModel : ObservableObject
         }
     }
 
-    public ObservableCollection<ConsumptionItemViewModel> Consumptions { get; } = [];
+    public ObservableCollection<ConsumptionItemViewModel> Consumptions => _consumptions;
 
     // Инициализация. Подгрузка данных из бд
     public async Task InitializeAsync()
@@ -290,20 +290,14 @@ public partial class MainPageViewModel : ObservableObject
 
     private void ReplaceConsumptions(IEnumerable<CaffeineConsumption> consumptions)
     {
-        _isReplacingConsumptions = true;
-        try
-        {
-            Consumptions.Clear();
-            foreach (var consumption in consumptions.OrderByDescending(item => item.ConsumedAt))
-            {
-                Consumptions.Add(new ConsumptionItemViewModel(consumption));
-            }
-        }
-        finally
-        {
-            _isReplacingConsumptions = false;
-        }
-
+        // Publish one populated source instead of N native CollectionView insertions.
+        var replacement = new ObservableCollection<ConsumptionItemViewModel>(
+            consumptions.OrderByDescending(item => item.ConsumedAt)
+                .Select(item => new ConsumptionItemViewModel(item)));
+        _consumptions.CollectionChanged -= OnConsumptionsCollectionChanged;
+        _consumptions = replacement;
+        _consumptions.CollectionChanged += OnConsumptionsCollectionChanged;
+        OnPropertyChanged(nameof(Consumptions));
         RefreshConsumptionDerivedState();
     }
 
@@ -342,10 +336,7 @@ public partial class MainPageViewModel : ObservableObject
 
     private void OnConsumptionsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (!_isReplacingConsumptions)
-        {
-            RefreshConsumptionDerivedState();
-        }
+        RefreshConsumptionDerivedState();
     }
 
     private void OnConsumptionAdded(object? sender, CaffeineConsumption consumption)

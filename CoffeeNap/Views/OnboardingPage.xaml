@@ -8,7 +8,7 @@
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:OnboardingViewModel"
     BackgroundColor="{StaticResource PageBackgroundColor}"
-    SafeAreaEdges="All"
+    SafeAreaEdges="{OnPlatform Default=All, Android=None}"
     Shell.NavBarIsVisible="False"
     Shell.TabBarIsVisible="False">
 

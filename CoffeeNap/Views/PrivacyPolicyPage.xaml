@@ -5,10 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     BackgroundColor="{StaticResource SurfaceColor}"
+    SafeAreaEdges="{OnPlatform Default=All, Android=None}"
     Shell.NavBarIsVisible="False"
     NavigationPage.HasNavigationBar="False">
 
-    <Grid RowDefinitions="Auto, *" RowSpacing="20" Padding="12,0">
+    <Grid SafeAreaEdges="None" RowDefinitions="Auto, *" RowSpacing="20" Padding="12,0">
         
         <!-- Топ бар экрана -->
         <Border Grid.Row="0"
@@ -18,7 +19,7 @@
                 StrokeShape="RoundRectangle 300"
                 StrokeThickness="1">
 
-            <Grid ColumnDefinitions="54,*,54" ColumnSpacing="12">
+            <Grid SafeAreaEdges="None" ColumnDefinitions="54,*,54" ColumnSpacing="12">
                 <Button
                     Grid.Column="0"
                     Padding="15"

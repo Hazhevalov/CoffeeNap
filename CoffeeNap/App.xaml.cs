@@ -11,18 +11,21 @@ public partial class App : Application
     private readonly LocalizationService _localization;
     private readonly AppPageFactory _pageFactory;
     private readonly ILogger<App> _logger;
+    private readonly CalendarStatisticsService _calendarStatistics;
 
     public App(
         UserStateService userState,
         LocalizationService localization,
         AppPageFactory pageFactory,
-        ILogger<App> logger)
+        ILogger<App> logger,
+        CalendarStatisticsService calendarStatistics)
     {
         InitializeComponent();
         _userState = userState;
         _localization = localization;
         _pageFactory = pageFactory;
         _logger = logger;
+        _calendarStatistics = calendarStatistics;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
@@ -39,17 +42,12 @@ public partial class App : Application
             await _localization.InitializeAsync();
             await _userState.InitializeAsync();
 
-            var calendarPage = _pageFactory.CreateCalendarPage();
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                window.Page = new AppShell(
-                    _userState,
-                    _pageFactory.CreateOnboardingPage(),
-                    _pageFactory.CreateMainPage(),
-                    _pageFactory.CreateAddConsumptionPage(),
-                    calendarPage);
+                var shell = new AppShell(_userState, _pageFactory);
+                shell.Loaded += OnShellLoaded;
+                window.Page = shell;
             });
-            _ = WarmUpCalendarAsync(calendarPage);
         }
         catch (Exception exception)
         {
@@ -59,17 +57,27 @@ public partial class App : Application
         }
     }
 
-    private async Task WarmUpCalendarAsync(CalendarPage calendarPage)
+    private void OnShellLoaded(object? sender, EventArgs eventArgs)
+    {
+        if (sender is AppShell shell)
+        {
+            shell.Loaded -= OnShellLoaded;
+        }
+
+        // Warm only the data cache. Never construct or bind hidden views on the UI thread.
+        _ = Task.Run(WarmUpCalendarDataAsync);
+    }
+
+    private async Task WarmUpCalendarDataAsync()
     {
         try
         {
-            // Let the initially selected page render before doing hidden-page work.
-            await Task.Delay(500);
-            await calendarPage.WarmUpAsync();
+            var today = DateTime.Today;
+            await _calendarStatistics.GetInitialAsync(today, today).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
-            _logger.LogDebug(exception, "Calendar background warm-up failed.");
+            _logger.LogDebug(exception, "Calendar data warm-up failed; the page will retry on appearance.");
         }
     }
 

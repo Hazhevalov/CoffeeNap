@@ -11,26 +11,27 @@
     Title="{localization:Translate AddConsumptionTitle}"
     x:DataType="viewModels:AddConsumptionPageViewModel"
     BackgroundColor="{StaticResource PageBackgroundColor}"
-    SafeAreaEdges="All"
+    SafeAreaEdges="{OnPlatform Default=All, Android=None}"
     Shell.NavBarIsVisible="False">
 
-    <Grid RowSpacing="0" Padding="12,0">
+    <Grid SafeAreaEdges="None" RowSpacing="0" Padding="12,0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="86" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="88" />
         </Grid.RowDefinitions>
 
         <!--  Top Bar  -->
         <controls:MainHeaderView
             Grid.Row="0"
+            HeightRequest="86"
             BindingContext="{Binding Header}"
             HorizontalOptions="Fill"
-            SafeAreaEdges="Container"
+            SafeAreaEdges="None"
             VerticalOptions="Start" />
 
         <!--  Контент под header'ом  -->
-        <Grid
+        <Grid SafeAreaEdges="None"
             Grid.Row="1"
             Padding="0,10"
             IsVisible="True"
@@ -39,7 +40,7 @@
             VerticalOptions="Fill">
 
             <!--  Кнопка назад и прогресс  -->
-            <Grid Grid.Row="0">
+            <Grid SafeAreaEdges="None" Grid.Row="0">
 
                 <Button
                     Padding="15"
@@ -103,7 +104,7 @@
             BindingContext="{Binding Navigation}"
             HorizontalOptions="Center"
             MinimumHeightRequest="78"
-            SafeAreaEdges="Container"
+            SafeAreaEdges="None"
             VerticalOptions="End"
             ZIndex="20">
 
