@@ -1,4 +1,5 @@
 using CoffeeNap.Models;
+using CoffeeNap.Helpers;
 using SQLite;
 
 namespace CoffeeNap.Data;
@@ -25,8 +26,10 @@ public sealed class AppDatabase
 
     public async Task InitializeAsync()
     {
+        var startedAt = PerformanceTrace.Start();
         if (_isInitialized)
         {
+            PerformanceTrace.Elapsed("AppDatabase.InitializeAsync(cached)", startedAt);
             return;
         }
 
@@ -60,6 +63,7 @@ public sealed class AppDatabase
             }
 
             _isInitialized = true;
+            PerformanceTrace.Elapsed("AppDatabase.InitializeAsync", startedAt);
         }
         finally
         {
@@ -79,23 +83,33 @@ public sealed class AppDatabase
     public Task<int> SaveSettingsAsync(AppSettings settings) =>
         _connection.InsertOrReplaceAsync(settings);
 
-    public Task<List<CaffeineConsumption>> GetConsumptionsAsync() =>
-        _connection.Table<CaffeineConsumption>()
+    public async Task<List<CaffeineConsumption>> GetConsumptionsAsync()
+    {
+        var startedAt = PerformanceTrace.Start();
+        var result = await _connection.Table<CaffeineConsumption>()
             .OrderByDescending(consumption => consumption.ConsumedAt)
             .ToListAsync();
+        PerformanceTrace.Elapsed("AppDatabase.GetConsumptions", startedAt);
+        return result;
+    }
 
     public async Task<CaffeineConsumption?> GetConsumptionAsync(int id) =>
         await _connection.FindAsync<CaffeineConsumption>(id);
 
-    public Task<List<CaffeineConsumption>> GetConsumptionsBetweenAsync(
+    public async Task<List<CaffeineConsumption>> GetConsumptionsBetweenAsync(
         DateTimeOffset fromInclusive,
-        DateTimeOffset toExclusive) =>
-        _connection.Table<CaffeineConsumption>()
+        DateTimeOffset toExclusive)
+    {
+        var startedAt = PerformanceTrace.Start();
+        var result = await _connection.Table<CaffeineConsumption>()
             .Where(consumption =>
                 consumption.ConsumedAt >= fromInclusive &&
                 consumption.ConsumedAt < toExclusive)
             .OrderByDescending(consumption => consumption.ConsumedAt)
             .ToListAsync();
+        PerformanceTrace.Elapsed("AppDatabase.GetConsumptionsBetween", startedAt);
+        return result;
+    }
 
     public Task<int> InsertConsumptionAsync(CaffeineConsumption consumption) =>
         _connection.InsertAsync(consumption);

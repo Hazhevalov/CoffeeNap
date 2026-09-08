@@ -23,17 +23,17 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="72" />
+                <ColumnDefinition Width="72" />
+                <ColumnDefinition Width="72" />
             </Grid.ColumnDefinitions>
 
             <Button
-                Grid.Row="1"
+                Grid.Row="0"
                 Grid.Column="0"
-                WidthRequest="56"
+                WidthRequest="72"
                 HeightRequest="56"
-                Padding="17"
+                Padding="25,17"
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
                 BackgroundColor="Transparent"
@@ -48,8 +48,6 @@
                             TargetType="Button"
                             Binding="{Binding IsAddConsumptionActive}"
                             Value="True">
-                        <Setter Property="WidthRequest" Value="96" />
-                        <Setter Property="Padding" Value="35,17" />
                         <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
                         <Setter Property="CornerRadius" Value="28" />
                         <Setter Property="ImageSource" Value="add_active_ico.png" />
@@ -58,11 +56,11 @@
             </Button>
 
             <Button
-                Grid.Row="1"
+                Grid.Row="0"
                 Grid.Column="1"
-                WidthRequest="56"
+                WidthRequest="72"
                 HeightRequest="56"
-                Padding="17"
+                Padding="25,17"
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
                 BackgroundColor="Transparent"
@@ -77,8 +75,6 @@
                             TargetType="Button"
                             Binding="{Binding IsHomeActive}"
                             Value="True">
-                        <Setter Property="WidthRequest" Value="96" />
-                        <Setter Property="Padding" Value="35,17" />
                         <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
                         <Setter Property="CornerRadius" Value="28" />
                         <Setter Property="ImageSource" Value="home_active_ico.png" />
@@ -87,11 +83,11 @@
             </Button>
 
             <Button
-                Grid.Row="1"
+                Grid.Row="0"
                 Grid.Column="2"
-                WidthRequest="56"
+                WidthRequest="72"
                 HeightRequest="56"
-                Padding="17"
+                Padding="25,17"
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
                 BackgroundColor="Transparent"
@@ -105,8 +101,6 @@
                             TargetType="Button"
                             Binding="{Binding IsCalendarActive}"
                             Value="True">
-                        <Setter Property="WidthRequest" Value="96" />
-                        <Setter Property="Padding" Value="35,17" />
                         <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
                         <Setter Property="CornerRadius" Value="28" />
                         <Setter Property="ImageSource" Value="calendar_active_ico.png" />

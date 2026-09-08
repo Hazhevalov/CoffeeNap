@@ -105,16 +105,6 @@
             MinimumHeightRequest="78"
             SafeAreaEdges="Container"
             VerticalOptions="End"
-            ZIndex="20">
-
-            <controls:BottomNavigationBar.Shadow>
-                <Shadow
-                    Brush="#40000000"
-                    Opacity="0.45"
-                    Radius="14"
-                    Offset="0,-6" />
-            </controls:BottomNavigationBar.Shadow>
-
-        </controls:BottomNavigationBar>
+            ZIndex="20" />
     </Grid>
 </ContentPage>

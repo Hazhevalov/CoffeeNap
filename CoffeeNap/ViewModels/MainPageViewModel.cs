@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using CoffeeNap.Models;
 using CoffeeNap.Services;
 using CoffeeNap.Converters;
+using CoffeeNap.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
@@ -46,6 +47,7 @@ public partial class MainPageViewModel : ObservableObject
         MainHeaderViewModel header,
         BottomNavigationViewModel navigation)
     {
+        var startedAt = PerformanceTrace.Start();
         _dataService = dataService;
         _localization = localization;
         _logger = logger;
@@ -57,6 +59,7 @@ public partial class MainPageViewModel : ObservableObject
         _dataService.ConsumptionDeleted += OnConsumptionDeleted;
         _dataService.UserDataDeleted += OnUserDataDeleted;
         _localization.CultureChanged += OnCultureChanged;
+        PerformanceTrace.Elapsed("MainPageViewModel.ctor", startedAt);
     }
 
     public MainHeaderViewModel Header { get; }
@@ -145,8 +148,10 @@ public partial class MainPageViewModel : ObservableObject
     // Инициализация. Подгрузка данных из бд
     public async Task InitializeAsync()
     {
+        var startedAt = PerformanceTrace.Start();
         if (IsInitialized)
         {
+            PerformanceTrace.Elapsed("MainPageViewModel.InitializeAsync(cached)", startedAt);
             return;
         }
 
@@ -178,6 +183,7 @@ public partial class MainPageViewModel : ObservableObject
         {
             IsBusy = false;
             _operationLock.Release();
+            PerformanceTrace.Elapsed("MainPageViewModel.InitializeAsync", startedAt);
         }
     }
 

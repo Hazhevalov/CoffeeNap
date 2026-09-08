@@ -140,10 +140,6 @@
             BindingContext="{Binding Navigation}"
             HorizontalOptions="Center"
             VerticalOptions="Start"
-            ZIndex="20">
-            <controls:BottomNavigationBar.Shadow>
-                <Shadow Brush="#40000000" Offset="0,-6" Opacity="0.45" Radius="14" />
-            </controls:BottomNavigationBar.Shadow>
-        </controls:BottomNavigationBar>
+            ZIndex="20" />
     </Grid>
 </ContentPage>

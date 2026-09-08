@@ -1,5 +1,6 @@
 using CoffeeNap.Models;
 using CoffeeNap.Services;
+using CoffeeNap.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
@@ -36,6 +37,7 @@ public partial class CalendarPageViewModel : ObservableObject
         MainHeaderViewModel header,
         BottomNavigationViewModel navigation)
     {
+        var startedAt = PerformanceTrace.Start();
         _statisticsService = statisticsService;
         _localization = localization;
         _logger = logger;
@@ -51,6 +53,7 @@ public partial class CalendarPageViewModel : ObservableObject
         Days = BuildCalendarDays(_publishedMonth, today, EmptyStatistics);
         WeeklyDays = BuildWeeklyDays(today, EmptyStatistics);
         _localization.CultureChanged += OnCultureChanged;
+        PerformanceTrace.Elapsed("CalendarPageViewModel.ctor", startedAt);
     }
 
     private static IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> EmptyStatistics { get; } =
@@ -116,10 +119,9 @@ public partial class CalendarPageViewModel : ObservableObject
     /// </summary>
     public Task RefreshAsync() => LoadCurrentStateAsync(prefetchAdjacentMonths: true);
 
-    public Task WarmUpAsync() => LoadCurrentStateAsync(prefetchAdjacentMonths: false);
-
     private async Task LoadCurrentStateAsync(bool prefetchAdjacentMonths)
     {
+        var startedAt = PerformanceTrace.Start();
         await _initializationLock.WaitAsync();
         try
         {
@@ -154,6 +156,7 @@ public partial class CalendarPageViewModel : ObservableObject
         {
             await SetLoadingStateAsync(false, LoadError);
             _initializationLock.Release();
+            PerformanceTrace.Elapsed("CalendarPageViewModel.RefreshAsync", startedAt);
         }
     }
 
