@@ -20,6 +20,7 @@
 
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Spacing="10">
+                <!-- Выбор месяца -->
                 <Border
                     Padding="10"
                     BackgroundColor="{StaticResource SurfaceColor}"
@@ -61,6 +62,7 @@
                     </Grid>
                 </Border>
 
+                <!-- Блок календаря -->
                 <Border
                     Padding="14,18"
                     BackgroundColor="{StaticResource SurfaceColor}"
@@ -100,7 +102,34 @@
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
+                
+                <!-- Лучшее комбо -->
+                <Border
+                    Background="{StaticResource White}"
+                    Stroke="{StaticResource DividerColor}"
+                    StrokeThickness="1"
+                    StrokeShape="20"
+                    Padding="25,20">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Ваше лучшее комбо:"/>
+                        <Label Grid.Column="1" Text="15 дней"/>
+                    </Grid>
+                </Border>
 
+                <!-- Максимальное кол-во выпитого кофеина -->
+                <Border
+                    Background="{StaticResource White}"
+                    Stroke="{StaticResource DividerColor}"
+                    StrokeThickness="1"
+                    StrokeShape="20"
+                    Padding="25,20">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Больше всего выпили в день:"/>
+                        <Label Grid.Column="1" Text="315 мг."/>
+                    </Grid>
+                </Border>
+
+                <!-- Статистика источников кофеина -->
                 <Border
                     Padding="15,20"
                     BackgroundColor="{StaticResource SurfaceColor}"
@@ -132,6 +161,22 @@
                     HorizontalTextAlignment="Center"
                     Text="{Binding LoadError}"
                     TextColor="{StaticResource ValidationErrorColor}" />
+
+                <!-- Кнопка "Месячная сводка" -->
+                <Border 
+                    Background="{StaticResource White}"
+                    Stroke="{StaticResource DividerColor}"
+                    StrokeThickness="1"
+                    StrokeShape="20"
+                    Padding="25,20">
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Image Source="monthly_summary.png"/>
+                            <Label Text="Месячная сводка"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                </Border>
             </VerticalStackLayout>
         </ScrollView>
 
