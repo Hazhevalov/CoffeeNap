@@ -9,7 +9,7 @@
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:SettingsPageViewModel"
     Title="{localization:Translate SettingsTitle}"
-    BackgroundColor="{StaticResource SurfaceColor}"
+    BackgroundColor="{StaticResource PageBackgroundColor}"
     SafeAreaEdges="{OnPlatform Default=All, Android=None}"
     Shell.NavBarIsVisible="False">
 
@@ -59,7 +59,8 @@
         <VerticalStackLayout Grid.Row="1" Spacing="10">
             
             <!--  Кнопка смены языка  -->
-            <Border Padding="20" Stroke="{StaticResource DividerColor}">
+            <Border Padding="15" BackgroundColor="{StaticResource White}" 
+                Stroke="{StaticResource DividerColor}">
                 <Border.Behaviors>
                     <behaviors:PressAnimationBehavior />
                 </Border.Behaviors>
@@ -93,7 +94,8 @@
             </Border>
 
             <!--  Кнопка политики конфиденциальности  -->
-            <Border Padding="20" Stroke="{StaticResource DividerColor}">
+            <Border Padding="15" BackgroundColor="{StaticResource White}" 
+                Stroke="{StaticResource DividerColor}">
                 <Border.Behaviors>
                     <behaviors:PressAnimationBehavior />
                 </Border.Behaviors>
@@ -119,7 +121,8 @@
             </Border>
 
             <!--  Кнопка удаления данных  -->
-            <Border Padding="20" Stroke="{StaticResource DividerColor}">
+            <Border Padding="15" BackgroundColor="{StaticResource White}" 
+                Stroke="{StaticResource DividerColor}">
                 <Border.Behaviors>
                     <behaviors:PressAnimationBehavior />
                 </Border.Behaviors>
@@ -354,14 +357,6 @@
             SafeAreaEdges="None"
             VerticalOptions="End"
             ZIndex="20">
-
-            <controls:BottomNavigationBar.Shadow>
-                <Shadow
-                    Brush="#40000000"
-                    Opacity="0.45"
-                    Radius="14"
-                    Offset="0,-6" />
-            </controls:BottomNavigationBar.Shadow>
 
         </controls:BottomNavigationBar>
     </Grid>

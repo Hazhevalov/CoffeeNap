@@ -111,8 +111,8 @@
                     StrokeShape="20"
                     Padding="25,20">
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Grid.Column="0" Text="Ваше лучшее комбо:"/>
-                        <Label Grid.Column="1" Text="15 дней"/>
+                        <Label TextColor="{StaticResource InkColor}" Grid.Column="0" Text="Ваше лучшее комбо:"/>
+                        <Label TextColor="{StaticResource InkColor}" Grid.Column="1" Text="15 дней"/>
                     </Grid>
                 </Border>
 
@@ -124,8 +124,8 @@
                     StrokeShape="20"
                     Padding="25,20">
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Grid.Column="0" Text="Больше всего выпили в день:"/>
-                        <Label Grid.Column="1" Text="315 мг."/>
+                        <Label TextColor="{StaticResource InkColor}" Grid.Column="0" Text="Больше всего выпили в день:"/>
+                        <Label TextColor="{StaticResource InkColor}" Grid.Column="1" Text="315 мг."/>
                     </Grid>
                 </Border>
 
@@ -171,7 +171,8 @@
                     Padding="25,20">
                         <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
                             <Image Source="monthly_summary.png"/>
-                            <Label Text="Месячная сводка"
+                            <Label TextColor="{StaticResource InkColor}" 
+                                Text="Месячная сводка"
                                 FontSize="16"
                                 FontAttributes="Bold"
                                 VerticalOptions="Center"/>
@@ -186,9 +187,6 @@
             HorizontalOptions="Center"
             VerticalOptions="Start"
             ZIndex="20">
-            <controls:BottomNavigationBar.Shadow>
-                <Shadow Brush="#40000000" Offset="0,-6" Opacity="0.45" Radius="14" />
-            </controls:BottomNavigationBar.Shadow>
         </controls:BottomNavigationBar>
     </Grid>
 </ContentPage>

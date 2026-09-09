@@ -44,7 +44,7 @@
                 StrokeThickness="0">
 
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="30" />
+                    <RoundRectangle CornerRadius="25" />
                 </Border.StrokeShape>
 
                 <Border.Shadow>
@@ -140,7 +140,7 @@
                 StrokeThickness="1">
 
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="30" />
+                    <RoundRectangle CornerRadius="25" />
                 </Border.StrokeShape>
 
                 <Border.Shadow>
