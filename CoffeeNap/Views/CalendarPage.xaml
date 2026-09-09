@@ -109,10 +109,20 @@
                     Stroke="{StaticResource DividerColor}"
                     StrokeThickness="1"
                     StrokeShape="20"
-                    Padding="25,20">
+                    Padding="15,20">
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label TextColor="{StaticResource InkColor}" Grid.Column="0" Text="Ваше лучшее комбо:"/>
-                        <Label TextColor="{StaticResource InkColor}" Grid.Column="1" Text="15 дней"/>
+                        <HorizontalStackLayout Spacing="10">
+                            <Image WidthRequest="24" 
+                                HeightRequest="24" 
+                                Source="best_combo_ico.png"/>
+
+                            <Label TextColor="{StaticResource InkColor}" 
+                                Grid.Column="0" 
+                                VerticalOptions="Center"
+                                Text="Ваше лучшее комбо:"/>
+                        </HorizontalStackLayout>
+
+                        <Label VerticalOptions="Center" TextColor="{StaticResource InkColor}" Grid.Column="1" Text="15 дней"/>
                     </Grid>
                 </Border>
 
@@ -122,10 +132,21 @@
                     Stroke="{StaticResource DividerColor}"
                     StrokeThickness="1"
                     StrokeShape="20"
-                    Padding="25,20">
+                    Padding="15,20">
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label TextColor="{StaticResource InkColor}" Grid.Column="0" Text="Больше всего выпили в день:"/>
-                        <Label TextColor="{StaticResource InkColor}" Grid.Column="1" Text="315 мг."/>
+
+                        <HorizontalStackLayout Spacing="10">
+                            <Image WidthRequest="24" 
+                                HeightRequest="24" 
+                                Source="record_ico.png"/>
+
+                            <Label TextColor="{StaticResource InkColor}" 
+                                Grid.Column="0" 
+                                VerticalOptions="Center"
+                                Text="Больше всего выпили в день:"/>
+                        </HorizontalStackLayout>
+
+                        <Label VerticalOptions="Center" TextColor="{StaticResource InkColor}" Grid.Column="1" Text="315 мг."/>
                     </Grid>
                 </Border>
 
@@ -170,7 +191,7 @@
                     StrokeShape="20"
                     Padding="25,20">
                         <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Image Source="monthly_summary.png"/>
+                            <Image WidthRequest="32" HeightRequest="32" Source="monthly_summary.png"/>
                             <Label TextColor="{StaticResource InkColor}" 
                                 Text="Месячная сводка"
                                 FontSize="16"
