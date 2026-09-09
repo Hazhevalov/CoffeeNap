@@ -47,10 +47,10 @@
 
 	<ItemGroup>
 		<!-- Иконка: appicon.svg — фон, appiconfg.svg — адаптивный передний слой. -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#ffffff" />
 
 		<!-- Splash screen, автоматически преобразуемый MAUI в платформенные ресурсы. -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#ffffff" BaseSize="128,128" />
 
 		<!-- Все изображения папки доступны в XAML по одному имени файла. -->
 		<MauiImage Include="Resources\Images\*" />

@@ -102,7 +102,57 @@
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
-                
+
+                <!-- Кнопка "Месячная сводка" -->
+                <Border 
+                    Background="{StaticResource White}"
+                    Stroke="{StaticResource DividerColor}"
+                    StrokeThickness="1"
+                    StrokeShape="20"
+                    Padding="25,20">
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Image WidthRequest="32" HeightRequest="32" Source="monthly_summary.png"/>
+                            <Label TextColor="{StaticResource InkColor}" 
+                                Text="Месячная сводка"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                </Border>
+
+                <!-- Статистика источников кофеина -->
+                <Border
+                    Padding="15,20"
+                    BackgroundColor="{StaticResource SurfaceColor}"
+                    Stroke="{StaticResource DividerColor}"
+                    StrokeShape="RoundRectangle 25"
+                    StrokeThickness="1">
+                    <VerticalStackLayout Spacing="16">
+                        <controls:WeeklyConsumptionChartView ItemsSource="{Binding WeeklyDays}" />
+
+                        <HorizontalStackLayout HorizontalOptions="Start" Spacing="20">
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <BoxView BackgroundColor="{StaticResource CaffeeIcoFill}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
+                                <Label FontSize="12" Text="{localization:Translate Coffee}" TextColor="{StaticResource MutedTextColor}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <BoxView BackgroundColor="{StaticResource TeaIcoFill}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
+                                <Label FontSize="12" Text="{localization:Translate Tea}" TextColor="{StaticResource MutedTextColor}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <BoxView BackgroundColor="{StaticResource EnergyDrinkIcoFill}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
+                                <Label FontSize="12" Text="{localization:Translate EnergyDrinks}" TextColor="{StaticResource MutedTextColor}" />
+                            </HorizontalStackLayout>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label
+                    IsVisible="{Binding HasLoadError}"
+                    HorizontalTextAlignment="Center"
+                    Text="{Binding LoadError}"
+                    TextColor="{StaticResource ValidationErrorColor}" />
+
                 <!-- Лучшее комбо -->
                 <Border
                     Background="{StaticResource White}"
@@ -148,56 +198,6 @@
 
                         <Label VerticalOptions="Center" TextColor="{StaticResource InkColor}" Grid.Column="1" Text="315 мг."/>
                     </Grid>
-                </Border>
-
-                <!-- Статистика источников кофеина -->
-                <Border
-                    Padding="15,20"
-                    BackgroundColor="{StaticResource SurfaceColor}"
-                    Stroke="{StaticResource DividerColor}"
-                    StrokeShape="RoundRectangle 25"
-                    StrokeThickness="1">
-                    <VerticalStackLayout Spacing="16">
-                        <controls:WeeklyConsumptionChartView ItemsSource="{Binding WeeklyDays}" />
-
-                        <HorizontalStackLayout HorizontalOptions="Start" Spacing="20">
-                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                                <BoxView BackgroundColor="{StaticResource CaffeeIcoFill}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
-                                <Label FontSize="12" Text="{localization:Translate Coffee}" TextColor="{StaticResource MutedTextColor}" />
-                            </HorizontalStackLayout>
-                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                                <BoxView BackgroundColor="{StaticResource TeaIcoFill}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
-                                <Label FontSize="12" Text="{localization:Translate Tea}" TextColor="{StaticResource MutedTextColor}" />
-                            </HorizontalStackLayout>
-                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                                <BoxView BackgroundColor="{StaticResource EnergyDrinkIcoFill}" CornerRadius="5" HeightRequest="10" VerticalOptions="Center" WidthRequest="10" />
-                                <Label FontSize="12" Text="{localization:Translate EnergyDrinks}" TextColor="{StaticResource MutedTextColor}" />
-                            </HorizontalStackLayout>
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
-                </Border>
-
-                <Label
-                    IsVisible="{Binding HasLoadError}"
-                    HorizontalTextAlignment="Center"
-                    Text="{Binding LoadError}"
-                    TextColor="{StaticResource ValidationErrorColor}" />
-
-                <!-- Кнопка "Месячная сводка" -->
-                <Border 
-                    Background="{StaticResource White}"
-                    Stroke="{StaticResource DividerColor}"
-                    StrokeThickness="1"
-                    StrokeShape="20"
-                    Padding="25,20">
-                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Image WidthRequest="32" HeightRequest="32" Source="monthly_summary.png"/>
-                            <Label TextColor="{StaticResource InkColor}" 
-                                Text="Месячная сводка"
-                                FontSize="16"
-                                FontAttributes="Bold"
-                                VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
                 </Border>
             </VerticalStackLayout>
         </ScrollView>
