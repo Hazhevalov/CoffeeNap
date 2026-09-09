@@ -19,7 +19,7 @@
   <data name="ErrorTitle" xml:space="preserve"><value>Ошибка</value></data>
   <data name="Ok" xml:space="preserve"><value>ОК</value></data>
   <data name="Welcome" xml:space="preserve"><value>Добро пожаловать,</value></data>
-  <data name="DailyCaffeineLimit" xml:space="preserve"><value>Дневная&#10;норма кофеина</value></data>
+  <data name="DailyCaffeineLimit" xml:space="preserve"><value>Дневная норма кофеина</value></data>
   <data name="Milligrams" xml:space="preserve"><value> миллиграмм</value></data>
   <data name="CaffeineSources" xml:space="preserve"><value>Ваши&#10;источники кофеина</value></data>
   <data name="Consumptions" xml:space="preserve"><value>Ваши употребления</value></data>

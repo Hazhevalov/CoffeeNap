@@ -67,7 +67,7 @@
                     Padding="14,18"
                     BackgroundColor="{StaticResource SurfaceColor}"
                     Stroke="{StaticResource DividerColor}"
-                    StrokeShape="RoundRectangle 30"
+                    StrokeShape="RoundRectangle 25"
                     StrokeThickness="1">
                     <VerticalStackLayout Spacing="14">
                         <Grid SafeAreaEdges="None" ColumnDefinitions="*,*,*,*,*,*,*">
@@ -134,7 +134,7 @@
                     Padding="15,20"
                     BackgroundColor="{StaticResource SurfaceColor}"
                     Stroke="{StaticResource DividerColor}"
-                    StrokeShape="RoundRectangle 30"
+                    StrokeShape="RoundRectangle 25"
                     StrokeThickness="1">
                     <VerticalStackLayout Spacing="16">
                         <controls:WeeklyConsumptionChartView ItemsSource="{Binding WeeklyDays}" />

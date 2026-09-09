@@ -81,17 +81,20 @@
                                 BindingContextChanged="OnSwipeBindingContextChanged"
                                 SwipeEnded="OnSwipeEnded"
                                 SwipeStarted="OnSwipeStarted">
+
+                                <!-- Блок свайпающийся вправо -->
                                 <SwipeView.RightItems>
                                     <SwipeItems Mode="Reveal">
                                         <SwipeItemView>
                                             <Border
-                                                Margin="0,3,10,3"
+                                                Margin="10,3,10,3"
                                                 Padding="18"
                                                 BackgroundColor="{StaticResource CaffeineProgressLimit}"
                                                 StrokeThickness="0"
-                                                WidthRequest="72">
+                                                WidthRequest="64"
+                                                HeightRequest="64">
                                                 <Border.StrokeShape>
-                                                    <RoundRectangle CornerRadius="16" />
+                                                    <RoundRectangle CornerRadius="20" />
                                                 </Border.StrokeShape>
                                                 <Border.GestureRecognizers>
                                                     <TapGestureRecognizer
@@ -104,10 +107,10 @@
                                                 </Border.Behaviors>
                                                 <Image
                                                     Aspect="AspectFit"
-                                                    HeightRequest="64"
+                                                    HeightRequest="24"
+                                                    WidthRequest="24"
                                                     InputTransparent="True"
-                                                    Source="trash.png"
-                                                    WidthRequest="64" />
+                                                    Source="trash.png" />
                                             </Border>
                                         </SwipeItemView>
                                     </SwipeItems>

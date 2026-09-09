@@ -19,7 +19,7 @@
   <data name="ErrorTitle" xml:space="preserve"><value>Error</value></data>
   <data name="Ok" xml:space="preserve"><value>OK</value></data>
   <data name="Welcome" xml:space="preserve"><value>Welcome,</value></data>
-  <data name="DailyCaffeineLimit" xml:space="preserve"><value>Daily caffeine&#10;limit</value></data>
+  <data name="DailyCaffeineLimit" xml:space="preserve"><value>Daily caffeine limit</value></data>
   <data name="Milligrams" xml:space="preserve"><value> milligrams</value></data>
   <data name="CaffeineSources" xml:space="preserve"><value>Your caffeine&#10;sources</value></data>
   <data name="Consumptions" xml:space="preserve"><value>Your consumptions</value></data>

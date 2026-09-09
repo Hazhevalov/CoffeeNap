@@ -67,20 +67,14 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="22" />
                         </Grid.ColumnDefinitions>
-                        
+
                         <Label
                             FontFamily="Inter"
                             FontSize="20"
                             FontAttributes="Bold"
-                            LineHeight="1.1"
+                            LineHeight="1.2"
                             Text="{localization:Translate DailyCaffeineLimit}"
                             TextColor="{StaticResource SurfaceColor}" />
-                        
-                        <Image
-                            Grid.Column="1"
-                            HorizontalOptions="End"
-                            VerticalOptions="Center"
-                            Source="more_ico.png" />
                     </Grid>
 
                     <Grid SafeAreaEdges="None"
@@ -119,7 +113,7 @@
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span
-                                    FontSize="36"
+                                    FontSize="32"
                                     FontAttributes="Bold"
                                     Text="{Binding CurrentCaffeine, StringFormat='{0:0}'}" />
                                 <Span
@@ -142,14 +136,6 @@
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="25" />
                 </Border.StrokeShape>
-
-                <Border.Shadow>
-                    <Shadow
-                        Brush="{StaticResource CardShadowBrush}"
-                        Offset="0,1"
-                        Opacity="0.08"
-                        Radius="4" />
-                </Border.Shadow>
                 
                 <Grid SafeAreaEdges="None" RowSpacing="20">
                     <Grid.RowDefinitions>
@@ -158,6 +144,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
+                    <!-- Заголовок блока и кнопка перехода -->
                     <Grid SafeAreaEdges="None" ColumnSpacing="8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -179,6 +166,7 @@
                             Source="more_black_ico.png" />
                     </Grid>
 
+                    <!-- Полосы статистики -->
                     <Border
                         Grid.Row="1"
                         BackgroundColor="{StaticResource DividerColor}"
@@ -198,6 +186,8 @@
                                     Width="{Binding EnergyDrinkSource.SegmentWidth}" />
                             </Grid.ColumnDefinitions>
 
+                            <!-- Легенда блока -->
+                            <!-- Кофе -->
                             <Grid SafeAreaEdges="None"
                                 Grid.Column="0"
                                 BackgroundColor="{Binding CoffeeSource.Color}"
@@ -217,6 +207,7 @@
                                     VerticalTextAlignment="Center" />
                             </Grid>
 
+                            <!-- Чой -->
                             <Grid SafeAreaEdges="None"
                                 Grid.Column="1"
                                 BackgroundColor="{Binding TeaSource.Color}"
@@ -236,6 +227,7 @@
                                     VerticalTextAlignment="Center" />
                             </Grid>
 
+                            <!-- Энергетик -->
                             <Grid SafeAreaEdges="None"
                                 Grid.Column="2"
                                 BackgroundColor="{Binding EnergyDrinkSource.Color}"
@@ -256,6 +248,7 @@
                             </Grid>
                         </Grid>
                     </Border>
+
                     <Grid SafeAreaEdges="None"
                         Grid.Row="2"
                         ColumnSpacing="15">
