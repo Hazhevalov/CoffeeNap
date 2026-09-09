@@ -71,17 +71,21 @@
                 </Border.StrokeShape>
 
                 <Grid SafeAreaEdges="None" ColumnDefinitions="*,*">
-                    <Label
-                        Grid.Column="0"
-                        FontAttributes="Bold"
-                        FontSize="16"
-                        HorizontalTextAlignment="Start"
-                        Text="{localization:Translate Language}"
-                        TextColor="{StaticResource InkColor}" />
+                    <HorizontalStackLayout Grid.Column="0" Spacing="10">
+                        <Image WidthRequest="32" Source="language_ico.png"/>
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Start"
+                            Text="{localization:Translate Language}"
+                            TextColor="{StaticResource InkColor}" />
+                    </HorizontalStackLayout>
 
                     <Label
                         Grid.Column="1"
                         FontSize="16"
+                        VerticalOptions="Center"
                         HorizontalTextAlignment="End"
                         Text="{Binding CurrentLanguageDisplayName}"
                         TextColor="{StaticResource MutedTextColor}" />
@@ -101,13 +105,16 @@
                 </Border.StrokeShape>
 
                 <Grid SafeAreaEdges="None" ColumnDefinitions="*,*">
-                    <Label
-                        Grid.Column="0"
-                        FontAttributes="Bold"
-                        FontSize="15"
-                        HorizontalTextAlignment="Start"
-                        Text="{localization:Translate PrivacyPolicy}"
-                        TextColor="{StaticResource InkColor}" />
+                    <HorizontalStackLayout Grid.Column="0" Spacing="10">
+                        <Image WidthRequest="32" Source="pp_ico.png"/>
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="15"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Start"
+                            Text="{localization:Translate PrivacyPolicy}"
+                            TextColor="{StaticResource InkColor}" />
+                    </HorizontalStackLayout>
                 </Grid>
             </Border>
 
@@ -124,13 +131,17 @@
                 </Border.StrokeShape>
 
                 <Grid SafeAreaEdges="None" ColumnDefinitions="*,*">
-                    <Label
-                        Grid.Column="0"
-                        FontAttributes="Bold"
-                        FontSize="16"
-                        HorizontalTextAlignment="Start"
-                        Text="{localization:Translate DeleteData}"
-                        TextColor="{StaticResource ValidationErrorColor}" />
+                    <HorizontalStackLayout Spacing="10">
+                        <Image WidthRequest="32" Source="delete_ico.png"/>
+                        <Label
+                            Grid.Column="0"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Start"
+                            Text="{localization:Translate DeleteData}"
+                            TextColor="{StaticResource ValidationErrorColor}" />
+                    </HorizontalStackLayout>
                 </Grid>
             </Border>
         </VerticalStackLayout>
@@ -260,6 +271,8 @@
                 ZIndex="20"
                 Padding="16,20" 
                 StrokeShape="20"
+                Stroke="{StaticResource DividerColor}"
+                StrokeThickness="1"
                 VerticalOptions="Center">
             
             <VerticalStackLayout Spacing="20">
