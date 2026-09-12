@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <!-- Compile the actual platform-independent sources so tests run without MAUI. -->
+  <ItemGroup>
+    <Compile Include="../../CoffeeNap/Models/**/*.cs" LinkBase="App/Models" />
+    <Compile Include="../../CoffeeNap/Data/DatabaseConstants.cs" LinkBase="App/Data" />
+    <Compile Include="../../CoffeeNap/Services/Consumption/*.cs" LinkBase="App/Services" />
+    <Compile Include="../../CoffeeNap/Services/Statistics/*.cs"
+             Exclude="../../CoffeeNap/Services/Statistics/CalendarStatisticsService.cs" LinkBase="App/Services" />
+    <Compile Include="../../CoffeeNap/Services/Localization/LocalizationService.cs" LinkBase="App/Services" />
+    <Compile Include="../../CoffeeNap/Services/Persistence/IAppDataService.cs" LinkBase="App/Services" />
+    <EmbeddedResource Include="../../CoffeeNap/Resources/Localization/AppResources.resx"
+                      ManifestResourceName="CoffeeNap.Resources.Localization.AppResources" />
+    <EmbeddedResource Include="../../CoffeeNap/Resources/Localization/AppResources.en.resx"
+                      ManifestResourceName="CoffeeNap.Resources.Localization.AppResources.en" />
+  </ItemGroup>
+
+</Project>

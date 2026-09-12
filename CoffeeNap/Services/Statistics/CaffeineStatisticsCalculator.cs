@@ -21,11 +21,4 @@ public static class CaffeineStatisticsCalculator
             .Sum(consumption => Math.Max(0, consumption.CaffeineMg));
     }
 
-    public static IReadOnlyDictionary<CaffeineConsumptionType, int> CountBySource(
-        IEnumerable<CaffeineConsumption> consumptions)
-    {
-        var distribution = ConsumptionTypeDistributionCalculator.Calculate(consumptions);
-        return Enum.GetValues<CaffeineConsumptionType>()
-            .ToDictionary(type => type, distribution.GetCount);
-    }
 }

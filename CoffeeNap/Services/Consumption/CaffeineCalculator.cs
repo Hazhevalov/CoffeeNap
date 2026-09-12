@@ -2,11 +2,6 @@ using CoffeeNap.Models;
 
 namespace CoffeeNap.Services;
 
-public interface ICaffeineCalculator
-{
-    ConsumptionCalculationResult Calculate(AddConsumptionQuizState state);
-}
-
 // Примерная оценка кофеина
 public sealed class CaffeineCalculator : ICaffeineCalculator
 {

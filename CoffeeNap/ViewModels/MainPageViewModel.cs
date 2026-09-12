@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using CoffeeNap.Models;
 using CoffeeNap.Services;
-using CoffeeNap.Converters;
+using CoffeeNap.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
@@ -204,46 +204,6 @@ public partial class MainPageViewModel : ObservableObject
         }
     }
 
-    //public async Task AddConsumptionAsync(CaffeineConsumption consumption)
-    //{
-    //    await EnsureInitializedAsync();
-
-    //    await _operationLock.WaitAsync();
-    //    try
-    //    {
-    //        await _dataService.AddConsumptionAsync(consumption);
-    //        InsertInChronologicalOrder(new ConsumptionItemViewModel(consumption));
-    //    }
-    //    finally
-    //    {
-    //        _operationLock.Release();
-    //    }
-    //}
-
-    //public async Task UpdateConsumptionAsync(CaffeineConsumption consumption)
-    //{
-    //    await EnsureInitializedAsync();
-
-    //    await _operationLock.WaitAsync();
-    //    try
-    //    {
-    //        await _dataService.UpdateConsumptionAsync(consumption);
-    //        ReplaceConsumption(new ConsumptionItemViewModel(consumption));
-    //    }
-    //    finally
-    //    {
-    //        _operationLock.Release();
-    //    }
-    //}
-
-    //public async Task SaveDailyCaffeineLimitAsync(double limit)
-    //{
-    //    var settings = await _dataService.GetSettingsAsync();
-    //    settings.DailyCaffeineLimit = limit;
-    //    await _dataService.SaveSettingsAsync(settings);
-    //    DailyCaffeineLimit = limit;
-    //}
-
     // Запуск счёта времени употребления
     public void StartRelativeTimeTimer()
     {
@@ -264,24 +224,6 @@ public partial class MainPageViewModel : ObservableObject
         cancellation?.Cancel();
         cancellation?.Dispose();
     }
-
-    //public void Dispose()
-    //{
-    //    StopRelativeTimeTimer();
-    //    Consumptions.CollectionChanged -= OnConsumptionsCollectionChanged;
-    //    _dataService.ConsumptionAdded -= OnConsumptionAdded;
-    //    _operationLock.Dispose();
-    //    GC.SuppressFinalize(this);
-    //}
-
-    //private async Task EnsureInitializedAsync()
-    //{
-    //    await InitializeAsync();
-    //    if (!IsInitialized)
-    //    {
-    //        throw new InvalidOperationException("Application data is not initialized.");
-    //    }
-    //}
 
     private void ReplaceConsumptions(IEnumerable<CaffeineConsumption> consumptions)
     {
@@ -307,27 +249,6 @@ public partial class MainPageViewModel : ObservableObject
 
         Consumptions.Insert(index, consumption);
     }
-
-    //private void ReplaceConsumption(ConsumptionItemViewModel consumption)
-    //{
-    //    _isReplacingConsumptions = true;
-    //    try
-    //    {
-    //        var existing = Consumptions.FirstOrDefault(item => item.Id == consumption.Id);
-    //        if (existing is not null)
-    //        {
-    //            Consumptions.Remove(existing);
-    //        }
-
-    //        InsertInChronologicalOrder(consumption);
-    //    }
-    //    finally
-    //    {
-    //        _isReplacingConsumptions = false;
-    //    }
-
-    //    RefreshConsumptionDerivedState();
-    //}
 
     private void OnConsumptionsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {

@@ -97,9 +97,6 @@ public sealed class AppDatabase
             .OrderByDescending(consumption => consumption.ConsumedAt)
             .ToListAsync();
 
-    public Task<int> InsertConsumptionAsync(CaffeineConsumption consumption) =>
-        _connection.InsertAsync(consumption);
-
     public async Task<LastConsumptionRecipe?> GetLastConsumptionRecipeAsync() =>
         await _connection.FindAsync<LastConsumptionRecipe>(
             DatabaseConstants.LastConsumptionRecipeId);
@@ -115,9 +112,6 @@ public sealed class AppDatabase
             connection.Insert(consumption);
             connection.InsertOrReplace(recipe);
         });
-
-    public Task<int> UpdateConsumptionAsync(CaffeineConsumption consumption) =>
-        _connection.UpdateAsync(consumption);
 
     public Task<int> DeleteConsumptionAsync(int id) =>
         _connection.DeleteAsync<CaffeineConsumption>(id);

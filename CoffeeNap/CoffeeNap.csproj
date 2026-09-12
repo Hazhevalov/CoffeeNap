@@ -54,13 +54,10 @@
 
 		<!-- Все изображения папки доступны в XAML по одному имени файла. -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
-		
+
 		<!-- Шрифты пакуются как MAUIFont; их псевдонимы регистрируются в MauiProgram. -->
 		<MauiFont Include="Resources\Fonts\*" />
 
-		<!-- Raw-файлы сохраняются без префикса Resources/Raw и читаются через FileSystem API. -->
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -69,15 +66,6 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiXaml Update="Controls\AddConsumption\Steps\EnergyDrinkVolume.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Controls\AddConsumption\Steps\TeaSort.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	</ItemGroup>
 
 </Project>

@@ -123,15 +123,6 @@ public sealed class AppDataService : IAppDataService
         return await _database.GetConsumptionsAsync();
     }
 
-    public async Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsForDateAsync(DateTime date)
-    {
-        var localStart = DateTime.SpecifyKind(date.Date, DateTimeKind.Local);
-        var localEnd = localStart.AddDays(1);
-        return await GetConsumptionsBetweenAsync(
-            new DateTimeOffset(localStart).ToUniversalTime(),
-            new DateTimeOffset(localEnd).ToUniversalTime());
-    }
-
     public async Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsBetweenAsync(
         DateTimeOffset fromInclusive,
         DateTimeOffset toExclusive)
@@ -147,17 +138,6 @@ public sealed class AppDataService : IAppDataService
         return await _database.GetConsumptionsBetweenAsync(
             fromInclusive.ToUniversalTime(),
             toExclusive.ToUniversalTime()).ConfigureAwait(false);
-    }
-
-    public async Task AddConsumptionAsync(CaffeineConsumption consumption)
-    {
-        ValidateConsumption(consumption);
-        await InitializeAsync();
-
-        consumption.Id = 0;
-        consumption.ConsumedAt = consumption.ConsumedAt.ToUniversalTime();
-        await _database.InsertConsumptionAsync(consumption);
-        ConsumptionAdded?.Invoke(this, consumption);
     }
 
     public async Task AddConsumptionAndSaveRecipeAsync(
@@ -200,23 +180,6 @@ public sealed class AppDataService : IAppDataService
         finally
         {
             _lastRecipeLock.Release();
-        }
-    }
-
-    public async Task UpdateConsumptionAsync(CaffeineConsumption consumption)
-    {
-        ValidateConsumption(consumption);
-        if (consumption.Id <= 0)
-        {
-            throw new ArgumentException("A persistent consumption must have a valid Id.", nameof(consumption));
-        }
-
-        await InitializeAsync();
-        consumption.ConsumedAt = consumption.ConsumedAt.ToUniversalTime();
-        var updatedRows = await _database.UpdateConsumptionAsync(consumption);
-        if (updatedRows == 0)
-        {
-            throw new InvalidOperationException($"Consumption with Id {consumption.Id} was not found.");
         }
     }
 

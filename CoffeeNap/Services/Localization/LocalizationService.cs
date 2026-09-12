@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Resources;
 using CoffeeNap.Models;
-using Microsoft.Extensions.Logging;
 
 namespace CoffeeNap.Services;
 
@@ -15,16 +14,12 @@ public sealed class LocalizationService : INotifyPropertyChanged
         "CoffeeNap.Resources.Localization.AppResources",
         typeof(LocalizationService).Assembly);
     private readonly IAppDataService _dataService;
-    private readonly ILogger<LocalizationService> _logger;
     private readonly SemaphoreSlim _changeLock = new(1, 1);
     private AppSettings? _settings;
 
-    public LocalizationService(
-        IAppDataService dataService,
-        ILogger<LocalizationService> logger)
+    public LocalizationService(IAppDataService dataService)
     {
         _dataService = dataService;
-        _logger = logger;
         Current = this;
         _dataService.UserDataDeleted += OnUserDataDeleted;
         ApplyCulture(AppSettings.DefaultLanguageCode);
@@ -89,8 +84,6 @@ public sealed class LocalizationService : INotifyPropertyChanged
     /// </summary>
     public void PrepareSavedLanguageForRestart(string languageCode) =>
         ApplyCulture(NormalizeLanguageCode(languageCode), notifyUi: false);
-
-    public string GetString(string key) => this[key];
 
     public string Format(string key, params object[] arguments) =>
         string.Format(CurrentCulture, this[key], arguments);

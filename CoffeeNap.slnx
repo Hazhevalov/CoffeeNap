@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="CoffeeNap/CoffeeNap.csproj" />
+  <Folder Name="/tests/">
+    <Project Path="tests/CoffeeNap.Tests/CoffeeNap.Tests.csproj" />
+  </Folder>
 </Solution>

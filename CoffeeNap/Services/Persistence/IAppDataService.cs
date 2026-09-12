@@ -18,16 +18,13 @@ public interface IAppDataService
     Task SaveSettingsAsync(AppSettings settings);
 
     Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsAsync();
-    Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsForDateAsync(DateTime date);
     Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsBetweenAsync(
         DateTimeOffset fromInclusive,
         DateTimeOffset toExclusive);
-    Task AddConsumptionAsync(CaffeineConsumption consumption);
     Task AddConsumptionAndSaveRecipeAsync(
         CaffeineConsumption consumption,
         LastConsumptionRecipe recipe);
     Task<LastConsumptionRecipe?> GetLastConsumptionRecipeAsync();
-    Task UpdateConsumptionAsync(CaffeineConsumption consumption);
     Task DeleteConsumptionAsync(int id);
     Task DeleteAllUserDataAsync();
 }

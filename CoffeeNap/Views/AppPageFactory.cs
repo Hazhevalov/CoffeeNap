@@ -1,4 +1,3 @@
-using CoffeeNap.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoffeeNap.Views;

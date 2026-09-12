@@ -1,7 +1,3 @@
-using CoffeeNap.Data;
-using CoffeeNap.Services;
-using CoffeeNap.ViewModels;
-using CoffeeNap.Views;
 using Microsoft.Extensions.Logging;
 
 namespace CoffeeNap;
@@ -16,8 +12,6 @@ public static class MauiProgram
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("InterVariableFont.ttf", "Inter");
-                fonts.AddFont("InterVariableFont.ttf", "OpenSansRegular");
-                fonts.AddFont("InterVariableFont.ttf", "OpenSansSemibold");
             });
 
 #if ANDROID
@@ -36,38 +30,7 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-        builder.Services.AddSingleton<AppDatabase>();
-
-        builder.Services.AddSingleton<IAppDataService, AppDataService>();
-        builder.Services.AddSingleton<UserStateService>();
-        builder.Services.AddSingleton<LocalizationService>();
-        builder.Services.AddSingleton<IDialogService, DialogService>();
-        builder.Services.AddSingleton<IAppNavigationService, AppNavigationService>();
-#if ANDROID
-        builder.Services.AddSingleton<IApplicationLifecycleService, Platforms.Android.AndroidApplicationLifecycleService>();
-#else
-        builder.Services.AddSingleton<IApplicationLifecycleService, DefaultApplicationLifecycleService>();
-#endif
-        builder.Services.AddSingleton<ICaffeineCalculator, CaffeineCalculator>();
-        builder.Services.AddSingleton<CalendarStatisticsService>();
-
-        builder.Services.AddTransient<MainHeaderViewModel>();
-        builder.Services.AddTransient<BottomNavigationViewModel>();
-        builder.Services.AddTransient<MainPageViewModel>();
-        builder.Services.AddTransient<CalendarPageViewModel>();
-        builder.Services.AddSingleton<AddConsumptionPageViewModel>();
-        builder.Services.AddTransient<OnboardingViewModel>();
-        builder.Services.AddTransient<SettingsPageViewModel>();
-
-        builder.Services.AddTransient<MainPage>();
-        builder.Services.AddTransient<CalendarPage>();
-        builder.Services.AddSingleton<AddConsumptionPage>();
-        builder.Services.AddTransient<SettingsPage>();
-        builder.Services.AddTransient<OnboardingPage>();
-        builder.Services.AddTransient<PrivacyPolicyPage>();
-        builder.Services.AddTransient<TabHostPage>();
-
-        builder.Services.AddSingleton<AppPageFactory>();
+        builder.Services.AddCoffeeNap();
 
         return builder.Build();
     }
