@@ -31,6 +31,8 @@
   <data name="NamePlaceholder" xml:space="preserve"><value>Name</value></data>
   <data name="Confirm" xml:space="preserve"><value>Confirm</value></data>
   <data name="CalendarTitle" xml:space="preserve"><value>Calendar</value></data>
+  <data name="BestComboTitle" xml:space="preserve"><value>Your best combo:</value></data>
+  <data name="MostConsumedInDayTitle" xml:space="preserve"><value>Most consumed in a day:</value></data>
   <data name="MainPageTitle" xml:space="preserve"><value>Home</value></data>
   <data name="Back" xml:space="preserve"><value>Back</value></data>
   <data name="Selected" xml:space="preserve"><value>Selected</value></data>

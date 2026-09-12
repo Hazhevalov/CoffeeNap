@@ -29,7 +29,9 @@ public readonly record struct CalendarDailyStatistics(
 /// <summary>Runtime-cached statistics for one calendar month.</summary>
 public sealed record CalendarMonthStatistics(
     DateTime Month,
-    IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> Days);
+    IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> Days,
+    int BestComboDays,
+    int MostConsumedInDayMg);
 
 /// <summary>Runtime-cached statistics for the current real week.</summary>
 public sealed record CalendarWeekStatistics(

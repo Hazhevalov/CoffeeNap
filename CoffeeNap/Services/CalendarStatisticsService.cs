@@ -153,7 +153,7 @@ public sealed class CalendarStatisticsService
             cancellationToken.ThrowIfCancellationRequested();
             var queryElapsed = watch.Elapsed.TotalMilliseconds;
             var statistics = Aggregate(consumptions);
-            var monthResult = new CalendarMonthStatistics(
+            var monthResult = BuildMonthStatistics(
                 month,
                 Slice(statistics, month, monthEnd));
             var weekResult = new CalendarWeekStatistics(
@@ -205,7 +205,7 @@ public sealed class CalendarStatisticsService
                         ToUtcBoundary(monthEnd))
                     .ConfigureAwait(false);
                 var queryElapsed = watch.Elapsed.TotalMilliseconds;
-                var result = new CalendarMonthStatistics(month, Aggregate(consumptions));
+                var result = BuildMonthStatistics(month, Aggregate(consumptions));
                 lock (_cacheGate)
                 {
                     if (monthGeneration != GetMonthGeneration(key) ||
@@ -391,6 +391,38 @@ public sealed class CalendarStatisticsService
         }
 
         return builders.ToDictionary(pair => pair.Key, pair => pair.Value.Build());
+    }
+
+    private static CalendarMonthStatistics BuildMonthStatistics(
+        DateTime month,
+        IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> days)
+    {
+        var monthEnd = month.AddMonths(1);
+        var bestComboDays = 0;
+        var currentComboDays = 0;
+        var mostConsumedInDayMg = 0;
+
+        for (var date = month; date < monthEnd; date = date.AddDays(1))
+        {
+            if (days.TryGetValue(DateOnly.FromDateTime(date), out var daily))
+            {
+                mostConsumedInDayMg = Math.Max(mostConsumedInDayMg, daily.TotalCaffeineMg);
+                if (daily.Distribution.TotalCount > 0)
+                {
+                    currentComboDays++;
+                    bestComboDays = Math.Max(bestComboDays, currentComboDays);
+                    continue;
+                }
+            }
+
+            currentComboDays = 0;
+        }
+
+        return new CalendarMonthStatistics(
+            month,
+            days,
+            bestComboDays,
+            mostConsumedInDayMg);
     }
 
     private static IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> Slice(

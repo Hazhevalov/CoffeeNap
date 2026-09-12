@@ -31,6 +31,8 @@
   <data name="NamePlaceholder" xml:space="preserve"><value>Имя</value></data>
   <data name="Confirm" xml:space="preserve"><value>Подтвердить</value></data>
   <data name="CalendarTitle" xml:space="preserve"><value>Календарь</value></data>
+  <data name="BestComboTitle" xml:space="preserve"><value>Ваше лучшее комбо:</value></data>
+  <data name="MostConsumedInDayTitle" xml:space="preserve"><value>Больше всего выпили в день:</value></data>
   <data name="MainPageTitle" xml:space="preserve"><value>Главная</value></data>
   <data name="Back" xml:space="preserve"><value>Назад</value></data>
   <data name="Selected" xml:space="preserve"><value>Выбрано</value></data>

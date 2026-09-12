@@ -23,6 +23,8 @@ public partial class CalendarPageViewModel : ObservableObject
     private CalendarMonthStatistics? _publishedMonthStatistics;
     private CalendarWeekStatistics? _publishedWeekStatistics;
     private string _monthTitle = string.Empty;
+    private int _bestComboDays;
+    private int _mostConsumedInDayMg;
     private string? _loadError;
     private bool _isLoading;
     private int _monthRequestVersion;
@@ -84,6 +86,12 @@ public partial class CalendarPageViewModel : ObservableObject
 
     public string ExceededRangeLabel =>
         $"{CaffeineLevelResolver.LimitExceededMinimumMg}+{_localization["MilligramShort"]}";
+
+    public string BestComboValue =>
+        $"{_bestComboDays} {GetDayWordForm(_bestComboDays)}";
+
+    public string MostConsumedInDayValue =>
+        $"{_mostConsumedInDayMg} {_localization["MilligramShort"]}";
 
     public bool IsLoading
     {
@@ -238,8 +246,12 @@ public partial class CalendarPageViewModel : ObservableObject
         _publishedMonthStatistics = statistics;
         _publishedMonth = statistics.Month;
         _presentationDate = today;
+        _bestComboDays = statistics.BestComboDays;
+        _mostConsumedInDayMg = statistics.MostConsumedInDayMg;
         MonthTitle = FormatMonthTitle(_publishedMonth);
         Days = models;
+        OnPropertyChanged(nameof(BestComboValue));
+        OnPropertyChanged(nameof(MostConsumedInDayValue));
     }
 
     private void PublishWeekIfChanged(
@@ -335,6 +347,8 @@ public partial class CalendarPageViewModel : ObservableObject
         OnPropertyChanged(nameof(MediumRangeLabel));
         OnPropertyChanged(nameof(HighRangeLabel));
         OnPropertyChanged(nameof(ExceededRangeLabel));
+        OnPropertyChanged(nameof(BestComboValue));
+        OnPropertyChanged(nameof(MostConsumedInDayValue));
 
         var today = DateTime.Today;
         WeeklyDays = WeeklyDays.Select(item => new WeeklyConsumptionItem
@@ -358,6 +372,22 @@ public partial class CalendarPageViewModel : ObservableObject
             IsLoading = isLoading;
             LoadError = error;
         });
+    }
+
+    private string GetDayWordForm(int value)
+    {
+        var lastTwoDigits = value % 100;
+        if (lastTwoDigits is >= 11 and <= 14)
+        {
+            return _localization["DayMany"];
+        }
+
+        return (value % 10) switch
+        {
+            1 => _localization["DayOne"],
+            2 or 3 or 4 => _localization["DayFew"],
+            _ => _localization["DayMany"]
+        };
     }
 
     private async Task MonitorDateChangeAsync(CancellationToken cancellationToken)

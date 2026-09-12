@@ -101,23 +101,6 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Кнопка "Месячная сводка" -->
-                <Border 
-                    Background="{StaticResource White}"
-                    Stroke="{StaticResource DividerColor}"
-                    StrokeThickness="1"
-                    StrokeShape="20"
-                    Padding="25,20">
-                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Image WidthRequest="32" HeightRequest="32" Source="monthly_summary.png"/>
-                            <Label TextColor="{StaticResource InkColor}" 
-                                Text="Месячная сводка"
-                                FontSize="16"
-                                FontAttributes="Bold"
-                                VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
-                </Border>
-
                 <!-- Статистика источников кофеина -->
                 <Border
                     Padding="15,20"
@@ -167,10 +150,10 @@
                             <Label TextColor="{StaticResource InkColor}" 
                                 Grid.Column="0" 
                                 VerticalOptions="Center"
-                                Text="Ваше лучшее комбо:"/>
+                                Text="{localization:Translate BestComboTitle}"/>
                         </HorizontalStackLayout>
 
-                        <Label VerticalOptions="Center" TextColor="{StaticResource InkColor}" Grid.Column="1" Text="15 дней"/>
+                        <Label VerticalOptions="Center" TextColor="{StaticResource InkColor}" Grid.Column="1" Text="{Binding BestComboValue}"/>
                     </Grid>
                 </Border>
 
@@ -191,10 +174,10 @@
                             <Label TextColor="{StaticResource InkColor}" 
                                 Grid.Column="0" 
                                 VerticalOptions="Center"
-                                Text="Больше всего выпили в день:"/>
+                                Text="{localization:Translate MostConsumedInDayTitle}"/>
                         </HorizontalStackLayout>
 
-                        <Label VerticalOptions="Center" TextColor="{StaticResource InkColor}" Grid.Column="1" Text="315 мг."/>
+                        <Label VerticalOptions="Center" TextColor="{StaticResource InkColor}" Grid.Column="1" Text="{Binding MostConsumedInDayValue}"/>
                     </Grid>
                 </Border>
             </VerticalStackLayout>
