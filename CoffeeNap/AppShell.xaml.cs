@@ -10,19 +10,25 @@ public partial class AppShell : Shell
     public const string AddConsumptionAbsoluteRoute = "//AppTabs/AddConsumptionPage";
     public const string CalendarAbsoluteRoute = "//AppTabs/CalendarPage";
 
+    private readonly AppPageFactory _pageFactory;
+    private TabHostPage? _tabHostPage;
+
     public AppShell(
         UserStateService userState,
         AppPageFactory pageFactory)
     {
+        _pageFactory = pageFactory;
         InitializeComponent();
-        // Shell materializes only the selected page and retains it for subsequent visits.
+        // Shell materializes only the selected root. The host then creates each
+        // tab lazily and keeps it alive so form and calendar state are preserved.
         OnboardingShellContent.ContentTemplate = new DataTemplate(() => pageFactory.CreateOnboardingPage());
-        MainShellContent.ContentTemplate = new DataTemplate(() => pageFactory.CreateMainPage());
-        AddConsumptionShellContent.ContentTemplate = new DataTemplate(() => pageFactory.CreateAddConsumptionPage());
-        CalendarShellContent.ContentTemplate = new DataTemplate(() => pageFactory.CreateCalendarPage());
+        TabHostShellContent.ContentTemplate = new DataTemplate(() => GetTabHostPage());
 
         CurrentItem = userState.IsOnboardingCompleted && userState.HasUserName
             ? MainShellItem
             : OnboardingShellItem;
     }
+
+    internal TabHostPage GetTabHostPage() =>
+        _tabHostPage ??= _pageFactory.CreateTabHostPage();
 }

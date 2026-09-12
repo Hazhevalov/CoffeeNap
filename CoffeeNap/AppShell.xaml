@@ -24,14 +24,8 @@
         x:Name="MainShellItem"
         Route="AppTabs">
         <ShellContent
-            x:Name="MainShellContent"
+            x:Name="TabHostShellContent"
             Route="MainPage" />
-        <ShellContent
-            x:Name="AddConsumptionShellContent"
-            Route="AddConsumptionPage" />
-        <ShellContent
-            x:Name="CalendarShellContent"
-            Route="CalendarPage" />
     </FlyoutItem>
 
 </Shell>

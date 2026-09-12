@@ -8,6 +8,7 @@
     xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:SettingsPageViewModel"
+    AutomationId="SettingsPage"
     Title="{localization:Translate SettingsTitle}"
     BackgroundColor="{StaticResource PageBackgroundColor}"
     SafeAreaEdges="{OnPlatform Default=All, Android=None}"
@@ -31,12 +32,14 @@
             <Grid SafeAreaEdges="None" ColumnDefinitions="54,*,54" ColumnSpacing="12">
                 <Button
                     Grid.Column="0"
+                    AutomationId="SettingsBack"
                     Padding="15"
                     BackgroundColor="{StaticResource SurfaceColor}"
                     Command="{Binding BackCommand}"
                     CornerRadius="15"
                     HeightRequest="54"
                     ImageSource="back_ico.png"
+                    SemanticProperties.Description="{localization:Translate Back}"
                     WidthRequest="54">
                     <Button.Behaviors>
                         <behaviors:PressAnimationBehavior PressedScale="0.96" />
@@ -59,7 +62,9 @@
         <VerticalStackLayout Grid.Row="1" Spacing="10">
             
             <!--  Кнопка смены языка  -->
-            <Border Padding="15" BackgroundColor="{StaticResource White}" 
+            <Border
+                Padding="15"
+                BackgroundColor="{StaticResource White}"
                 Stroke="{StaticResource DividerColor}">
                 <Border.Behaviors>
                     <behaviors:PressAnimationBehavior />
@@ -94,7 +99,11 @@
             </Border>
 
             <!--  Кнопка политики конфиденциальности  -->
-            <Border Padding="15" BackgroundColor="{StaticResource White}" 
+            <Border
+                AutomationId="OpenPrivacy"
+                Padding="15"
+                BackgroundColor="{StaticResource White}"
+                SemanticProperties.Description="{localization:Translate PrivacyPolicy}"
                 Stroke="{StaticResource DividerColor}">
                 <Border.Behaviors>
                     <behaviors:PressAnimationBehavior />

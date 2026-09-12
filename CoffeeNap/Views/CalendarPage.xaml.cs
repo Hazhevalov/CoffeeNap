@@ -3,7 +3,7 @@ namespace CoffeeNap.Views;
 using CoffeeNap.ViewModels;
 
 /// <summary>Forwards page lifecycle events to the page-scoped view model.</summary>
-public partial class CalendarPage : ContentPage
+public partial class CalendarPage : ContentView, ITabContent
 {
     private readonly CalendarPageViewModel _viewModel;
     private bool _isPageVisible;
@@ -15,11 +15,11 @@ public partial class CalendarPage : ContentPage
         BindingContext = viewModel;
     }
 
-    protected override async void OnAppearing()
+    NavigationTab ITabContent.Tab => NavigationTab.Calendar;
+
+    async Task ITabContent.ActivateAsync()
     {
-        base.OnAppearing();
         _isPageVisible = true;
-        _viewModel.Navigation.ActiveTab = NavigationTab.Calendar;
         await _viewModel.RefreshAsync();
         if (_isPageVisible)
         {
@@ -27,11 +27,10 @@ public partial class CalendarPage : ContentPage
         }
     }
 
-    protected override void OnDisappearing()
+    void ITabContent.Deactivate()
     {
         _isPageVisible = false;
         _viewModel.StopDateChangeMonitor();
-        base.OnDisappearing();
     }
 
     internal Task WarmUpAsync() => _viewModel.WarmUpAsync();

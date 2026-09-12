@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
+    AutomationId="PrivacyPage"
     BackgroundColor="{StaticResource SurfaceColor}"
     SafeAreaEdges="{OnPlatform Default=All, Android=None}"
     Shell.NavBarIsVisible="False"
@@ -22,12 +23,14 @@
             <Grid SafeAreaEdges="None" ColumnDefinitions="54,*,54" ColumnSpacing="12">
                 <Button
                     Grid.Column="0"
+                    AutomationId="PrivacyBack"
                     Padding="15"
                     BackgroundColor="{StaticResource SurfaceColor}"
                     Clicked="OnBackClicked"
                     CornerRadius="15"
                     HeightRequest="54"
                     ImageSource="back_ico.png"
+                    SemanticProperties.Description="{localization:Translate Back}"
                     WidthRequest="54" />
 
                 <Label

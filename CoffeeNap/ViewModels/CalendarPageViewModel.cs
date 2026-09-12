@@ -33,15 +33,12 @@ public partial class CalendarPageViewModel : ObservableObject
         CalendarStatisticsService statisticsService,
         LocalizationService localization,
         ILogger<CalendarPageViewModel> logger,
-        MainHeaderViewModel header,
-        BottomNavigationViewModel navigation)
+        MainHeaderViewModel header)
     {
         _statisticsService = statisticsService;
         _localization = localization;
         _logger = logger;
         Header = header;
-        Navigation = navigation;
-        Navigation.ActiveTab = NavigationTab.Calendar;
 
         var today = DateTime.Today;
         _requestedMonth = new DateTime(today.Year, today.Month, 1);
@@ -57,8 +54,6 @@ public partial class CalendarPageViewModel : ObservableObject
         new Dictionary<DateOnly, CalendarDailyStatistics>();
 
     public MainHeaderViewModel Header { get; }
-
-    public BottomNavigationViewModel Navigation { get; }
 
     public IReadOnlyList<CalendarDayItem> Days
     {

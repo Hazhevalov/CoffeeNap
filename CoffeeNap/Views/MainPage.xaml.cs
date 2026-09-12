@@ -6,7 +6,7 @@ namespace CoffeeNap.Views;
 /// Главный экран приложения. Разметка находится в MainPage.xaml, а code-behind
 /// отвечает только за жизненный цикл MainPageViewModel.
 /// </summary>
-public partial class MainPage : ContentPage
+public partial class MainPage : ContentView, ITabContent
 {
     private readonly MainPageViewModel _viewModel;
     private bool _isPageVisible;
@@ -18,9 +18,10 @@ public partial class MainPage : ContentPage
         BindingContext = viewModel;
     }
 
-    protected override async void OnAppearing()
+    NavigationTab ITabContent.Tab => NavigationTab.Home;
+
+    async Task ITabContent.ActivateAsync()
     {
-        base.OnAppearing();
         _isPageVisible = true;
         await _viewModel.InitializeAsync();
         if (_isPageVisible)
@@ -30,10 +31,9 @@ public partial class MainPage : ContentPage
         }
     }
 
-    protected override void OnDisappearing()
+    void ITabContent.Deactivate()
     {
         _isPageVisible = false;
         _viewModel.StopRelativeTimeTimer();
-        base.OnDisappearing();
     }
 }

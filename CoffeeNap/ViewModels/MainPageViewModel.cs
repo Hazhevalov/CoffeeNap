@@ -43,15 +43,12 @@ public partial class MainPageViewModel : ObservableObject
         IAppDataService dataService,
         LocalizationService localization,
         ILogger<MainPageViewModel> logger,
-        MainHeaderViewModel header,
-        BottomNavigationViewModel navigation)
+        MainHeaderViewModel header)
     {
         _dataService = dataService;
         _localization = localization;
         _logger = logger;
         Header = header;
-        Navigation = navigation;
-        Navigation.ActiveTab = NavigationTab.Home;
         Consumptions.CollectionChanged += OnConsumptionsCollectionChanged;
         _dataService.ConsumptionAdded += OnConsumptionAdded;
         _dataService.ConsumptionDeleted += OnConsumptionDeleted;
@@ -60,8 +57,6 @@ public partial class MainPageViewModel : ObservableObject
     }
 
     public MainHeaderViewModel Header { get; }
-
-    public BottomNavigationViewModel Navigation { get; }
 
     public double CurrentCaffeine
     {

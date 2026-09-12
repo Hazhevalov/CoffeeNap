@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CoffeeNap.Views.TabHostPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:CoffeeNap.Controls"
+    xmlns:views="clr-namespace:CoffeeNap.Views"
+    x:DataType="views:TabHostPage"
+    AutomationId="TabHostPage"
+    BackgroundColor="{StaticResource PageBackgroundColor}"
+    SafeAreaEdges="{OnPlatform Default=All, Android=None}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid
+        x:Name="HostRoot"
+        RowDefinitions="*,88"
+        RowSpacing="0"
+        SafeAreaEdges="None">
+
+        <!-- Both tab contents live in this clipped layer during a transition,
+             which lets the old and new screens move at the same time. -->
+        <Grid
+            x:Name="ContentLayer"
+            Grid.Row="0"
+            IsClippedToBounds="True"
+            SafeAreaEdges="None" />
+
+        <controls:BottomNavigationBar
+            x:Name="BottomNavigationBar"
+            Grid.Row="1"
+            BindingContext="{Binding BottomNavigation}"
+            HorizontalOptions="Center"
+            SafeAreaEdges="None"
+            VerticalOptions="Start"
+            ZIndex="20" />
+    </Grid>
+</ContentPage>

@@ -54,7 +54,6 @@ public partial class AddConsumptionPageViewModel : ObservableObject
 
     public AddConsumptionPageViewModel(
         MainHeaderViewModel header,
-        BottomNavigationViewModel navigation,
         IAppDataService dataService,
         IAppNavigationService appNavigation,
         ICaffeineCalculator calculator,
@@ -62,19 +61,16 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         ILogger<AddConsumptionPageViewModel> logger)
     {
         Header = header;
-        Navigation = navigation;
         _dataService = dataService;
         _appNavigation = appNavigation;
         _calculator = calculator;
         _localization = localization;
         _logger = logger;
-        Navigation.ActiveTab = NavigationTab.AddConsumption;
         _dataService.UserDataDeleted += OnUserDataDeleted;
         _localization.CultureChanged += OnCultureChanged;
     }
 
     public MainHeaderViewModel Header { get; }
-    public BottomNavigationViewModel Navigation { get; }
     public AddConsumptionQuizState QuizState { get; } = new();
 
     public AddConsumptionStep CurrentStep

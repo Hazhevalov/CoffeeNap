@@ -1,4 +1,5 @@
 using CoffeeNap.Views;
+using CoffeeNap.ViewModels;
 
 namespace CoffeeNap.Services;
 
@@ -26,7 +27,7 @@ public sealed class AppNavigationService : IAppNavigationService
         var settingsPage = _services.GetRequiredService<SettingsPage>();
         NavigationPage.SetHasNavigationBar(settingsPage, false);
         var navigationPage = new NavigationPage(settingsPage);
-        await shell.Navigation.PushModalAsync(navigationPage, false);
+        await shell.Navigation.PushModalAsync(navigationPage, NavigationAnimation.IsEnabled);
     });
 
     public Task OpenPrivacyPolicyAsync() => RunNavigationAsync(async shell =>
@@ -38,7 +39,7 @@ public sealed class AppNavigationService : IAppNavigationService
         }
 
         var privacyPage = _services.GetRequiredService<PrivacyPolicyPage>();
-        await navigationPage.PushAsync(privacyPage, false);
+        await navigationPage.PushAsync(privacyPage, NavigationAnimation.IsEnabled);
     });
 
     public Task GoBackAsync() => RunNavigationAsync(async shell =>
@@ -61,36 +62,89 @@ public sealed class AppNavigationService : IAppNavigationService
 
         if (navigationPage.Navigation.NavigationStack.Count > 1)
         {
-            await navigationPage.PopAsync(false);
+            await navigationPage.PopAsync(NavigationAnimation.IsEnabled);
             return;
         }
 
-        await shell.Navigation.PopModalAsync(false);
+        await shell.Navigation.PopModalAsync(NavigationAnimation.IsEnabled);
     });
 
-    public async Task NavigateToTopLevelAsync(string absoluteRoute)
+    public async Task NavigateToTopLevelAsync(
+        string absoluteRoute,
+        BottomNavigationViewModel? sourceNavigation = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(absoluteRoute);
+        var targetTab = GetTab(absoluteRoute);
+        if (targetTab == NavigationTab.None)
+        {
+            throw new ArgumentException("Unknown top-level route.", nameof(absoluteRoute));
+        }
 
         await RunNavigationAsync(async shell =>
         {
-            // Select the destination before uncovering it, avoiding a flash of the old tab.
-            if (!string.Equals(shell.CurrentState.Location.OriginalString, absoluteRoute,
-                    StringComparison.Ordinal))
+            if (shell is not AppShell appShell)
             {
-                await shell.GoToAsync(absoluteRoute, false);
+                return;
             }
 
-            if (shell.Navigation.ModalStack.Count > 0)
+            var modalIsOpen = shell.Navigation.ModalStack.Count > 0;
+            var host = shell.CurrentPage as TabHostPage ?? appShell.GetTabHostPage();
+            var previousSourceTab = sourceNavigation?.ActiveTab ?? NavigationTab.None;
+
+            // A modal covers the host, so select its target without motion and
+            // let the native dismiss animation reveal the correct section.
+            await host.NavigateToAsync(targetTab, sourceNavigation);
+
+            if (!modalIsOpen && !ReferenceEquals(shell.CurrentPage, host))
             {
-                await shell.Navigation.PopModalAsync(false);
+                await shell.GoToAsync(
+                    AppShell.MainAbsoluteRoute,
+                    NavigationAnimation.IsEnabled);
             }
-        });
+
+            if (modalIsOpen)
+            {
+                try
+                {
+                    await shell.Navigation.PopModalAsync(NavigationAnimation.IsEnabled);
+                }
+                catch
+                {
+                    // If the native modal dismiss fails, its bottom bar remains
+                    // visible. Restore only that bar; the host was committed and
+                    // is already ready behind the modal for a safe retry.
+                    if (sourceNavigation is not null &&
+                        !ReferenceEquals(sourceNavigation, host.BottomNavigation))
+                    {
+                        sourceNavigation.SetActiveTab(previousSourceTab, animate: false);
+                    }
+                    throw;
+                }
+            }
+        }, dropIfBusy: sourceNavigation is not null);
     }
 
-    private async Task RunNavigationAsync(Func<Shell, Task> navigation)
+    private static NavigationTab GetTab(string absoluteRoute) => absoluteRoute switch
     {
-        await _navigationLock.WaitAsync();
+        AppShell.MainAbsoluteRoute => NavigationTab.Home,
+        AppShell.AddConsumptionAbsoluteRoute => NavigationTab.AddConsumption,
+        AppShell.CalendarAbsoluteRoute => NavigationTab.Calendar,
+        _ => NavigationTab.None
+    };
+
+    private async Task RunNavigationAsync(
+        Func<Shell, Task> navigation,
+        bool dropIfBusy = false)
+    {
+        var lockAcquired = dropIfBusy
+            ? await _navigationLock.WaitAsync(0)
+            : await WaitForNavigationLockAsync();
+
+        if (!lockAcquired)
+        {
+            return;
+        }
+
         try
         {
             await MainThread.InvokeOnMainThreadAsync(async () =>
@@ -105,5 +159,11 @@ public sealed class AppNavigationService : IAppNavigationService
         {
             _navigationLock.Release();
         }
+    }
+
+    private async Task<bool> WaitForNavigationLockAsync()
+    {
+        await _navigationLock.WaitAsync();
+        return true;
     }
 }

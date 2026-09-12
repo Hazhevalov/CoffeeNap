@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
+<ContentView
     x:Class="CoffeeNap.Views.AddConsumptionPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -8,17 +8,14 @@
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:steps="clr-namespace:CoffeeNap.Controls.AddConsumption.Steps"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
-    Title="{localization:Translate AddConsumptionTitle}"
     x:DataType="viewModels:AddConsumptionPageViewModel"
-    BackgroundColor="{StaticResource PageBackgroundColor}"
-    SafeAreaEdges="{OnPlatform Default=All, Android=None}"
-    Shell.NavBarIsVisible="False">
+    AutomationId="AddTabContent"
+    BackgroundColor="{StaticResource PageBackgroundColor}">
 
     <Grid SafeAreaEdges="None" RowSpacing="0" Padding="12,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="86" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="88" />
         </Grid.RowDefinitions>
 
         <!--  Top Bar  -->
@@ -96,18 +93,5 @@
             
         </Grid>
 
-        <!--  Nav Bar  -->
-        <!--  Нижняя навигация вынесена в отдельный переиспользуемый контрол.  -->
-        <controls:BottomNavigationBar
-            x:Name="BottomNavigationBar"
-            Grid.Row="2"
-            BindingContext="{Binding Navigation}"
-            HorizontalOptions="Center"
-            MinimumHeightRequest="78"
-            SafeAreaEdges="None"
-            VerticalOptions="End"
-            ZIndex="20">
-
-        </controls:BottomNavigationBar>
     </Grid>
-</ContentPage>
+</ContentView>

@@ -21,4 +21,6 @@ public sealed class AppPageFactory
         _services.GetRequiredService<CalendarPage>();
 
     public OnboardingPage CreateOnboardingPage() => _services.GetRequiredService<OnboardingPage>();
+
+    public TabHostPage CreateTabHostPage() => _services.GetRequiredService<TabHostPage>();
 }

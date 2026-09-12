@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
+<ContentView
     x:Class="CoffeeNap.Views.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -7,15 +7,13 @@
     xmlns:controls="clr-namespace:CoffeeNap.Controls"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:MainPageViewModel"
-    BackgroundColor="{StaticResource PageBackgroundColor}"
-    SafeAreaEdges="{OnPlatform Default=All, Android=None}"
-    Shell.NavBarIsVisible="False">
+    AutomationId="MainTabContent"
+    BackgroundColor="{StaticResource PageBackgroundColor}">
 
     <Grid SafeAreaEdges="None" RowSpacing="10" Padding="12,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="86" />
             <RowDefinition Height="*"/>
-            <RowDefinition Height="88" />
         </Grid.RowDefinitions>
         
         <!-- Нав Бар -->
@@ -330,10 +328,5 @@
 
         </Grid>
 
-        <controls:BottomNavigationBar Grid.Row="2"
-            BindingContext="{Binding Navigation}"
-            x:Name="BottomNavigationBar"
-            VerticalOptions="Start"
-            HorizontalOptions="Center"/>
     </Grid>
-</ContentPage>
+</ContentView>

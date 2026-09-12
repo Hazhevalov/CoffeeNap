@@ -31,6 +31,9 @@
   <data name="NamePlaceholder" xml:space="preserve"><value>Name</value></data>
   <data name="Confirm" xml:space="preserve"><value>Confirm</value></data>
   <data name="CalendarTitle" xml:space="preserve"><value>Calendar</value></data>
+  <data name="MainPageTitle" xml:space="preserve"><value>Home</value></data>
+  <data name="Back" xml:space="preserve"><value>Back</value></data>
+  <data name="Selected" xml:space="preserve"><value>Selected</value></data>
   <data name="MondayShort" xml:space="preserve"><value>Mon</value></data>
   <data name="TuesdayShort" xml:space="preserve"><value>Tue</value></data>
   <data name="WednesdayShort" xml:space="preserve"><value>Wed</value></data>

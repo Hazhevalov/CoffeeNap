@@ -60,6 +60,7 @@
 
             <Button
                 Grid.Column="2"
+                AutomationId="OpenSettings"
                 WidthRequest="44"
                 HeightRequest="44"
                 Padding="11"
@@ -67,7 +68,8 @@
                 BackgroundColor="{StaticResource InkColor}"
                 Command="{Binding OpenSettingsCommand}"
                 CornerRadius="22"
-                ImageSource="settings_ico.png" />
+                ImageSource="settings_ico.png"
+                SemanticProperties.Description="{localization:Translate SettingsTitle}" />
         </Grid>
 
     </Border>

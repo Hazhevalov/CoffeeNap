@@ -4,117 +4,120 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:behaviors="clr-namespace:CoffeeNap.Behaviors"
+    xmlns:localization="clr-namespace:CoffeeNap.Resources.Localization"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:BottomNavigationViewModel">
 
-    <Border StrokeThickness="1"
-            Stroke="{StaticResource DividerColor}"
-            BackgroundColor="{StaticResource White}"
-            Padding="20,10"
-            Margin="0,5">
+    <Border
+        Padding="10"
+        Margin="0,5"
+        BackgroundColor="{StaticResource White}"
+        Stroke="{StaticResource DividerColor}"
+        StrokeShape="RoundRectangle 1000"
+        StrokeThickness="1">
 
-        <Border.StrokeShape>
-            <RoundRectangle CornerRadius="1000" />
-        </Border.StrokeShape>
-        
-        <!-- Три равные колонки соответствуют главной, добавлению и календарю. -->
-        <Grid ColumnSpacing="20" HorizontalOptions="Center"> 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <!-- Fixed hit targets prevent the grid shake caused by animated widths. -->
+        <AbsoluteLayout
+            WidthRequest="268"
+            HeightRequest="56"
+            HorizontalOptions="Center">
 
-            <Button
-                Grid.Row="0"
-                Grid.Column="0"
-                WidthRequest="56"
-                HeightRequest="56"
-                Padding="17"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-                BackgroundColor="Transparent"
-                Command="{Binding OpenAddConsumptionCommand}"
-                ImageSource="add_ico.png"
-                TextColor="{StaticResource InkColor}">
-                <Button.Behaviors>
-                    <behaviors:PressAnimationBehavior />
-                </Button.Behaviors>
-                <Button.Triggers>
-                    <DataTrigger
+            <!-- Only this decorative element moves; the navbar and all three
+                 fixed hit targets keep the same geometry. -->
+            <Border
+                x:Name="SelectionIndicator"
+                AbsoluteLayout.LayoutBounds="0,0,96,56"
+                AutomationId="NavSelectionIndicator"
+                AutomationProperties.ExcludedWithChildren="True"
+                BackgroundColor="{StaticResource InkColor}"
+                InputTransparent="True"
+                StrokeShape="RoundRectangle 28"
+                StrokeThickness="0" />
+
+            <Grid
+                AbsoluteLayout.LayoutBounds="10,0,248,56"
+                ColumnDefinitions="76,76,76"
+                ColumnSpacing="10"
+                FlowDirection="LeftToRight">
+
+                <Button
+                    x:Name="AddButton"
+                    Grid.Column="0"
+                    WidthRequest="76"
+                    HeightRequest="56"
+                    AutomationId="NavAdd"
+                    BackgroundColor="Transparent"
+                    Command="{Binding OpenAddConsumptionCommand}"
+                    ImageSource="add_ico.png"
+                    Padding="27,17"
+                    SemanticProperties.Description="{localization:Translate AddConsumptionTitle}">
+                    <Button.Behaviors>
+                        <behaviors:PressAnimationBehavior />
+                    </Button.Behaviors>
+                    <Button.Triggers>
+                        <DataTrigger
                             TargetType="Button"
                             Binding="{Binding IsAddConsumptionActive}"
                             Value="True">
-                        <Setter Property="WidthRequest" Value="96" />
-                        <Setter Property="Padding" Value="35,17" />
-                        <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
-                        <Setter Property="CornerRadius" Value="28" />
-                        <Setter Property="ImageSource" Value="add_active_ico.png" />
-                    </DataTrigger>
-                </Button.Triggers>
-            </Button>
+                            <Setter
+                                Property="SemanticProperties.Hint"
+                                Value="{localization:Translate Selected}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
 
-            <Button
-                Grid.Row="0"
-                Grid.Column="1"
-                WidthRequest="56"
-                HeightRequest="56"
-                Padding="17"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-                BackgroundColor="Transparent"
-                Command="{Binding OpenHomeCommand}"
-                ImageSource="home_ico.png"
-                Opacity="1">
-                <Button.Behaviors>
-                    <behaviors:PressAnimationBehavior />
-                </Button.Behaviors>
-                <Button.Triggers>
-                    <DataTrigger
+                <Button
+                    x:Name="HomeButton"
+                    Grid.Column="1"
+                    WidthRequest="76"
+                    HeightRequest="56"
+                    AutomationId="NavHome"
+                    BackgroundColor="Transparent"
+                    Command="{Binding OpenHomeCommand}"
+                    ImageSource="home_ico.png"
+                    Padding="27,17"
+                    SemanticProperties.Description="{localization:Translate MainPageTitle}">
+                    <Button.Behaviors>
+                        <behaviors:PressAnimationBehavior />
+                    </Button.Behaviors>
+                    <Button.Triggers>
+                        <DataTrigger
                             TargetType="Button"
                             Binding="{Binding IsHomeActive}"
                             Value="True">
-                        <Setter Property="WidthRequest" Value="96" />
-                        <Setter Property="Padding" Value="35,17" />
-                        <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
-                        <Setter Property="CornerRadius" Value="28" />
-                        <Setter Property="ImageSource" Value="home_active_ico.png" />
-                    </DataTrigger>
-                </Button.Triggers>
-            </Button>
+                            <Setter
+                                Property="SemanticProperties.Hint"
+                                Value="{localization:Translate Selected}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
 
-            <Button
-                Grid.Row="0"
-                Grid.Column="2"
-                WidthRequest="56"
-                HeightRequest="56"
-                Padding="17"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-                BackgroundColor="Transparent"
-                Command="{Binding OpenCalendarCommand}"
-                ImageSource="calendar_ico.png">
-                <Button.Behaviors>
-                    <behaviors:PressAnimationBehavior />
-                </Button.Behaviors>
-                <Button.Triggers>
-                    <DataTrigger
+                <Button
+                    x:Name="CalendarButton"
+                    Grid.Column="2"
+                    WidthRequest="76"
+                    HeightRequest="56"
+                    AutomationId="NavCalendar"
+                    BackgroundColor="Transparent"
+                    Command="{Binding OpenCalendarCommand}"
+                    ImageSource="calendar_ico.png"
+                    Padding="27,17"
+                    SemanticProperties.Description="{localization:Translate CalendarTitle}">
+                    <Button.Behaviors>
+                        <behaviors:PressAnimationBehavior />
+                    </Button.Behaviors>
+                    <Button.Triggers>
+                        <DataTrigger
                             TargetType="Button"
                             Binding="{Binding IsCalendarActive}"
                             Value="True">
-                        <Setter Property="WidthRequest" Value="96" />
-                        <Setter Property="Padding" Value="35,17" />
-                        <Setter Property="BackgroundColor" Value="{StaticResource InkColor}" />
-                        <Setter Property="CornerRadius" Value="28" />
-                        <Setter Property="ImageSource" Value="calendar_active_ico.png" />
-                    </DataTrigger>
-                </Button.Triggers>
-            </Button>
-        </Grid>
-
+                            <Setter
+                                Property="SemanticProperties.Hint"
+                                Value="{localization:Translate Selected}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </Grid>
+        </AbsoluteLayout>
     </Border>
-
 </ContentView>

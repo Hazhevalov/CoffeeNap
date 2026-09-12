@@ -65,6 +65,7 @@ public static class MauiProgram
         builder.Services.AddTransient<SettingsPage>();
         builder.Services.AddTransient<OnboardingPage>();
         builder.Services.AddTransient<PrivacyPolicyPage>();
+        builder.Services.AddTransient<TabHostPage>();
 
         builder.Services.AddSingleton<AppPageFactory>();
 

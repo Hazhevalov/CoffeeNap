@@ -5,13 +5,14 @@ using CoffeeNap.Services;
 namespace CoffeeNap.ViewModels;
 
 /// <summary>
-/// Общая навигационная логика нижней панели. Экземпляр принадлежит конкретной
-/// странице, поэтому active state не конфликтует с другими экранами.
+/// Navigation state for one visible bottom bar. The tab host owns its shared
+/// instance; modal pages receive an independent instance.
 /// </summary>
 public partial class BottomNavigationViewModel : ObservableObject
 {
     private readonly IAppNavigationService _navigationService;
     private NavigationTab _activeTab;
+    private bool _animateNextSelection = true;
 
     public BottomNavigationViewModel(IAppNavigationService navigationService)
     {
@@ -38,18 +39,51 @@ public partial class BottomNavigationViewModel : ObservableObject
 
     public bool IsCalendarActive => ActiveTab == NavigationTab.Calendar;
 
-    [RelayCommand(AllowConcurrentExecutions = false)]
-    private Task OpenHomeAsync() => ActiveTab == NavigationTab.Home
-        ? Task.CompletedTask
-        : _navigationService.NavigateToTopLevelAsync(AppShell.MainAbsoluteRoute);
+    internal void SetActiveTab(NavigationTab tab, bool animate)
+    {
+        _animateNextSelection = animate;
+        try
+        {
+            ActiveTab = tab;
+        }
+        finally
+        {
+            _animateNextSelection = true;
+        }
+    }
+
+    internal bool ConsumeSelectionAnimation()
+    {
+        var animate = _animateNextSelection;
+        _animateNextSelection = true;
+        return animate;
+    }
 
     [RelayCommand(AllowConcurrentExecutions = false)]
-    private Task OpenAddConsumptionAsync() => ActiveTab == NavigationTab.AddConsumption
-        ? Task.CompletedTask
-        : _navigationService.NavigateToTopLevelAsync(AppShell.AddConsumptionAbsoluteRoute);
+    private Task OpenHomeAsync() => NavigateAsync(
+        NavigationTab.Home,
+        AppShell.MainAbsoluteRoute);
 
     [RelayCommand(AllowConcurrentExecutions = false)]
-    private Task OpenCalendarAsync() => ActiveTab == NavigationTab.Calendar
-        ? Task.CompletedTask
-        : _navigationService.NavigateToTopLevelAsync(AppShell.CalendarAbsoluteRoute);
+    private Task OpenAddConsumptionAsync() => NavigateAsync(
+        NavigationTab.AddConsumption,
+        AppShell.AddConsumptionAbsoluteRoute);
+
+    [RelayCommand(AllowConcurrentExecutions = false)]
+    private Task OpenCalendarAsync() => NavigateAsync(
+        NavigationTab.Calendar,
+        AppShell.CalendarAbsoluteRoute);
+
+    private Task NavigateAsync(NavigationTab targetTab, string absoluteRoute)
+    {
+        if (ActiveTab == targetTab)
+        {
+            return Task.CompletedTask;
+        }
+
+        // The host changes ActiveTab only when the destination is ready. No
+        // optimistic rollback is needed, and an already committed destination
+        // can never diverge from the pill if native navigation later fails.
+        return _navigationService.NavigateToTopLevelAsync(absoluteRoute, this);
+    }
 }

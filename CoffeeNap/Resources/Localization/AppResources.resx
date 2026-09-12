@@ -31,6 +31,9 @@
   <data name="NamePlaceholder" xml:space="preserve"><value>Имя</value></data>
   <data name="Confirm" xml:space="preserve"><value>Подтвердить</value></data>
   <data name="CalendarTitle" xml:space="preserve"><value>Календарь</value></data>
+  <data name="MainPageTitle" xml:space="preserve"><value>Главная</value></data>
+  <data name="Back" xml:space="preserve"><value>Назад</value></data>
+  <data name="Selected" xml:space="preserve"><value>Выбрано</value></data>
   <data name="MondayShort" xml:space="preserve"><value>Пн</value></data>
   <data name="TuesdayShort" xml:space="preserve"><value>Вт</value></data>
   <data name="WednesdayShort" xml:space="preserve"><value>Ср</value></data>
