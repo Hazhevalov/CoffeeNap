@@ -1,52 +1,48 @@
 # CoffeeNap
 
-Приложение на .NET 10 MAUI для учёта употребления кофеина. Поддерживает кофе дома и в кафе, чай и энергетики, повтор последнего рецепта, историю, календарь, статистику и переключение между русским и английским языками. Данные хранятся локально в SQLite.
+A .NET 10 MAUI app for tracking caffeine consumption. It supports home and café coffee, tea, energy drinks, reusing the last recipe, consumption history, a calendar, statistics, and switching between English and Russian. Data is stored locally in SQLite.
 
-## Структура
+## Project structure
 
 ```text
 CoffeeNap/
-  Configuration/             Регистрация зависимостей и их времени жизни
+  Configuration/             Dependency registration and lifetimes
   Models/
-    AddConsumption/           Ответы опроса, рецепты, каталоги напитков
-    Calendar/                 Модели календаря и агрегированной статистики
-  Data/                      SQLite-соединение, схема и версия базы
+    AddConsumption/           Quiz answers, recipes, and drink catalogs
+    Calendar/                 Calendar models and aggregated statistics
+  Data/                      SQLite connection, schema, and database version
   Services/
-    Consumption/             Расчёт кофеина
-    Dialogs/                 Диалоги приложения
-    Lifecycle/               Перезапуск и завершение приложения
-    Localization/            Язык, культура и доступ к переводам
-    Navigation/              Переходы и политика анимаций
-    Persistence/             Доступ к данным, валидация и миграция Preferences
-    Profile/                 Наблюдаемое состояние профиля
-    Statistics/              Расчёты статистики и кеш календаря
-  ViewModels/                Состояние экранов и команды
-  Views/                     Страницы, контейнер вкладок и фабрика страниц
-  Controls/                  Общие элементы интерфейса и шаги опроса
-  Behaviors/                 Поведение нажатий
-  Helpers/                   Валидация имени, форматирование времени и цвета
-  Resources/                 Переводы, стили, изображения, шрифт и иконки
-  Platforms/                 Код и настройки отдельных платформ
-tests/CoffeeNap.Tests/       Регрессионные тесты без запуска MAUI
-docs/                       Заметки о платформенном поведении и проверках
+    Consumption/             Caffeine calculations
+    Dialogs/                 Application dialogs
+    Lifecycle/               Application restart and shutdown
+    Localization/            Language, culture, and translation access
+    Navigation/              Navigation and animation policy
+    Persistence/             Data access, validation, and Preferences migration
+    Profile/                 Observable profile state
+    Statistics/              Statistics calculations and calendar cache
+  ViewModels/                Screen state and commands
+  Views/                     Pages, tab host, and page factory
+  Controls/                  Shared UI components and quiz steps
+  Behaviors/                 Press interaction behavior
+  Helpers/                   Name validation, relative time formatting, and colors
+  Resources/                 Translations, styles, images, font, and icons
+  Platforms/                 Platform-specific code and configuration
+docs/                        Platform behavior and verification notes
 ```
 
-Вложенные папки моделей и сервисов сохраняют пространства имён `CoffeeNap.Models` и `CoffeeNap.Services`: группировка файлов не меняет существующие XAML-ссылки и имена типов. Регистрация сервисов находится в `Configuration/ServiceCollectionExtensions.cs`; `MauiProgram` настраивает MAUI, шрифт и платформенные обработчики.
+The model and service subfolders retain the `CoffeeNap.Models` and `CoffeeNap.Services` namespaces: grouping files does not change existing XAML references or type names. Service registration lives in `Configuration/ServiceCollectionExtensions.cs`; `MauiProgram` configures MAUI, the font, and platform handlers.
 
-Запись употребления и последнего рецепта выполняется одной транзакцией через `IAppDataService`. При изменении структуры проекта необходимо сохранять имена таблиц, значения перечислений, ключи настроек и миграцию существующих данных. Кеш календаря и ленивое создание UI описаны в [заметках по Android](docs/android-performance.md).
+A consumption entry and its recipe are saved in a single transaction through `IAppDataService`. When restructuring the project, preserve table names, enum values, settings keys, and existing data migrations. Calendar caching and lazy UI creation are described in the [Android notes](docs/android-performance.md).
 
-## Сборка и проверки
+## Building and verification
 
-Нужны .NET 10 SDK и MAUI workloads для выбранной платформы. Для Android также нужны Android SDK и JDK; iOS и Mac Catalyst требуют macOS и Xcode.
+The .NET 10 SDK and MAUI workloads for the target platform are required. Android also requires the Android SDK and JDK; iOS and Mac Catalyst require macOS and Xcode.
 
-Из корня репозитория:
+Run from the repository root:
 
 ```powershell
 dotnet build CoffeeNap/CoffeeNap.csproj -f net10.0-windows10.0.19041.0
 dotnet build CoffeeNap/CoffeeNap.csproj -f net10.0-android
-dotnet test tests/CoffeeNap.Tests/CoffeeNap.Tests.csproj
 ```
 
-Тесты подключают исходные файлы платформонезависимой логики через `Compile Include`, а также настоящие ресурсы переводов. Это позволяет проверять расчёты, рецепты и статистику на обычном .NET без устройства и без обращения к пользовательской базе. Они не заменяют проверку UI, навигации и SQLite на устройстве.
-
-После изменений интерфейса проверять onboarding, переключение вкладок, все ветви добавления напитка, повтор рецепта, удаление записи, обновление календаря и смену языка. Сценарий удаления всех данных проверять только на тестовом профиле.
+After UI changes, verify onboarding, tab switching, every drink entry flow, recipe reuse, entry deletion, calendar updates, and language switching. Verify the delete-all-data flow only with a test profile.
