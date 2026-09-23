@@ -11,7 +11,6 @@
             <Grid
                 Grid.Row="1"
                 Padding="10"
-                IsVisible="{Binding IsCoffeeLocationStep}"
                 RowSpacing="20"
                 VerticalOptions="Fill">
 

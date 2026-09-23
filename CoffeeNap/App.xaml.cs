@@ -12,13 +12,15 @@ public partial class App : Application
     private readonly AppPageFactory _pageFactory;
     private readonly ILogger<App> _logger;
     private readonly CalendarStatisticsService _calendarStatistics;
+    private readonly ApplicationVisibility _visibility;
 
     public App(
         UserStateService userState,
         LocalizationService localization,
         AppPageFactory pageFactory,
         ILogger<App> logger,
-        CalendarStatisticsService calendarStatistics)
+        CalendarStatisticsService calendarStatistics,
+        ApplicationVisibility visibility)
     {
         InitializeComponent();
         _userState = userState;
@@ -26,11 +28,16 @@ public partial class App : Application
         _pageFactory = pageFactory;
         _logger = logger;
         _calendarStatistics = calendarStatistics;
+        _visibility = visibility;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
         var window = new Window(CreateLoadingPage());
+        window.Activated += (_, _) => _visibility.SetActive(true);
+        window.Stopped += (_, _) => _visibility.SetActive(false);
+        window.Resumed += (_, _) => _visibility.SetActive(true);
+        window.Destroying += (_, _) => (window.Page as AppShell)?.ReleaseContent();
         _ = CompleteStartupAsync(window);
         return window;
     }

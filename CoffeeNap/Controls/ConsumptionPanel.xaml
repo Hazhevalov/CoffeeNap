@@ -10,59 +10,26 @@
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     BackgroundColor="Transparent">
 
-    <!-- Белая карточка занимает всю доступную высоту фиксированного блока. -->
-    <Border
-        Padding="5"
-        BackgroundColor="{StaticResource SurfaceColor}"
-        StrokeThickness="1"
-        Stroke="{StaticResource DividerColor}">
-
-        <Border.StrokeShape>
-            <RoundRectangle CornerRadius="25"/>
-        </Border.StrokeShape>
-
-        <Border.Shadow>
-            <Shadow Brush="{StaticResource CardShadowBrush}" Offset="0,-2" Opacity="0.1" Radius="6" />
-        </Border.Shadow>
-
-        <Grid RowSpacing="0">
-            <!-- Заголовок остаётся на месте, список занимает остальную высоту. -->
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0" Padding="10,16,10,10">
-                <!-- Заголовок панели и декоративный информационный значок. -->
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="26" />
-                </Grid.ColumnDefinitions>
-                <Label
-                    FontFamily="Inter"
-                    FontSize="20"
-                    FontAttributes="Bold"
-                    Text="{localization:Translate Consumptions}"
-                    TextColor="{StaticResource InkColor}" />
-
-                <Image Source="info_ico.png" 
-                        WidthRequest="24" 
-                        HeightRequest="24"
-                        HorizontalOptions="End"
-                        VerticalOptions="Center"
-                        Grid.Column="1"/>
-            </Grid>
-
-            <Grid Grid.Row="1">
-                <!-- Список получает данные снаружи через ItemsSource самого контрола. -->
                 <CollectionView
                     x:Name="ConsumptionList"
                     Margin="0,1,0,0"
                     BackgroundColor="{StaticResource SurfaceColor}"
                     ItemsSource="{Binding Source={x:Reference Panel}, Path=ItemsSource}"
                     SelectionMode="None"
+                    ItemSizingStrategy="MeasureFirstItem"
+                    ItemsUpdatingScrollMode="KeepScrollOffset"
+                    Scrolled="OnScrolled"
+                    RemainingItemsThreshold="8"
+                    RemainingItemsThresholdReachedCommand="{Binding Source={x:Reference Panel}, Path=LoadMoreCommand}"
                     VerticalScrollBarVisibility="Never">
 
+                    <CollectionView.Header>
+                        <VerticalStackLayout Spacing="10" Padding="0,0,0,8">
+                            <ContentView Content="{Binding Source={x:Reference Panel}, Path=HeaderContent}" />
+                            <Label Margin="10,16,10,0" FontFamily="Inter" FontSize="20" FontAttributes="Bold"
+                                Text="{localization:Translate Consumptions}" TextColor="{StaticResource InkColor}" />
+                        </VerticalStackLayout>
+                    </CollectionView.Header>
                     <CollectionView.EmptyView>
                         <Grid Padding="20" VerticalOptions="Center">
                             <Label
@@ -158,6 +125,8 @@
                                         <Label
                                             FontFamily="Inter"
                                                 FontSize="11"
+                                                MaxLines="1"
+                                                LineBreakMode="TailTruncation"
                                                 Text="{Binding RelativeTime}"
                                                 TextColor="{StaticResource MutedTextColor}" />
                                         </VerticalStackLayout>
@@ -177,13 +146,13 @@
                     </CollectionView.ItemTemplate>
                     <!-- Фиксированный отступ позволяет полностью показать последнюю карточку. -->
                     <CollectionView.Footer>
-                        <BoxView
-                            x:Name="BottomScrollSpacer"
-                            HeightRequest="20"
-                            BackgroundColor="{StaticResource SurfaceColor}" />
+                        <VerticalStackLayout Padding="10,8,10,20" Spacing="6">
+                            <ActivityIndicator IsRunning="{Binding Source={x:Reference Panel}, Path=IsLoading}"
+                                IsVisible="{Binding Source={x:Reference Panel}, Path=IsLoading}" />
+                            <Button Text="{localization:Translate LoadMore}"
+                                IsVisible="{Binding Source={x:Reference Panel}, Path=HasMore}"
+                                Command="{Binding Source={x:Reference Panel}, Path=LoadMoreCommand}" />
+                        </VerticalStackLayout>
                     </CollectionView.Footer>
                 </CollectionView>
-            </Grid>
-        </Grid>
-    </Border>
 </ContentView>

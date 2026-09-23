@@ -18,6 +18,8 @@ public interface IAppDataService
     Task SaveSettingsAsync(AppSettings settings);
 
     Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsAsync();
+    Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsPageAsync(ConsumptionCursor? before, int pageSize);
+    Task<ConsumptionOverview> GetConsumptionOverviewAsync(DateTimeOffset now);
     Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsBetweenAsync(
         DateTimeOffset fromInclusive,
         DateTimeOffset toExclusive);

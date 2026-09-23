@@ -24,18 +24,19 @@ internal static class ServiceCollectionExtensions
 #endif
         services.AddSingleton<ICaffeineCalculator, CaffeineCalculator>();
         services.AddSingleton<CalendarStatisticsService>();
+        services.AddSingleton<ApplicationVisibility>();
 
         services.AddTransient<MainHeaderViewModel>();
         services.AddTransient<BottomNavigationViewModel>();
         services.AddTransient<MainPageViewModel>();
         services.AddTransient<CalendarPageViewModel>();
-        services.AddSingleton<AddConsumptionPageViewModel>();
+        services.AddTransient<AddConsumptionPageViewModel>();
         services.AddTransient<OnboardingViewModel>();
         services.AddTransient<SettingsPageViewModel>();
 
         services.AddTransient<MainPage>();
         services.AddTransient<CalendarPage>();
-        services.AddSingleton<AddConsumptionPage>();
+        services.AddTransient<AddConsumptionPage>();
         services.AddTransient<SettingsPage>();
         services.AddTransient<OnboardingPage>();
         services.AddTransient<PrivacyPolicyPage>();

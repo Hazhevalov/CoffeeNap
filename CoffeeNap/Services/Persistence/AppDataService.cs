@@ -99,7 +99,7 @@ public sealed class AppDataService : IAppDataService
         ArgumentNullException.ThrowIfNull(settings);
         await InitializeAsync();
 
-        if (settings.DailyCaffeineLimit <= 0)
+        if (!double.IsFinite(settings.DailyCaffeineLimit) || settings.DailyCaffeineLimit <= 0)
         {
             throw new ArgumentOutOfRangeException(
                 nameof(settings),
@@ -121,6 +121,19 @@ public sealed class AppDataService : IAppDataService
     {
         await InitializeAsync();
         return await _database.GetConsumptionsAsync();
+    }
+
+    public async Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsPageAsync(ConsumptionCursor? before, int pageSize)
+    {
+        if (pageSize is < 1 or > 100) throw new ArgumentOutOfRangeException(nameof(pageSize));
+        await InitializeAsync();
+        return await _database.GetConsumptionsPageAsync(before, pageSize);
+    }
+
+    public async Task<ConsumptionOverview> GetConsumptionOverviewAsync(DateTimeOffset now)
+    {
+        await InitializeAsync();
+        return await _database.GetConsumptionOverviewAsync(now);
     }
 
     public async Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsBetweenAsync(
@@ -151,11 +164,12 @@ public sealed class AppDataService : IAppDataService
         consumption.Id = 0;
         consumption.ConsumedAt = consumption.ConsumedAt.ToUniversalTime();
         recipe.Id = DatabaseConstants.LastConsumptionRecipeId;
+        consumption.NameKey = ConsumptionNameKey.FromRecipe(recipe);
         await _database.SaveConsumptionAndRecipeAsync(consumption, recipe);
 
         _lastRecipe = recipe;
         _isLastRecipeLoaded = true;
-        ConsumptionAdded?.Invoke(this, consumption);
+        PublishSafely(ConsumptionAdded, consumption);
     }
 
     public async Task<LastConsumptionRecipe?> GetLastConsumptionRecipeAsync()
@@ -199,7 +213,7 @@ public sealed class AppDataService : IAppDataService
             throw new InvalidOperationException($"Consumption with Id {id} was not deleted.");
         }
 
-        ConsumptionDeleted?.Invoke(this, consumption);
+        PublishSafely(ConsumptionDeleted, consumption);
     }
 
     public async Task DeleteAllUserDataAsync()
@@ -214,7 +228,24 @@ public sealed class AppDataService : IAppDataService
             Preferences.Default.Remove(key);
         }
 
-        UserDataDeleted?.Invoke(this, EventArgs.Empty);
+        if (UserDataDeleted is { } handlers)
+        {
+            foreach (EventHandler handler in handlers.GetInvocationList())
+            {
+                try { handler(this, EventArgs.Empty); }
+                catch (Exception exception) { _logger.LogError(exception, "User data reset subscriber failed after commit."); }
+            }
+        }
+    }
+
+    private void PublishSafely(EventHandler<CaffeineConsumption>? handlers, CaffeineConsumption consumption)
+    {
+        if (handlers is null) return;
+        foreach (EventHandler<CaffeineConsumption> handler in handlers.GetInvocationList())
+        {
+            try { handler(this, consumption); }
+            catch (Exception exception) { _logger.LogError(exception, "Consumption subscriber failed after commit."); }
+        }
     }
 
     private async Task MigrateLegacyPreferencesAsync()
@@ -272,7 +303,7 @@ public sealed class AppDataService : IAppDataService
             throw new ArgumentException("Consumption name cannot be empty.", nameof(consumption));
         }
 
-        if (consumption.CaffeineMg < 0)
+        if (consumption.CaffeineMg is < 0 or > ConsumptionRecipeValidator.MaximumCaffeineMg)
         {
             throw new ArgumentOutOfRangeException(nameof(consumption), "Caffeine amount cannot be negative.");
         }
@@ -287,27 +318,7 @@ public sealed class AppDataService : IAppDataService
     {
         ArgumentNullException.ThrowIfNull(recipe);
 
-        var isValid = recipe.DrinkType switch
-        {
-            CaffeineConsumptionType.Coffee => recipe.CoffeeLocation switch
-            {
-                CoffeeLocation.Home =>
-                    recipe.BrewingMethod is not null &&
-                    recipe.CoffeeAmountGrams is > 0 &&
-                    recipe.BeanType is not null,
-                CoffeeLocation.Outside =>
-                    recipe.CoffeeDrinkType is not null &&
-                    recipe.VolumeMl is > 0 &&
-                    recipe.BeanType is not null,
-                _ => false
-            },
-            CaffeineConsumptionType.Tea =>
-                recipe.TeaType is not null && recipe.TeaAmountGrams is > 0,
-            CaffeineConsumptionType.EnergyDrink => recipe.EnergyDrinkVolumeMl is > 0,
-            _ => false
-        };
-
-        if (!isValid)
+        if (!ConsumptionRecipeValidator.IsValid(recipe))
         {
             throw new ArgumentException("The recipe is incomplete.", nameof(recipe));
         }

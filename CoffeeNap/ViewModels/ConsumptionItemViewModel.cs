@@ -12,7 +12,9 @@ public sealed class ConsumptionItemViewModel(CaffeineConsumption model) : Observ
 
     public int Id => Model.Id;
 
-    public string Name => Model.Name;
+    public string Name => string.IsNullOrEmpty(Model.NameKey)
+        ? Model.Name
+        : LocalizationService.Current[Model.NameKey];
 
     public DateTimeOffset ConsumedAt => Model.ConsumedAt;
 
@@ -36,13 +38,16 @@ public sealed class ConsumptionItemViewModel(CaffeineConsumption model) : Observ
 
     public string CaffeineDisplay => $"{CaffeineMg} {LocalizationService.Current["MilligramShort"]}";
 
-    public string RelativeTime => RelativeTimeFormatter.Format(ConsumedAt, DateTimeOffset.Now);
+    private string? _relativeTime;
+    public string RelativeTime => _relativeTime ??= RelativeTimeFormatter.Format(ConsumedAt, DateTimeOffset.Now);
 
     public void RefreshLocalizedState()
     {
-        OnPropertyChanged(nameof(RelativeTime));
+        RefreshRelativeTime();
+        OnPropertyChanged(nameof(Name));
         OnPropertyChanged(nameof(CaffeineDisplay));
     }
 
-    public void RefreshRelativeTime() => OnPropertyChanged(nameof(RelativeTime));
+    public void RefreshRelativeTime() => SetProperty(ref _relativeTime,
+        RelativeTimeFormatter.Format(ConsumedAt, DateTimeOffset.Now), nameof(RelativeTime));
 }

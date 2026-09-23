@@ -18,7 +18,7 @@ public static class CaffeineStatisticsCalculator
             .Where(consumption =>
                 consumption.ConsumedAt.ToLocalTime() >= startOfToday &&
                 consumption.ConsumedAt <= now)
-            .Sum(consumption => Math.Max(0, consumption.CaffeineMg));
+            .Sum(consumption => (double)Math.Max(0, consumption.CaffeineMg));
     }
 
 }

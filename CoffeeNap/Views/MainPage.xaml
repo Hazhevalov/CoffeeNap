@@ -10,27 +10,20 @@
     AutomationId="MainTabContent"
     BackgroundColor="{StaticResource PageBackgroundColor}">
 
-    <Grid SafeAreaEdges="None" RowSpacing="10" Padding="12,0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="86" />
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        
-        <!-- Нав Бар -->
-        <controls:MainHeaderView Grid.Row="0"
-                    HeightRequest="86"
-                    BindingContext="{Binding Header}"
-                    SafeAreaEdges="None" />
-
-        <!-- Верхние карточки фиксированы, а список употреблений занимает оставшуюся высоту. -->
-        <Grid SafeAreaEdges="None"
-            Grid.Row="1"
-            RowDefinitions="Auto,*"
-            RowSpacing="10">
-
-        <VerticalStackLayout
-            x:Name="FixedTopContent"
-            Grid.Row="0"
+    <Grid SafeAreaEdges="None" RowDefinitions="Auto,Auto,*" RowSpacing="10" Padding="12,0">
+        <controls:MainHeaderView Grid.Row="0" MinimumHeightRequest="86" BindingContext="{Binding Header}" SafeAreaEdges="None" />
+        <VerticalStackLayout Grid.Row="1" IsVisible="{Binding HasLoadError}" Spacing="4">
+            <Label Text="{Binding InitializationError}" TextColor="{StaticResource InkColor}" />
+            <Button Text="{localization:Translate Retry}" Command="{Binding RetryCommand}" />
+        </VerticalStackLayout>
+        <controls:ConsumptionPanel
+            x:Name="ConsumptionPanel" Grid.Row="2"
+            DeleteCommand="{Binding DeleteConsumptionCommand}"
+            LoadMoreCommand="{Binding LoadMoreCommand}"
+            HasMore="{Binding HasMore}" IsLoading="{Binding IsBusy}"
+            ItemsSource="{Binding Consumptions}">
+            <controls:ConsumptionPanel.HeaderContent>
+                <VerticalStackLayout
             Spacing="10"
             VerticalOptions="Start">
             
@@ -96,7 +89,7 @@
                             Grid.Column="1"
                             FontFamily="Inter"
                             FontSize="10"
-                            Text="{Binding DailyCaffeineLimit, StringFormat='{0:0}мг'}"
+                            Text="{Binding DailyLimitDisplay}"
                             TextColor="{StaticResource MutedTextColor}"
                             VerticalOptions="Center" />
                     </Grid>
@@ -319,14 +312,7 @@
                 </Grid>
             </Border>
         </VerticalStackLayout>
-
-        <controls:ConsumptionPanel
-            x:Name="ConsumptionPanel"
-            Grid.Row="1"
-            DeleteCommand="{Binding DeleteConsumptionCommand}"
-            ItemsSource="{Binding Consumptions}" />
-
-        </Grid>
-
+            </controls:ConsumptionPanel.HeaderContent>
+        </controls:ConsumptionPanel>
     </Grid>
 </ContentView>

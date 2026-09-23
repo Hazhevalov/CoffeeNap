@@ -8,7 +8,7 @@
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:AddConsumptionPageViewModel">
 
-    <Grid Padding="10" IsVisible="{Binding IsEnergyDrinkVolumeStep}" VerticalOptions="Fill">
+    <Grid Padding="10" VerticalOptions="Fill">
         <Grid RowDefinitions="Auto,Auto" RowSpacing="20" VerticalOptions="Center">
             <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="5">
                 <Label FontSize="16" Text="{localization:Translate EnergyDrink}" TextColor="{StaticResource MutedTextColor}" />

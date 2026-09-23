@@ -16,6 +16,7 @@ public partial class MainPage : ContentView, ITabContent
         InitializeComponent();
         _viewModel = viewModel;
         BindingContext = viewModel;
+        ConsumptionPanel.VisibleRangeChanged += viewModel.SetVisibleRange;
     }
 
     NavigationTab ITabContent.Tab => NavigationTab.Home;
@@ -26,7 +27,6 @@ public partial class MainPage : ContentView, ITabContent
         await _viewModel.InitializeAsync();
         if (_isPageVisible)
         {
-            ConsumptionPanel.ScrollToNewest();
             _viewModel.StartRelativeTimeTimer();
         }
     }
@@ -35,5 +35,12 @@ public partial class MainPage : ContentView, ITabContent
     {
         _isPageVisible = false;
         _viewModel.StopRelativeTimeTimer();
+    }
+
+    void ITabContent.Release()
+    {
+        _isPageVisible = false;
+        ConsumptionPanel.VisibleRangeChanged -= _viewModel.SetVisibleRange;
+        _viewModel.Release();
     }
 }

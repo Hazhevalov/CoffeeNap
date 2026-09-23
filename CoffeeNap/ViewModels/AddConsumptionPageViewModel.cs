@@ -70,6 +70,12 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         _localization.CultureChanged += OnCultureChanged;
     }
 
+    public void Release()
+    {
+        _dataService.UserDataDeleted -= OnUserDataDeleted;
+        _localization.CultureChanged -= OnCultureChanged;
+    }
+
     public MainHeaderViewModel Header { get; }
     public AddConsumptionQuizState QuizState { get; } = new();
 
@@ -123,17 +129,6 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         private set => SetProperty(ref _isSaving, value);
     }
 
-    public bool IsDrinkTypeStep => CurrentStep == AddConsumptionStep.DrinkType;
-    public bool IsCoffeeLocationStep => CurrentStep == AddConsumptionStep.CoffeeLocation;
-    public bool IsBrewingMethodStep => CurrentStep == AddConsumptionStep.BrewingMethod;
-    public bool IsCoffeeAmountStep => CurrentStep == AddConsumptionStep.CoffeeAmount;
-    public bool IsCoffeeBeanTypeStep => CurrentStep == AddConsumptionStep.CoffeeBeanType;
-    public bool IsResultStep => CurrentStep == AddConsumptionStep.Result;
-    public bool IsCoffeeDrinkTypeStep => CurrentStep == AddConsumptionStep.CoffeeDrinkType;
-    public bool IsCoffeeVolumeStep => CurrentStep == AddConsumptionStep.CoffeeVolume;
-    public bool IsTeaSortStep => CurrentStep == AddConsumptionStep.TeaSort;
-    public bool IsTeaAmountStep => CurrentStep == AddConsumptionStep.TeaAmount;
-    public bool IsEnergyDrinkVolumeStep => CurrentStep == AddConsumptionStep.EnergyDrinkVolume;
 
     public int ProgressPosition
     {
@@ -234,7 +229,8 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     [RelayCommand]
     private void ConfirmManualCoffeeAmount()
     {
-        if (!TryParsePositiveDouble(ManualCoffeeAmountText, out var grams))
+        if (!TryParsePositiveDouble(ManualCoffeeAmountText, out var grams) ||
+            !ConsumptionRecipeValidator.IsAmountValid(grams, ConsumptionRecipeValidator.MaximumCoffeeGrams))
         {
             ValidationMessage = _localization["CoffeeAmountInvalid"];
             return;
@@ -301,7 +297,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     [RelayCommand]
     private void ConfirmManualVolume()
     {
-        if (!int.TryParse(ManualVolumeText, NumberStyles.Integer, CultureInfo.CurrentCulture, out var volume) || volume <= 0)
+        if (!int.TryParse(ManualVolumeText, NumberStyles.Integer, CultureInfo.CurrentCulture, out var volume) || volume is <= 0 or > ConsumptionRecipeValidator.MaximumVolumeMl)
         {
             ValidationMessage = _localization["VolumeInvalid"];
             return;
@@ -349,7 +345,8 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     [RelayCommand]
     private void ConfirmManualTeaAmount()
     {
-        if (!TryParsePositiveDouble(ManualTeaAmountText, out var grams))
+        if (!TryParsePositiveDouble(ManualTeaAmountText, out var grams) ||
+            !ConsumptionRecipeValidator.IsAmountValid(grams, ConsumptionRecipeValidator.MaximumTeaGrams))
         {
             ValidationMessage = _localization["TeaAmountInvalid"];
             return;
@@ -364,7 +361,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     [RelayCommand]
     private void SelectEnergyDrinkVolume(int volumeMl)
     {
-        if (volumeMl <= 0)
+        if (volumeMl is <= 0 or > ConsumptionRecipeValidator.MaximumVolumeMl)
         {
             ValidationMessage = _localization["EnergyDrinkVolumeInvalid"];
             return;
@@ -514,25 +511,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
             return false;
         }
 
-        var isValid = drinkType switch
-        {
-            CaffeineConsumptionType.Coffee => QuizState.CoffeeLocation switch
-            {
-                CoffeeLocation.Home =>
-                    QuizState.BrewingMethod is not null &&
-                    QuizState.CoffeeAmountGrams is > 0 &&
-                    QuizState.BeanType is not null,
-                CoffeeLocation.Outside =>
-                    QuizState.CoffeeDrinkType is not null &&
-                    QuizState.VolumeMl is > 0 &&
-                    QuizState.BeanType is not null,
-                _ => false
-            },
-            CaffeineConsumptionType.Tea =>
-                QuizState.TeaType is not null && QuizState.TeaAmountGrams is > 0,
-            CaffeineConsumptionType.EnergyDrink => QuizState.EnergyDrinkVolumeMl is > 0,
-            _ => false
-        };
+        var isValid = ConsumptionRecipeValidator.IsValid(QuizState);
 
         message = isValid
             ? string.Empty
@@ -586,13 +565,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
 
     private void NotifyStepStateChanged()
     {
-        OnPropertyChanged(nameof(IsDrinkTypeStep)); OnPropertyChanged(nameof(IsCoffeeLocationStep));
-        OnPropertyChanged(nameof(IsBrewingMethodStep)); OnPropertyChanged(nameof(IsCoffeeAmountStep));
-        OnPropertyChanged(nameof(IsCoffeeBeanTypeStep));
-        OnPropertyChanged(nameof(IsResultStep)); OnPropertyChanged(nameof(IsCoffeeDrinkTypeStep));
-        OnPropertyChanged(nameof(IsCoffeeVolumeStep)); OnPropertyChanged(nameof(ProgressPosition));
-        OnPropertyChanged(nameof(IsTeaSortStep)); OnPropertyChanged(nameof(IsTeaAmountStep));
-        OnPropertyChanged(nameof(IsEnergyDrinkVolumeStep));
+        OnPropertyChanged(nameof(ProgressPosition));
         OnPropertyChanged(nameof(ProgressStepCount));
     }
 
@@ -608,7 +581,8 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     private static bool TryParsePositiveDouble(string value, out double result)
     {
         var normalized = value.Replace(',', CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]);
-        return double.TryParse(normalized, NumberStyles.Float, CultureInfo.CurrentCulture, out result) && result > 0;
+        return double.TryParse(normalized, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite,
+            CultureInfo.CurrentCulture, out result) && double.IsFinite(result) && result > 0;
     }
 
     private void OnCultureChanged(object? sender, EventArgs eventArgs)

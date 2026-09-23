@@ -12,6 +12,8 @@ public sealed class CaffeineConsumption
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
 
+    public string? NameKey { get; set; }
+
     [Indexed(Name = "IX_CaffeineConsumptions_ConsumedAt")]
     public DateTimeOffset ConsumedAt { get; set; }
 

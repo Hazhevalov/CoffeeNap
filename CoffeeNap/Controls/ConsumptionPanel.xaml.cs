@@ -9,6 +9,23 @@ namespace CoffeeNap.Controls;
 /// </summary>
 public partial class ConsumptionPanel : ContentView
 {
+    public static readonly BindableProperty HeaderContentProperty = BindableProperty.Create(
+        nameof(HeaderContent), typeof(View), typeof(ConsumptionPanel));
+    public static readonly BindableProperty LoadMoreCommandProperty = BindableProperty.Create(
+        nameof(LoadMoreCommand), typeof(ICommand), typeof(ConsumptionPanel));
+    public static readonly BindableProperty HasMoreProperty = BindableProperty.Create(
+        nameof(HasMore), typeof(bool), typeof(ConsumptionPanel), false);
+    public static readonly BindableProperty IsLoadingProperty = BindableProperty.Create(
+        nameof(IsLoading), typeof(bool), typeof(ConsumptionPanel), false);
+
+    public View? HeaderContent { get => (View?)GetValue(HeaderContentProperty); set => SetValue(HeaderContentProperty, value); }
+    public ICommand? LoadMoreCommand { get => (ICommand?)GetValue(LoadMoreCommandProperty); set => SetValue(LoadMoreCommandProperty, value); }
+    public bool HasMore { get => (bool)GetValue(HasMoreProperty); set => SetValue(HasMoreProperty, value); }
+    public bool IsLoading { get => (bool)GetValue(IsLoadingProperty); set => SetValue(IsLoadingProperty, value); }
+    public event Action<int, int>? VisibleRangeChanged;
+
+    private void OnScrolled(object? sender, ItemsViewScrolledEventArgs args) =>
+        VisibleRangeChanged?.Invoke(args.FirstVisibleItemIndex, args.LastVisibleItemIndex);
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
         nameof(ItemsSource), typeof(IEnumerable), typeof(ConsumptionPanel));
 
@@ -32,18 +49,6 @@ public partial class ConsumptionPanel : ContentView
     {
         get => (ICommand?)GetValue(DeleteCommandProperty);
         set => SetValue(DeleteCommandProperty, value);
-    }
-
-    /// <summary>Показывает начало уже отсортированного списка без заметной задержки.</summary>
-    public void ScrollToNewest()
-    {
-        Dispatcher.Dispatch(() =>
-        {
-            if (ItemsSource is ICollection { Count: > 0 })
-            {
-                ConsumptionList.ScrollTo(0, position: ScrollToPosition.Start, animate: false);
-            }
-        });
     }
 
     private void OnSwipeStarted(object? sender, SwipeStartedEventArgs eventArgs)
@@ -77,6 +82,8 @@ public partial class ConsumptionPanel : ContentView
         }
 
         swipeView.Close(animated: false);
+        if (swipeView.BindingContext is ViewModels.ConsumptionItemViewModel item)
+            item.RefreshRelativeTime();
         if (ReferenceEquals(_openSwipeView, swipeView))
         {
             _openSwipeView = null;

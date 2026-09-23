@@ -49,13 +49,25 @@ public sealed class AppDatabase
             await _connection.CreateTableAsync<AppSettings>();
             await _connection.CreateTableAsync<CaffeineConsumption>();
             await _connection.CreateTableAsync<LastConsumptionRecipe>();
-            await _connection.ExecuteAsync(
-                "CREATE INDEX IF NOT EXISTS IX_CaffeineConsumptions_ConsumedAt " +
-                "ON CaffeineConsumptions (ConsumedAt)");
 
             if (databaseVersion < DatabaseConstants.Version)
             {
-                // Новые миграции добавляются сюда последовательно, без DropTable.
+                // Keep original text as a fallback for unrecognized legacy/custom names.
+                var resources = new System.Resources.ResourceManager(
+                    "CoffeeNap.Resources.Localization.AppResources", typeof(AppDatabase).Assembly);
+                await _connection.RunInTransactionAsync(connection =>
+                {
+                    foreach (var key in ConsumptionNameKey.KnownKeys)
+                    {
+                        foreach (var language in new[] { "ru", "en" })
+                        {
+                            var name = resources.GetString(key, new System.Globalization.CultureInfo(language));
+                            if (!string.IsNullOrEmpty(name))
+                                connection.Execute("UPDATE CaffeineConsumptions SET NameKey = ? " +
+                                    "WHERE (NameKey IS NULL OR NameKey = '') AND Name = ?", key, name);
+                        }
+                    }
+                });
                 await _connection.ExecuteAsync($"PRAGMA user_version = {DatabaseConstants.Version}");
             }
 
@@ -86,6 +98,47 @@ public sealed class AppDatabase
 
     public async Task<CaffeineConsumption?> GetConsumptionAsync(int id) =>
         await _connection.FindAsync<CaffeineConsumption>(id);
+
+    public Task<List<CaffeineConsumption>> GetConsumptionsPageAsync(ConsumptionCursor? before, int pageSize)
+    {
+        var query = _connection.Table<CaffeineConsumption>();
+        if (before is { } cursor)
+        {
+            var date = cursor.ConsumedAt;
+            var id = cursor.Id;
+            query = query.Where(item => item.ConsumedAt < date ||
+                (item.ConsumedAt == date && item.Id < id));
+        }
+
+        return query.OrderByDescending(item => item.ConsumedAt)
+            .ThenByDescending(item => item.Id).Take(pageSize).ToListAsync();
+    }
+
+    public async Task<ConsumptionOverview> GetConsumptionOverviewAsync(DateTimeOffset now)
+    {
+        var date = now.ToLocalTime().Date;
+        var start = new DateTimeOffset(date, TimeZoneInfo.Local.GetUtcOffset(date)).ToUniversalTime();
+        ConsumptionOverview result = null!;
+        await _connection.RunInTransactionAsync(connection =>
+        {
+            var daily = connection.ExecuteScalar<double>(
+                "SELECT COALESCE(SUM(CAST(MAX(0, CaffeineMg) AS REAL)), 0) FROM CaffeineConsumptions " +
+                "WHERE ConsumedAt >= ? AND ConsumedAt <= ?", start, now.ToUniversalTime());
+            var counts = connection.Query<TypeCount>(
+                "SELECT Type, COUNT(*) AS Count FROM CaffeineConsumptions GROUP BY Type");
+            result = new ConsumptionOverview(daily, new ConsumptionTypeDistribution(
+                counts.FirstOrDefault(item => item.Type == CaffeineConsumptionType.Coffee)?.Count ?? 0,
+                counts.FirstOrDefault(item => item.Type == CaffeineConsumptionType.Tea)?.Count ?? 0,
+                counts.FirstOrDefault(item => item.Type == CaffeineConsumptionType.EnergyDrink)?.Count ?? 0));
+        });
+        return result;
+    }
+
+    private sealed class TypeCount
+    {
+        public CaffeineConsumptionType Type { get; set; }
+        public int Count { get; set; }
+    }
 
     public Task<List<CaffeineConsumption>> GetConsumptionsBetweenAsync(
         DateTimeOffset fromInclusive,

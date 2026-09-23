@@ -28,8 +28,9 @@
             VerticalOptions="Start" />
 
         <!--  Контент под header'ом  -->
+        <ScrollView x:Name="QuizScroll" Grid.Row="1" VerticalScrollBarVisibility="Default">
         <Grid SafeAreaEdges="None"
-            Grid.Row="1"
+            MinimumHeightRequest="{Binding Height, Source={x:Reference QuizScroll}, x:DataType=ScrollView}"
             Padding="0,10"
             IsVisible="True"
             RowDefinitions="Auto,*,Auto"
@@ -92,6 +93,7 @@
                 TextColor="{StaticResource CaffeineProgressLimit}" />
             
         </Grid>
+        </ScrollView>
 
     </Grid>
 </ContentView>

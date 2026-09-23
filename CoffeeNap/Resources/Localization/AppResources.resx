@@ -53,7 +53,7 @@
   <data name="EnergyDrinkVolume250" xml:space="preserve"><value>250 мл</value></data>
   <data name="EnergyDrinkVolume330" xml:space="preserve"><value>330 мл</value></data>
   <data name="EnergyDrinkVolume500" xml:space="preserve"><value>500 мл</value></data>
-  <data name="EnergyDrinkVolumeInvalid" xml:space="preserve"><value>Выберите объём энергетика больше 0 мл</value></data>
+  <data name="EnergyDrinkVolumeInvalid" xml:space="preserve"><value>Выберите объём от 1 до 2000 мл</value></data>
   <data name="CompleteEnergyDrinkParameters" xml:space="preserve"><value>Выберите объём энергетика</value></data>
   <data name="TeaSortQuestion" xml:space="preserve"><value>Какой сорт чая?</value></data>
   <data name="BlackTea" xml:space="preserve"><value>Чёрный</value></data>
@@ -61,7 +61,7 @@
   <data name="BlackTeaDrink" xml:space="preserve"><value>Чёрный чай</value></data>
   <data name="GreenTeaDrink" xml:space="preserve"><value>Зелёный чай</value></data>
   <data name="TeaAmountQuestion" xml:space="preserve"><value>Сколько заварки использовали?</value></data>
-  <data name="TeaAmountInvalid" xml:space="preserve"><value>Введите количество заварки больше 0 г</value></data>
+  <data name="TeaAmountInvalid" xml:space="preserve"><value>Введите количество заварки больше 0 и не более 50 г</value></data>
   <data name="CompleteTeaParameters" xml:space="preserve"><value>Выберите сорт и количество заварки</value></data>
   <data name="UseOldRecipe" xml:space="preserve"><value>Использовать старый рецепт</value></data>
   <data name="NoSavedRecipe" xml:space="preserve"><value>У вас пока нет сохранённого рецепта</value></data>
@@ -131,10 +131,10 @@
   <data name="DayMany" xml:space="preserve"><value>дней</value></data>
   <data name="AgoFormat" xml:space="preserve"><value>{0} {1} назад</value></data>
   <data name="CoffeeOnlySupported" xml:space="preserve"><value>Пока поддерживается только кофе</value></data>
-  <data name="CoffeeAmountInvalid" xml:space="preserve"><value>Введите количество кофе больше 0 г</value></data>
+  <data name="CoffeeAmountInvalid" xml:space="preserve"><value>Введите количество кофе больше 0 и не более 100 г</value></data>
   <data name="SelectDrinkTypeFirst" xml:space="preserve"><value>Сначала выберите вид напитка</value></data>
   <data name="ServingProfileMissing" xml:space="preserve"><value>Для выбранного напитка не настроен стандартный объём</value></data>
-  <data name="VolumeInvalid" xml:space="preserve"><value>Введите объём больше 0 мл</value></data>
+  <data name="VolumeInvalid" xml:space="preserve"><value>Введите объём от 1 до 2000 мл</value></data>
   <data name="ConsumptionSaveFailed" xml:space="preserve"><value>Не удалось сохранить употребление. Попробуйте ещё раз</value></data>
   <data name="SelectCoffee" xml:space="preserve"><value>Выберите кофе</value></data>
   <data name="CompleteCoffeeParameters" xml:space="preserve"><value>Заполните все обязательные параметры кофе</value></data>
@@ -146,4 +146,36 @@
   <data name="SpoonMany" xml:space="preserve"><value>ложек</value></data>
   <data name="GramShort" xml:space="preserve"><value>г</value></data>
   <data name="MilliliterShort" xml:space="preserve"><value>мл</value></data>
+  <data name="PrivacyHeading" xml:space="preserve"><value>Политика конфиденциальности Coffee Nap</value></data>
+  <data name="PrivacyDate" xml:space="preserve"><value>Дата вступления в силу: 23 сентября 2026 года</value></data>
+  <data name="PrivacyIntro" xml:space="preserve"><value>Coffee Nap («Приложение») уважает вашу конфиденциальность. Мы разработали приложение таким образом, чтобы ваши данные оставались на вашем устройстве и не передавались нам или третьим лицам.</value></data>
+  <data name="PrivacyCollectionHeading" xml:space="preserve"><value>1. Какие данные собирает Coffee Nap</value></data>
+  <data name="PrivacyNoUpload" xml:space="preserve"><value>Coffee Nap не собирает и не передаёт персональные данные на внешние серверы.</value></data>
+  <data name="PrivacyStoredIntro" xml:space="preserve"><value>Приложение может сохранять на вашем устройстве информацию, которую вы вводите или создаёте при использовании приложения, включая:</value></data>
+  <data name="PrivacyStoredList" xml:space="preserve"><value>• имя профиля;&#x0a;• записи об употреблении кофеина;&#x0a;• количество и время употребления;&#x0a;• настройки приложения;&#x0a;• история, статистика и другие данные, необходимые для работы приложения.</value></data>
+  <data name="PrivacyLocal" xml:space="preserve"><value>Эти данные хранятся локально на вашем устройстве.</value></data>
+  <data name="PrivacyTransferHeading" xml:space="preserve"><value>2. Передача данных</value></data>
+  <data name="PrivacyNoServers" xml:space="preserve"><value>Coffee Nap не подключается к собственным серверам для сбора или хранения пользовательских данных.</value></data>
+  <data name="PrivacyNoSharing" xml:space="preserve"><value>Мы не передаём, не продаём и не предоставляем доступ к вашим данным третьим лицам.</value></data>
+  <data name="PrivacyNoAccess" xml:space="preserve"><value>Поскольку пользовательские данные не передаются на наши серверы, мы не имеем доступа к вашим локальным записям, истории употребления кофеина или другой информации, сохранённой внутри приложения.</value></data>
+  <data name="PrivacyThirdPartyHeading" xml:space="preserve"><value>3. Сторонние сервисы</value></data>
+  <data name="PrivacyNoTracking" xml:space="preserve"><value>Coffee Nap не использует сторонние аналитические сервисы, рекламные сети или системы отслеживания, предназначенные для сбора пользовательских данных.</value></data>
+  <data name="PrivacyFutureServices" xml:space="preserve"><value>Если в будущих версиях приложения будут добавлены сторонние сервисы, соответствующая информация будет отражена в обновлённой версии настоящей Политики конфиденциальности.</value></data>
+  <data name="PrivacyStorageHeading" xml:space="preserve"><value>4. Хранение данных</value></data>
+  <data name="PrivacyStorageLocal" xml:space="preserve"><value>Все данные, создаваемые Coffee Nap, хранятся локально на устройстве пользователя.</value></data>
+  <data name="PrivacyBackup" xml:space="preserve"><value>Удаление приложения или очистка его данных может удалить ваши записи. На Android эта версия исключает данные приложения из системного облачного резервного копирования и переноса между устройствами. На других платформах резервное копирование зависит от операционной системы и её настроек.</value></data>
+  <data name="PrivacyOldBackups" xml:space="preserve"><value>Эти настройки не удаляют копии, созданные старыми версиями приложения или отдельными инструментами резервного копирования. Coffee Nap не имеет доступа к таким копиям; управляйте ими в настройках соответствующей системы или сервиса.</value></data>
+  <data name="PrivacySecurityHeading" xml:space="preserve"><value>5. Безопасность</value></data>
+  <data name="PrivacyNoCentralStorage" xml:space="preserve"><value>Поскольку данные Coffee Nap хранятся локально и не передаются на наши серверы, приложение не осуществляет централизованное хранение пользовательских данных.</value></data>
+  <data name="PrivacyDeviceSecurity" xml:space="preserve"><value>Безопасность локально сохранённых данных также зависит от настроек безопасности вашего устройства, включая пароль, код-пароль, биометрическую аутентификацию и другие механизмы защиты операционной системы.</value></data>
+  <data name="PrivacyChildrenHeading" xml:space="preserve"><value>6. Данные детей</value></data>
+  <data name="PrivacyChildren" xml:space="preserve"><value>Coffee Nap не предназначен для целенаправленного сбора персональных данных детей и не осуществляет такой сбор.</value></data>
+  <data name="PrivacyNoOnlineCollection" xml:space="preserve"><value>Поскольку приложение не передаёт пользовательские данные на наши серверы, мы не собираем персональную информацию пользователей через онлайн-сервисы Coffee Nap.</value></data>
+  <data name="PrivacyChangesHeading" xml:space="preserve"><value>7. Изменения в Политике конфиденциальности</value></data>
+  <data name="PrivacyChanges" xml:space="preserve"><value>Мы можем время от времени обновлять настоящую Политику конфиденциальности, например, при добавлении новых функций в приложение.</value></data>
+  <data name="PrivacyNewVersion" xml:space="preserve"><value>Обновлённая версия будет опубликована вместе с указанием новой даты вступления в силу.</value></data>
+  <data name="PrivacyContactHeading" xml:space="preserve"><value>8. Контакты</value></data>
+  <data name="PrivacyContact" xml:space="preserve"><value>Если у вас есть вопросы относительно конфиденциальности или обработки данных в Coffee Nap, вы можете связаться с разработчиком по контактному адресу, указанному на странице приложения.</value></data>
+  <data name="Retry" xml:space="preserve"><value>Повторить</value></data>
+  <data name="LoadMore" xml:space="preserve"><value>Загрузить ещё</value></data>
 </root>

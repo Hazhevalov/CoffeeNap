@@ -10,4 +10,6 @@ internal interface ITabContent
     Task ActivateAsync();
 
     void Deactivate();
+
+    void Release();
 }

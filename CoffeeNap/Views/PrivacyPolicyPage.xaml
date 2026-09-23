@@ -49,7 +49,7 @@
         <ScrollView Grid.Row="1">
             <VerticalStackLayout>
             <Label
-                Text="Политика конфиденциальности Coffee Nap"
+                Text="{localization:Translate PrivacyHeading}"
                 FontSize="24"
                 FontAttributes="Bold"
                 TextColor="{StaticResource InkColor}"
@@ -57,14 +57,14 @@
                 Margin="0,0,0,10" />
 
             <Label
-                Text="Дата вступления в силу: 4 сентября 2026 года"
+                Text="{localization:Translate PrivacyDate}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineBreakMode="WordWrap"
                 Margin="0,0,0,32" />
 
             <Label
-                Text="Coffee Nap («Приложение») уважает вашу конфиденциальность. Мы разработали приложение таким образом, чтобы ваши данные оставались на вашем устройстве и не передавались нам или третьим лицам."
+                Text="{localization:Translate PrivacyIntro}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -73,14 +73,14 @@
 
             <!-- 1 -->
             <Label
-                Text="1. Какие данные собирает Coffee Nap"
+                Text="{localization:Translate PrivacyCollectionHeading}"
                 FontSize="20"
                 FontAttributes="Bold"
                 TextColor="{StaticResource InkColor}"
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Coffee Nap не собирает и не передаёт персональные данные на внешние серверы."
+                Text="{localization:Translate PrivacyNoUpload}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -88,7 +88,7 @@
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Приложение может сохранять на вашем устройстве информацию, которую вы вводите или создаёте при использовании приложения, включая:"
+                Text="{localization:Translate PrivacyStoredIntro}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -96,7 +96,7 @@
                 Margin="0,0,0,10" />
 
             <Label
-                Text="• записи об употреблении кофеина;&#x0a;• количество и время употребления кофеина;&#x0a;• настройки приложения;&#x0a;• историю и статистику, отображаемую в приложении;&#x0a;• другие данные, необходимые для работы функций Coffee Nap."
+                Text="{localization:Translate PrivacyStoredList}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -104,7 +104,7 @@
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Эти данные хранятся локально на вашем устройстве."
+                Text="{localization:Translate PrivacyLocal}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -113,14 +113,14 @@
 
             <!-- 2 -->
             <Label
-                Text="2. Передача данных"
+                Text="{localization:Translate PrivacyTransferHeading}"
                 FontSize="20"
                 FontAttributes="Bold"
                 TextColor="{StaticResource InkColor}"
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Coffee Nap не подключается к собственным серверам для сбора или хранения пользовательских данных."
+                Text="{localization:Translate PrivacyNoServers}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -128,7 +128,7 @@
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Мы не передаём, не продаём и не предоставляем доступ к вашим данным третьим лицам."
+                Text="{localization:Translate PrivacyNoSharing}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -136,7 +136,7 @@
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Поскольку пользовательские данные не передаются на наши серверы, мы не имеем доступа к вашим локальным записям, истории употребления кофеина или другой информации, сохранённой внутри приложения."
+                Text="{localization:Translate PrivacyNoAccess}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -145,14 +145,14 @@
 
             <!-- 3 -->
             <Label
-                Text="3. Сторонние сервисы"
+                Text="{localization:Translate PrivacyThirdPartyHeading}"
                 FontSize="20"
                 FontAttributes="Bold"
                 TextColor="{StaticResource InkColor}"
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Coffee Nap не использует сторонние аналитические сервисы, рекламные сети или системы отслеживания, предназначенные для сбора пользовательских данных."
+                Text="{localization:Translate PrivacyNoTracking}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -160,7 +160,7 @@
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Если в будущих версиях приложения будут добавлены сторонние сервисы, соответствующая информация будет отражена в обновлённой версии настоящей Политики конфиденциальности."
+                Text="{localization:Translate PrivacyFutureServices}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -169,14 +169,14 @@
 
             <!-- 4 -->
             <Label
-                Text="4. Хранение данных"
+                Text="{localization:Translate PrivacyStorageHeading}"
                 FontSize="20"
                 FontAttributes="Bold"
                 TextColor="{StaticResource InkColor}"
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Все данные, создаваемые Coffee Nap, хранятся локально на устройстве пользователя."
+                Text="{localization:Translate PrivacyStorageLocal}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -184,7 +184,7 @@
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Удаление приложения или очистка его данных может привести к удалению локально сохранённой информации. В зависимости от настроек операционной системы и устройства резервные копии могут создаваться средствами самой операционной системы."
+                Text="{localization:Translate PrivacyBackup}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -192,7 +192,7 @@
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Coffee Nap не контролирует и не имеет доступа к резервным копиям, создаваемым операционной системой или сторонними сервисами резервного копирования."
+                Text="{localization:Translate PrivacyOldBackups}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -201,14 +201,14 @@
 
             <!-- 5 -->
             <Label
-                Text="5. Безопасность"
+                Text="{localization:Translate PrivacySecurityHeading}"
                 FontSize="20"
                 FontAttributes="Bold"
                 TextColor="{StaticResource InkColor}"
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Поскольку данные Coffee Nap хранятся локально и не передаются на наши серверы, приложение не осуществляет централизованное хранение пользовательских данных."
+                Text="{localization:Translate PrivacyNoCentralStorage}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -216,7 +216,7 @@
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Безопасность локально сохранённых данных также зависит от настроек безопасности вашего устройства, включая пароль, код-пароль, биометрическую аутентификацию и другие механизмы защиты операционной системы."
+                Text="{localization:Translate PrivacyDeviceSecurity}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -225,14 +225,14 @@
 
             <!-- 6 -->
             <Label
-                Text="6. Данные детей"
+                Text="{localization:Translate PrivacyChildrenHeading}"
                 FontSize="20"
                 FontAttributes="Bold"
                 TextColor="{StaticResource InkColor}"
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Coffee Nap не предназначен для целенаправленного сбора персональных данных детей и не осуществляет такой сбор."
+                Text="{localization:Translate PrivacyChildren}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -240,7 +240,7 @@
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Поскольку приложение не передаёт пользовательские данные на наши серверы, мы не собираем персональную информацию пользователей через онлайн-сервисы Coffee Nap."
+                Text="{localization:Translate PrivacyNoOnlineCollection}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -249,14 +249,14 @@
 
             <!-- 7 -->
             <Label
-                Text="7. Изменения в Политике конфиденциальности"
+                Text="{localization:Translate PrivacyChangesHeading}"
                 FontSize="20"
                 FontAttributes="Bold"
                 TextColor="{StaticResource InkColor}"
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Мы можем время от времени обновлять настоящую Политику конфиденциальности, например, при добавлении новых функций в приложение."
+                Text="{localization:Translate PrivacyChanges}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -264,7 +264,7 @@
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Обновлённая версия будет опубликована вместе с указанием новой даты вступления в силу."
+                Text="{localization:Translate PrivacyNewVersion}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"
@@ -273,14 +273,14 @@
 
             <!-- 8 -->
             <Label
-                Text="8. Контакты"
+                Text="{localization:Translate PrivacyContactHeading}"
                 FontSize="20"
                 FontAttributes="Bold"
                 TextColor="{StaticResource InkColor}"
                 Margin="0,0,0,12" />
 
             <Label
-                Text="Если у вас есть вопросы относительно конфиденциальности или обработки данных в Coffee Nap, вы можете связаться с разработчиком по контактному адресу, указанному на странице приложения."
+                Text="{localization:Translate PrivacyContact}"
                 FontSize="16"
                 TextColor="{StaticResource InkColor}"
                 LineHeight="1.4"

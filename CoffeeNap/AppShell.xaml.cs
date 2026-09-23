@@ -31,4 +31,10 @@ public partial class AppShell : Shell
 
     internal TabHostPage GetTabHostPage() =>
         _tabHostPage ??= _pageFactory.CreateTabHostPage();
+
+    internal void ReleaseContent()
+    {
+        _tabHostPage?.Release();
+        _tabHostPage = null;
+    }
 }

@@ -30,6 +30,7 @@ public partial class CalendarPageViewModel : ObservableObject
     private int _monthRequestVersion;
     private CancellationTokenSource? _dateMonitorCancellation;
     private DateTime _lastObservedDate = DateTime.Today;
+    private string _lastObservedZone = string.Empty;
 
     public CalendarPageViewModel(
         CalendarStatisticsService statisticsService,
@@ -119,8 +120,6 @@ public partial class CalendarPageViewModel : ObservableObject
     /// </summary>
     public Task RefreshAsync() => LoadCurrentStateAsync(prefetchAdjacentMonths: true);
 
-    public Task WarmUpAsync() => LoadCurrentStateAsync(prefetchAdjacentMonths: false);
-
     private async Task LoadCurrentStateAsync(bool prefetchAdjacentMonths)
     {
         await _initializationLock.WaitAsync();
@@ -168,8 +167,16 @@ public partial class CalendarPageViewModel : ObservableObject
         }
 
         _lastObservedDate = DateTime.Today;
+        _lastObservedZone = LocalCalendarTime.RefreshZoneKey();
         _dateMonitorCancellation = new CancellationTokenSource();
         _ = MonitorDateChangeAsync(_dateMonitorCancellation.Token);
+    }
+
+    public void Release()
+    {
+        StopDateChangeMonitor();
+        Interlocked.Increment(ref _monthRequestVersion);
+        _localization.CultureChanged -= OnCultureChanged;
     }
 
     public void StopDateChangeMonitor()
@@ -212,7 +219,10 @@ public partial class CalendarPageViewModel : ObservableObject
 
             var today = DateTime.Today;
             await MainThread.InvokeOnMainThreadAsync(() =>
-                PublishMonthIfChanged(statistics, today));
+            {
+                if (requestVersion == Volatile.Read(ref _monthRequestVersion) && targetMonth == _requestedMonth)
+                    PublishMonthIfChanged(statistics, today);
+            });
             _statisticsService.PrefetchAdjacentMonths(targetMonth);
         }
         catch (Exception exception)
@@ -398,12 +408,14 @@ public partial class CalendarPageViewModel : ObservableObject
             while (await timer.WaitForNextTickAsync(cancellationToken))
             {
                 var today = DateTime.Today;
-                if (today == _lastObservedDate)
+                var zone = LocalCalendarTime.RefreshZoneKey();
+                if (today == _lastObservedDate && zone == _lastObservedZone)
                 {
                     continue;
                 }
 
                 _lastObservedDate = today;
+                _lastObservedZone = zone;
                 if (_requestedMonth.Year != today.Year || _requestedMonth.Month != today.Month)
                 {
                     _requestedMonth = new DateTime(today.Year, today.Month, 1);

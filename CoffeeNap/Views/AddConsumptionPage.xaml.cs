@@ -3,7 +3,7 @@ namespace CoffeeNap.Views;
 using CoffeeNap.ViewModels;
 
 /// <summary>
-/// Заготовка формы добавления употребления. Поля формы пока не реализованы.
+/// Форма добавления напитка; шаги создаются при первом показе.
 /// </summary>
 public partial class AddConsumptionPage : ContentView, ITabContent
 {
@@ -21,4 +21,6 @@ public partial class AddConsumptionPage : ContentView, ITabContent
     void ITabContent.Deactivate()
     {
     }
+
+    void ITabContent.Release() => (BindingContext as AddConsumptionPageViewModel)?.Release();
 }

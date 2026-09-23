@@ -53,7 +53,7 @@
   <data name="EnergyDrinkVolume250" xml:space="preserve"><value>250 ml</value></data>
   <data name="EnergyDrinkVolume330" xml:space="preserve"><value>330 ml</value></data>
   <data name="EnergyDrinkVolume500" xml:space="preserve"><value>500 ml</value></data>
-  <data name="EnergyDrinkVolumeInvalid" xml:space="preserve"><value>Select an energy drink volume greater than 0 ml</value></data>
+  <data name="EnergyDrinkVolumeInvalid" xml:space="preserve"><value>Select a volume from 1 to 2000 ml</value></data>
   <data name="CompleteEnergyDrinkParameters" xml:space="preserve"><value>Select an energy drink volume</value></data>
   <data name="TeaSortQuestion" xml:space="preserve"><value>What type of tea?</value></data>
   <data name="BlackTea" xml:space="preserve"><value>Black</value></data>
@@ -61,7 +61,7 @@
   <data name="BlackTeaDrink" xml:space="preserve"><value>Black tea</value></data>
   <data name="GreenTeaDrink" xml:space="preserve"><value>Green tea</value></data>
   <data name="TeaAmountQuestion" xml:space="preserve"><value>How much tea did you use?</value></data>
-  <data name="TeaAmountInvalid" xml:space="preserve"><value>Enter a tea amount greater than 0 g</value></data>
+  <data name="TeaAmountInvalid" xml:space="preserve"><value>Enter a tea amount greater than 0 and up to 50 g</value></data>
   <data name="CompleteTeaParameters" xml:space="preserve"><value>Select a tea type and amount</value></data>
   <data name="UseOldRecipe" xml:space="preserve"><value>Use a previous recipe</value></data>
   <data name="NoSavedRecipe" xml:space="preserve"><value>You don't have a saved recipe yet</value></data>
@@ -131,10 +131,10 @@
   <data name="DayMany" xml:space="preserve"><value>days</value></data>
   <data name="AgoFormat" xml:space="preserve"><value>{0} {1} ago</value></data>
   <data name="CoffeeOnlySupported" xml:space="preserve"><value>Only coffee is supported for now</value></data>
-  <data name="CoffeeAmountInvalid" xml:space="preserve"><value>Enter a coffee amount greater than 0 g</value></data>
+  <data name="CoffeeAmountInvalid" xml:space="preserve"><value>Enter a coffee amount greater than 0 and up to 100 g</value></data>
   <data name="SelectDrinkTypeFirst" xml:space="preserve"><value>Select a drink type first</value></data>
   <data name="ServingProfileMissing" xml:space="preserve"><value>No standard volume is configured for this drink</value></data>
-  <data name="VolumeInvalid" xml:space="preserve"><value>Enter a volume greater than 0 ml</value></data>
+  <data name="VolumeInvalid" xml:space="preserve"><value>Enter a volume from 1 to 2000 ml</value></data>
   <data name="ConsumptionSaveFailed" xml:space="preserve"><value>Could not save the consumption. Please try again</value></data>
   <data name="SelectCoffee" xml:space="preserve"><value>Select coffee</value></data>
   <data name="CompleteCoffeeParameters" xml:space="preserve"><value>Complete all required coffee details</value></data>
@@ -146,4 +146,36 @@
   <data name="SpoonMany" xml:space="preserve"><value>spoons</value></data>
   <data name="GramShort" xml:space="preserve"><value>g</value></data>
   <data name="MilliliterShort" xml:space="preserve"><value>ml</value></data>
+  <data name="PrivacyHeading" xml:space="preserve"><value>Coffee Nap Privacy Policy</value></data>
+  <data name="PrivacyDate" xml:space="preserve"><value>Effective date: September 23, 2026</value></data>
+  <data name="PrivacyIntro" xml:space="preserve"><value>Coffee Nap (the App) respects your privacy. Your data is stored on your device and is not sent to us or shared by the App with third parties.</value></data>
+  <data name="PrivacyCollectionHeading" xml:space="preserve"><value>1. Data stored by Coffee Nap</value></data>
+  <data name="PrivacyNoUpload" xml:space="preserve"><value>Coffee Nap does not collect or upload personal data to external servers.</value></data>
+  <data name="PrivacyStoredIntro" xml:space="preserve"><value>The App may store information that you enter or create on your device, including:</value></data>
+  <data name="PrivacyStoredList" xml:space="preserve"><value>• your profile name;&#x0a;• caffeine consumption records;&#x0a;• amounts and times of consumption;&#x0a;• app settings;&#x0a;• history, statistics and other information needed for the App to work.</value></data>
+  <data name="PrivacyLocal" xml:space="preserve"><value>This information is stored locally on your device.</value></data>
+  <data name="PrivacyTransferHeading" xml:space="preserve"><value>2. Data sharing</value></data>
+  <data name="PrivacyNoServers" xml:space="preserve"><value>Coffee Nap does not connect to its own servers to collect or store user data.</value></data>
+  <data name="PrivacyNoSharing" xml:space="preserve"><value>We do not share, sell or grant third parties access to your data.</value></data>
+  <data name="PrivacyNoAccess" xml:space="preserve"><value>Because user data is not uploaded to our servers, we cannot access your local records, caffeine history or other information stored in the App.</value></data>
+  <data name="PrivacyThirdPartyHeading" xml:space="preserve"><value>3. Third-party services</value></data>
+  <data name="PrivacyNoTracking" xml:space="preserve"><value>Coffee Nap does not use third-party analytics, advertising networks or tracking systems to collect user data.</value></data>
+  <data name="PrivacyFutureServices" xml:space="preserve"><value>If third-party services are added in a future version, this policy will be updated to describe them.</value></data>
+  <data name="PrivacyStorageHeading" xml:space="preserve"><value>4. Data storage</value></data>
+  <data name="PrivacyStorageLocal" xml:space="preserve"><value>Data created by Coffee Nap is stored locally on your device.</value></data>
+  <data name="PrivacyBackup" xml:space="preserve"><value>Deleting the App or clearing its data may erase your records. On Android, this version excludes app data from system cloud backup and device-to-device transfer. On other platforms, backup behavior depends on the operating system and its settings.</value></data>
+  <data name="PrivacyOldBackups" xml:space="preserve"><value>These settings do not delete backups created by older versions or independent backup tools. Coffee Nap cannot access those copies; manage them using the relevant system or service settings.</value></data>
+  <data name="PrivacySecurityHeading" xml:space="preserve"><value>5. Security</value></data>
+  <data name="PrivacyNoCentralStorage" xml:space="preserve"><value>Coffee Nap does not maintain a central store of user data.</value></data>
+  <data name="PrivacyDeviceSecurity" xml:space="preserve"><value>The security of local data also depends on your device security settings, including its password, PIN, biometrics and operating system protections.</value></data>
+  <data name="PrivacyChildrenHeading" xml:space="preserve"><value>6. Children's data</value></data>
+  <data name="PrivacyChildren" xml:space="preserve"><value>Coffee Nap does not intentionally collect children's personal data.</value></data>
+  <data name="PrivacyNoOnlineCollection" xml:space="preserve"><value>The App does not upload user data to our servers or collect personal information through Coffee Nap online services.</value></data>
+  <data name="PrivacyChangesHeading" xml:space="preserve"><value>7. Changes to this policy</value></data>
+  <data name="PrivacyChanges" xml:space="preserve"><value>We may update this policy, for example when adding new features.</value></data>
+  <data name="PrivacyNewVersion" xml:space="preserve"><value>An updated policy will include a new effective date.</value></data>
+  <data name="PrivacyContactHeading" xml:space="preserve"><value>8. Contact</value></data>
+  <data name="PrivacyContact" xml:space="preserve"><value>For questions about privacy or data handling in Coffee Nap, contact the developer using the contact details on the app listing.</value></data>
+  <data name="Retry" xml:space="preserve"><value>Retry</value></data>
+  <data name="LoadMore" xml:space="preserve"><value>Load more</value></data>
 </root>

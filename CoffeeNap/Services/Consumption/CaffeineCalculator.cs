@@ -8,6 +8,8 @@ public sealed class CaffeineCalculator : ICaffeineCalculator
     public ConsumptionCalculationResult Calculate(AddConsumptionQuizState state)
     {
         ArgumentNullException.ThrowIfNull(state);
+        if (!ConsumptionRecipeValidator.IsValid(state))
+            throw new InvalidOperationException("Drink parameters are outside the supported range.");
         var caffeine = state.DrinkType switch
         {
             CaffeineConsumptionType.Coffee when state.CoffeeLocation == CoffeeLocation.Home &&

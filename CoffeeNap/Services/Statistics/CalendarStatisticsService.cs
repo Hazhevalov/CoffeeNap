@@ -14,6 +14,7 @@ public sealed class CalendarStatisticsService
 
     private readonly IAppDataService _dataService;
     private readonly ILogger<CalendarStatisticsService> _logger;
+    private readonly TimeProvider _timeProvider;
     private readonly object _cacheGate = new();
     private readonly Dictionary<MonthKey, MonthCacheEntry> _monthCache = [];
     private readonly Dictionary<MonthKey, Task<CalendarMonthStatistics>> _monthLoads = [];
@@ -23,13 +24,17 @@ public sealed class CalendarStatisticsService
     private int _weekGeneration;
     private int _dataGeneration;
     private long _accessSequence;
+    private string _zoneKey;
 
     public CalendarStatisticsService(
         IAppDataService dataService,
-        ILogger<CalendarStatisticsService> logger)
+        ILogger<CalendarStatisticsService> logger,
+        TimeProvider? timeProvider = null)
     {
         _dataService = dataService;
         _logger = logger;
+        _timeProvider = timeProvider ?? TimeProvider.System;
+        _zoneKey = _timeProvider.LocalTimeZone.ToSerializedString();
         _dataService.ConsumptionAdded += OnConsumptionAdded;
         _dataService.ConsumptionDeleted += OnConsumptionDeleted;
         _dataService.UserDataDeleted += OnUserDataDeleted;
@@ -50,18 +55,11 @@ public sealed class CalendarStatisticsService
             return new CalendarInitialStatistics(cachedMonth!, cachedWeek!);
         }
 
-        if (!hasMonth && !hasWeek)
-        {
-            return await LoadCombinedAsync(month, weekStart, cancellationToken)
-                .ConfigureAwait(false);
-        }
-
-        var monthResult = hasMonth
-            ? cachedMonth!
-            : await GetMonthAsync(month, cancellationToken).ConfigureAwait(false);
-        var weekResult = hasWeek
-            ? cachedWeek!
-            : await GetCurrentWeekAsync(today, cancellationToken).ConfigureAwait(false);
+        var monthTask = hasMonth ? Task.FromResult(cachedMonth!) : GetMonthAsync(month, cancellationToken);
+        var weekTask = hasWeek ? Task.FromResult(cachedWeek!) : GetCurrentWeekAsync(today, cancellationToken);
+        await Task.WhenAll(monthTask, weekTask).ConfigureAwait(false);
+        var monthResult = await monthTask.ConfigureAwait(false);
+        var weekResult = await weekTask.ConfigureAwait(false);
         return new CalendarInitialStatistics(monthResult, weekResult);
     }
 
@@ -79,6 +77,7 @@ public sealed class CalendarStatisticsService
         Task<CalendarMonthStatistics> load;
         lock (_cacheGate)
         {
+            EnsureTimeZone();
             if (!_monthLoads.TryGetValue(key, out load!))
             {
                 load = LoadMonthAndCacheAsync(month, key);
@@ -104,6 +103,7 @@ public sealed class CalendarStatisticsService
         Task<CalendarWeekStatistics> load;
         lock (_cacheGate)
         {
+            EnsureTimeZone();
             if (!_weekLoads.TryGetValue(weekStart, out load!))
             {
                 load = LoadWeekAndCacheAsync(weekStart);
@@ -123,69 +123,11 @@ public sealed class CalendarStatisticsService
         _ = ObservePrefetchAsync(month.AddMonths(1));
     }
 
-    private async Task<CalendarInitialStatistics> LoadCombinedAsync(
-        DateTime month,
-        DateTime weekStart,
-        CancellationToken cancellationToken)
-    {
-        var monthEnd = month.AddMonths(1);
-        var weekEnd = weekStart.AddDays(7);
-        var rangeStart = month < weekStart ? month : weekStart;
-        var rangeEnd = monthEnd > weekEnd ? monthEnd : weekEnd;
-        var key = MonthKey.From(month);
-        while (true)
-        {
-            int monthGeneration;
-            int weekGeneration;
-            int dataGeneration;
-            lock (_cacheGate)
-            {
-                monthGeneration = GetMonthGeneration(key);
-                weekGeneration = _weekGeneration;
-                dataGeneration = _dataGeneration;
-            }
-
-            var watch = Stopwatch.StartNew();
-            var consumptions = await _dataService.GetConsumptionsBetweenAsync(
-                    ToUtcBoundary(rangeStart),
-                    ToUtcBoundary(rangeEnd))
-                .ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
-            var queryElapsed = watch.Elapsed.TotalMilliseconds;
-            var statistics = Aggregate(consumptions);
-            var monthResult = BuildMonthStatistics(
-                month,
-                Slice(statistics, month, monthEnd));
-            var weekResult = new CalendarWeekStatistics(
-                weekStart,
-                Slice(statistics, weekStart, weekEnd));
-
-            lock (_cacheGate)
-            {
-                if (monthGeneration != GetMonthGeneration(key) ||
-                    weekGeneration != _weekGeneration ||
-                    dataGeneration != _dataGeneration)
-                {
-                    continue;
-                }
-
-                StoreMonth(key, monthResult);
-                _weekCache = weekResult;
-            }
-
-            _logger.LogDebug(
-                "Calendar initial range loaded: query {QueryMs:F1} ms, total {TotalMs:F1} ms, {RowCount} rows.",
-                queryElapsed,
-                watch.Elapsed.TotalMilliseconds,
-                consumptions.Count);
-            return new CalendarInitialStatistics(monthResult, weekResult);
-        }
-    }
-
     private async Task<CalendarMonthStatistics> LoadMonthAndCacheAsync(
         DateTime month,
         MonthKey key)
     {
+        await Task.Yield(); // Register the in-flight task before it can complete.
         try
         {
             while (true)
@@ -194,6 +136,7 @@ public sealed class CalendarStatisticsService
                 int dataGeneration;
                 lock (_cacheGate)
                 {
+                    EnsureTimeZone();
                     monthGeneration = GetMonthGeneration(key);
                     dataGeneration = _dataGeneration;
                 }
@@ -208,6 +151,7 @@ public sealed class CalendarStatisticsService
                 var result = BuildMonthStatistics(month, Aggregate(consumptions));
                 lock (_cacheGate)
                 {
+                    EnsureTimeZone();
                     if (monthGeneration != GetMonthGeneration(key) ||
                         dataGeneration != _dataGeneration)
                     {
@@ -230,6 +174,7 @@ public sealed class CalendarStatisticsService
         {
             lock (_cacheGate)
             {
+                EnsureTimeZone();
                 _monthLoads.Remove(key);
             }
         }
@@ -237,6 +182,7 @@ public sealed class CalendarStatisticsService
 
     private async Task<CalendarWeekStatistics> LoadWeekAndCacheAsync(DateTime weekStart)
     {
+        await Task.Yield();
         try
         {
             while (true)
@@ -245,6 +191,7 @@ public sealed class CalendarStatisticsService
                 int dataGeneration;
                 lock (_cacheGate)
                 {
+                    EnsureTimeZone();
                     weekGeneration = _weekGeneration;
                     dataGeneration = _dataGeneration;
                 }
@@ -258,6 +205,7 @@ public sealed class CalendarStatisticsService
                 var result = new CalendarWeekStatistics(weekStart, Aggregate(consumptions));
                 lock (_cacheGate)
                 {
+                    EnsureTimeZone();
                     if (weekGeneration != _weekGeneration || dataGeneration != _dataGeneration)
                     {
                         continue;
@@ -278,6 +226,7 @@ public sealed class CalendarStatisticsService
         {
             lock (_cacheGate)
             {
+                EnsureTimeZone();
                 _weekLoads.Remove(weekStart);
             }
         }
@@ -300,6 +249,7 @@ public sealed class CalendarStatisticsService
         var key = MonthKey.From(month);
         lock (_cacheGate)
         {
+            EnsureTimeZone();
             if (_monthCache.TryGetValue(key, out var entry))
             {
                 entry.LastAccess = ++_accessSequence;
@@ -316,6 +266,7 @@ public sealed class CalendarStatisticsService
     {
         lock (_cacheGate)
         {
+            EnsureTimeZone();
             if (_weekCache?.WeekStart == weekStart)
             {
                 result = _weekCache;
@@ -345,11 +296,12 @@ public sealed class CalendarStatisticsService
 
     private void InvalidateConsumptionDate(CaffeineConsumption consumption)
     {
-        var localDate = consumption.ConsumedAt.ToLocalTime().Date;
+        var localDate = TimeZoneInfo.ConvertTime(consumption.ConsumedAt, _timeProvider.LocalTimeZone).Date;
         var monthKey = MonthKey.From(localDate);
-        var currentWeekStart = GetWeekStart(DateTime.Today);
+        var currentWeekStart = GetWeekStart(_timeProvider.GetLocalNow().Date);
         lock (_cacheGate)
         {
+            EnsureTimeZone();
             _monthCache.Remove(monthKey);
             _monthGenerations[monthKey] = GetMonthGeneration(monthKey) + 1;
             if (localDate >= currentWeekStart &&
@@ -365,22 +317,34 @@ public sealed class CalendarStatisticsService
     {
         lock (_cacheGate)
         {
+            EnsureTimeZone();
             _monthCache.Clear();
             _weekCache = null;
             _dataGeneration++;
         }
     }
 
+    // Called only while holding _cacheGate. In-flight loads retry using the new generation.
+    private void EnsureTimeZone()
+    {
+        var current = _timeProvider.LocalTimeZone.ToSerializedString();
+        if (_zoneKey == current) return;
+        _zoneKey = current;
+        _monthCache.Clear();
+        _weekCache = null;
+        _dataGeneration++;
+    }
+
     private int GetMonthGeneration(MonthKey key) =>
         _monthGenerations.GetValueOrDefault(key);
 
-    private static IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> Aggregate(
+    private IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> Aggregate(
         IReadOnlyList<CaffeineConsumption> consumptions)
     {
         var builders = new Dictionary<DateOnly, DailyStatisticsBuilder>();
         foreach (var consumption in consumptions)
         {
-            var localDate = DateOnly.FromDateTime(consumption.ConsumedAt.ToLocalTime().Date);
+            var localDate = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(consumption.ConsumedAt, _timeProvider.LocalTimeZone).Date);
             if (!builders.TryGetValue(localDate, out var statistics))
             {
                 statistics = new DailyStatisticsBuilder();
@@ -425,18 +389,6 @@ public sealed class CalendarStatisticsService
             mostConsumedInDayMg);
     }
 
-    private static IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> Slice(
-        IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> source,
-        DateTime fromInclusive,
-        DateTime toExclusive)
-    {
-        var from = DateOnly.FromDateTime(fromInclusive);
-        var to = DateOnly.FromDateTime(toExclusive);
-        return source
-            .Where(pair => pair.Key >= from && pair.Key < to)
-            .ToDictionary(pair => pair.Key, pair => pair.Value);
-    }
-
     private static DateTime FirstOfMonth(DateTime value) =>
         new(value.Year, value.Month, 1);
 
@@ -446,12 +398,12 @@ public sealed class CalendarStatisticsService
         return date.Date.AddDays(-mondayOffset);
     }
 
-    private static DateTimeOffset ToUtcBoundary(DateTime localDate)
+    private DateTimeOffset ToUtcBoundary(DateTime localDate)
     {
         var unspecified = DateTime.SpecifyKind(localDate, DateTimeKind.Unspecified);
         return new DateTimeOffset(
                 unspecified,
-                TimeZoneInfo.Local.GetUtcOffset(unspecified))
+                _timeProvider.LocalTimeZone.GetUtcOffset(unspecified))
             .ToUniversalTime();
     }
 

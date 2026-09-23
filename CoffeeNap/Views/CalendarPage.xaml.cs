@@ -20,6 +20,7 @@ public partial class CalendarPage : ContentView, ITabContent
     async Task ITabContent.ActivateAsync()
     {
         _isPageVisible = true;
+        Services.LocalCalendarTime.RefreshZoneKey();
         await _viewModel.RefreshAsync();
         if (_isPageVisible)
         {
@@ -33,5 +34,9 @@ public partial class CalendarPage : ContentView, ITabContent
         _viewModel.StopDateChangeMonitor();
     }
 
-    internal Task WarmUpAsync() => _viewModel.WarmUpAsync();
+    void ITabContent.Release()
+    {
+        _isPageVisible = false;
+        _viewModel.Release();
+    }
 }

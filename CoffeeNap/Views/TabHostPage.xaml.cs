@@ -22,14 +22,19 @@ public partial class TabHostPage : ContentPage
 
     private ITabContent _activeContent = null!;
     private bool _isHostVisible;
+    private readonly ApplicationVisibility _visibility;
+    private bool _observingVisibility;
+    private ITabContent? _activatedContent;
 
     public TabHostPage(
         AppPageFactory pageFactory,
         BottomNavigationViewModel navigation,
-        ILogger<TabHostPage> logger)
+        ILogger<TabHostPage> logger,
+        ApplicationVisibility visibility)
     {
         _pageFactory = pageFactory;
         _logger = logger;
+        _visibility = visibility;
         BottomNavigation = navigation;
         BottomNavigation.ActiveTab = NavigationTab.Home;
 
@@ -38,6 +43,8 @@ public partial class TabHostPage : ContentPage
 
         _activeContent = GetOrCreateContent(NavigationTab.Home);
         ShowImmediately(_activeContent);
+        Loaded += OnHostLoaded;
+        Unloaded += OnHostUnloaded;
     }
 
     public BottomNavigationViewModel BottomNavigation { get; }
@@ -49,14 +56,59 @@ public partial class TabHostPage : ContentPage
         base.OnAppearing();
         _isHostVisible = true;
         BottomNavigation.SetActiveTab(_activeContent.Tab, animate: false);
-        _ = ActivateSafelyAsync(_activeContent);
+        ActivateIfVisible();
     }
 
     protected override void OnDisappearing()
     {
         _isHostVisible = false;
         _activeContent.Deactivate();
+        _activatedContent = null;
         base.OnDisappearing();
+    }
+
+    private void OnHostLoaded(object? sender, EventArgs args)
+    {
+        if (_observingVisibility) return;
+        _observingVisibility = true;
+        _visibility.Changed += OnVisibilityChanged;
+        ActivateIfVisible();
+    }
+
+    private void OnHostUnloaded(object? sender, EventArgs args)
+    {
+        _activeContent.Deactivate();
+        _activatedContent = null;
+        _visibility.Changed -= OnVisibilityChanged;
+        _observingVisibility = false;
+    }
+
+    private void OnVisibilityChanged(object? sender, EventArgs args)
+    {
+        if (!_visibility.IsActive)
+        {
+            _activeContent.Deactivate();
+            _activatedContent = null;
+        }
+        else ActivateIfVisible();
+    }
+
+    private void ActivateIfVisible()
+    {
+        if (!_observingVisibility || !_isHostVisible || !_visibility.IsActive ||
+            ReferenceEquals(_activatedContent, _activeContent)) return;
+        _activatedContent = _activeContent;
+        _ = ActivateSafelyAsync(_activeContent);
+    }
+
+    internal void Release()
+    {
+        _isHostVisible = false;
+        Loaded -= OnHostLoaded;
+        Unloaded -= OnHostUnloaded;
+        OnHostUnloaded(this, EventArgs.Empty);
+        foreach (var content in _contents.Values) content.Release();
+        _contents.Clear();
     }
 
     internal async Task NavigateToAsync(
@@ -102,19 +154,20 @@ public partial class TabHostPage : ContentPage
 
             var destinationIsReady = !_isHostVisible ||
                                      await WaitForFirstLayoutAsync(destinationView);
-            var shouldAnimate = _isHostVisible &&
+            var shouldAnimate = _isHostVisible && _visibility.IsActive &&
                                 destinationIsReady &&
                                 NavigationAnimation.IsEnabled &&
                                 ContentLayer.Width > 0;
 
             source.Deactivate();
+            _activatedContent = null;
             _activeContent = destination;
             destinationCommitted = true;
             CommitSelection(targetTab, sourceNavigation, shouldAnimate);
 
-            if (_isHostVisible)
+            if (_isHostVisible && _visibility.IsActive)
             {
-                _ = ActivateSafelyAsync(destination);
+                ActivateIfVisible();
             }
 
             if (!shouldAnimate)

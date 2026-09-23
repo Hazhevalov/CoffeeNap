@@ -43,6 +43,12 @@ Run from the repository root:
 ```powershell
 dotnet build CoffeeNap/CoffeeNap.csproj -f net10.0-windows10.0.19041.0
 dotnet build CoffeeNap/CoffeeNap.csproj -f net10.0-android
+dotnet run --project tests/CaffeineCalculation.Checks -c Release
+dotnet run --project tests/AppBehavior.Checks -c Release
 ```
 
 After UI changes, verify onboarding, tab switching, every drink entry flow, recipe reuse, entry deletion, calendar updates, and language switching. Verify the delete-all-data flow only with a test profile.
+
+`AppBehavior.Checks` uses real SQLite in an isolated temporary directory. It covers schema migration, keyset pagination, full-history aggregates, failures after commit, input limits, history view models, calendar request ordering and timezone changes. Its MAUI dispatcher/visual types are test substitutes; it does not replace device testing.
+
+History is loaded in pages of 40 with a `(ConsumedAt, Id)` cursor; the daily total and source distribution include the entire database. Schema version 4 adds `NameKey` without dropping tables. Recognized English/Russian legacy names are migrated to resource keys; unrecognized names retain their original text. Android excludes app data from cloud backup and device transfer.
