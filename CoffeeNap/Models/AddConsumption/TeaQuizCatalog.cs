@@ -4,9 +4,8 @@ namespace CoffeeNap.Models;
 
 public static class TeaQuizCatalog
 {
-    public const double GramsPerSpoon = 2.5;
-    public const double BlackCaffeineMgPerGram = 6;
-    public const double GreenCaffeineMgPerGram = 5;
+    // A loose-leaf teaspoon is approximately 2 g; leaf size varies.
+    public const double GramsPerSpoon = 2;
 
     public static double GetSpoonGrams(int spoonCount) => spoonCount * GramsPerSpoon;
 
@@ -26,10 +25,4 @@ public static class TeaQuizCatalog
         _ => throw new ArgumentOutOfRangeException(nameof(type))
     };
 
-    public static double GetCaffeineMgPerGram(TeaType type) => type switch
-    {
-        TeaType.Black => BlackCaffeineMgPerGram,
-        TeaType.Green => GreenCaffeineMgPerGram,
-        _ => throw new ArgumentOutOfRangeException(nameof(type))
-    };
 }

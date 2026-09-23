@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../CoffeeNap/Models/AddConsumption/*.cs" Link="Models/%(Filename)%(Extension)" />
+    <Compile Include="../../CoffeeNap/Models/CaffeineConsumptionType.cs" Link="Models/CaffeineConsumptionType.cs" />
+    <Compile Include="../../CoffeeNap/Data/DatabaseConstants.cs" Link="DatabaseConstants.cs" />
+    <Compile Include="../../CoffeeNap/Services/Consumption/*.cs" Link="Services/%(Filename)%(Extension)" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
+  </ItemGroup>
+</Project>
