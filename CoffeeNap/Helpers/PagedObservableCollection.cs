@@ -7,9 +7,12 @@ namespace CoffeeNap.Helpers;
 /// <summary>Android's CollectionView adapter supports one native range insertion per page.</summary>
 public sealed class PagedObservableCollection<T> : ObservableCollection<T>
 {
+    // Initializes the paged observable collection.
     public PagedObservableCollection() { }
+    // Initializes the paged observable collection.
     public PagedObservableCollection(IEnumerable<T> items) : base(items) { }
 
+    // Appends a page using a range notification on Android.
     public void AddPage(IReadOnlyList<T> page)
     {
         if (page.Count == 0) return;

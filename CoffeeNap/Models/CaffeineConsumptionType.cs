@@ -1,8 +1,8 @@
 namespace CoffeeNap.Models;
 
 /// <summary>
-/// Поддерживаемые категории источников кофеина. Значения используются как ключи
-/// статистики в MainPageViewModel и должны оставаться согласованными с диаграммой MainPage.
+/// Supported caffeine source categories used as statistics keys.
+/// Keep these values consistent with the main page chart.
 /// </summary>
 public enum CaffeineConsumptionType
 {

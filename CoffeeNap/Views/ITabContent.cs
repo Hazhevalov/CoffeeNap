@@ -7,9 +7,12 @@ internal interface ITabContent
 {
     NavigationTab Tab { get; }
 
+    // Activates tab content when it becomes visible.
     Task ActivateAsync();
 
+    // Suspends tab content while it is hidden.
     void Deactivate();
 
+    // Releases resources owned by the tab content.
     void Release();
 }

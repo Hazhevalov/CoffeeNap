@@ -1,6 +1,6 @@
 namespace CoffeeNap.Controls;
 
-/// <summary>Рисует индикатор с количеством точек, равным длине активной ветки quiz.</summary>
+/// <summary>Draws one progress dot per step in the active quiz branch.</summary>
 public sealed class QuizProgressView : GraphicsView, IDrawable
 {
     public static readonly BindableProperty StepCountProperty = BindableProperty.Create(
@@ -17,6 +17,7 @@ public sealed class QuizProgressView : GraphicsView, IDrawable
         1,
         propertyChanged: OnProgressPropertyChanged);
 
+    // Initializes the quiz progress view.
     public QuizProgressView()
     {
         Drawable = this;
@@ -36,6 +37,7 @@ public sealed class QuizProgressView : GraphicsView, IDrawable
         set => SetValue(CurrentPositionProperty, value);
     }
 
+    // Draws progress dots for the current quiz branch.
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
         var count = Math.Max(1, StepCount);
@@ -69,6 +71,7 @@ public sealed class QuizProgressView : GraphicsView, IDrawable
         }
     }
 
+    // Redraws the quiz indicator when progress changes.
     private static void OnProgressPropertyChanged(BindableObject bindable, object oldValue, object newValue) =>
         ((QuizProgressView)bindable).Invalidate();
 }

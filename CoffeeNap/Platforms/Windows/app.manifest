@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
-  <!-- Идентификатор нативной WinUI-сборки, не идентификатор пакета из csproj. -->
+  <!-- Native WinUI assembly identity, distinct from the package identifier in the project file. -->
   <assemblyIdentity version="1.0.0.0" name="CoffeeNap.WinUI.app"/>
 
   <application xmlns="urn:schemas-microsoft-com:asm.v3">
     <windowsSettings>
-      <!-- Эти две настройки включают Per-Monitor DPI на современной Windows
-           и системное масштабирование на старых версиях.
+      <!-- These settings enable per-monitor DPI on modern Windows
+           and system scaling on older versions.
       -->
       <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/PM</dpiAware>
       <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2, PerMonitor</dpiAwareness>
 
-      <!-- Разрешает Win32 API работать с путями длиннее классического ограничения MAX_PATH. -->
+      <!-- Allows Win32 APIs to use paths longer than the classic MAX_PATH limit. -->
       <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
     </windowsSettings>
   </application>

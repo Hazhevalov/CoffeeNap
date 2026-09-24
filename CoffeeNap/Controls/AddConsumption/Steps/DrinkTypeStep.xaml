@@ -7,8 +7,8 @@
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:AddConsumptionPageViewModel">
-    <!--  Step 1 "Какой?"  -->
-            <!--  Сетка всего контента (Без Нав/Топ бара)  -->
+    <!-- Drink category selection. -->
+            <!-- Content grid excluding the header and navigation bar. -->
             <Grid
                 Grid.Row="1"
                 Padding="10"
@@ -19,7 +19,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <!--  Бокс: Опрос и кнопка  -->
+                <!-- Quiz and action container. -->
                 <Grid Grid.Row="0" VerticalOptions="Fill">
 
                     <Grid.RowDefinitions>
@@ -27,7 +27,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <!--  Сетка: Опрос и Кнопка  -->
+                    <!-- Quiz and action grid. -->
                     <Grid
                         Grid.Row="1"
                         IsVisible="True"
@@ -38,7 +38,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <!--  Блок выбора напитка  -->
+                        <!-- Drink selection section. -->
                         <Grid
                             Grid.Row="0"
                             HorizontalOptions="Fill"
@@ -46,7 +46,7 @@
                             RowSpacing="20"
                             VerticalOptions="Center">
 
-                            <!--  Заголовок  -->
+                            <!-- Heading. -->
                             <Label
                                 Grid.Row="0"
                                 FontAttributes="Bold"
@@ -56,7 +56,7 @@
                                 TextColor="{StaticResource InkColor}"
                                 VerticalOptions="Start" />
 
-                            <!--  Карточки  -->
+                            <!-- Selection cards. -->
                             <Grid
                                 Grid.Row="1"
                                 ColumnDefinitions="*,*,*"
@@ -64,7 +64,7 @@
                                 HorizontalOptions="Fill"
                                 VerticalOptions="Start">
 
-                                <!--  Кофе  -->
+                                <!-- Coffee. -->
                                 <Border
                                     Grid.Column="0"
                                     Padding="16"
@@ -113,7 +113,7 @@
                                     </VerticalStackLayout>
                                 </Border>
 
-                                <!--  Энергетик  -->
+                                <!-- Energy drink. -->
                                 <Border
                                     Grid.Column="1"
                                     Padding="16"
@@ -164,7 +164,7 @@
                                     </VerticalStackLayout>
                                 </Border>
 
-                                <!--  Чай  -->
+                                <!-- Tea. -->
                                 <Border
                                     Grid.Column="2"
                                     Padding="16"
@@ -215,7 +215,7 @@
                             </Grid>
                         </Grid>
 
-                        <!--  Кнопка старого рецепта  -->
+                        <!-- Reuse the last recipe. -->
                         <Border
                             Grid.Row="1"
                             Stroke="{StaticResource DividerColor}"

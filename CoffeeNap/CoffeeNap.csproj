@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!-- Один проект собирается для Android, iOS и Mac Catalyst; Windows добавляется только на Windows-хосте. -->
+		<!-- Builds Android, iOS, and Mac Catalyst; Windows is included only on a Windows host. -->
 		<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
 
-		<!-- Пояснение MAUI по архитектурам Mac Catalyst:
+		<!-- MAUI notes on Mac Catalyst architectures:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
 		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
 		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
@@ -13,31 +13,31 @@
 		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 
 		<OutputType>Exe</OutputType>
-		<!-- Пространство имён по умолчанию для файлов без явно заданного RootNamespace. -->
+		<!-- Default namespace for files without an explicit RootNamespace. -->
 		<RootNamespace>CoffeeNap</RootNamespace>
-		<!-- Включает MAUI targets и модель Single Project с общими ресурсами для всех платформ. -->
+		<!-- Enables MAUI targets and shared resources through the Single Project model. -->
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
-		<!-- Стандартные using подключаются автоматически; nullable-анализ включён. -->
+		<!-- Enables implicit standard imports and nullable reference analysis. -->
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<!-- Generate page/control construction code in both Debug and Release. -->
 		<MauiXamlInflator>SourceGen</MauiXamlInflator>
 
-		<!-- Отображаемое пользователю название приложения. -->
+		<!-- Application name displayed to the user. -->
 		<ApplicationTitle>CoffeeNap</ApplicationTitle>
 
-		<!-- Уникальный идентификатор пакета; перед публикацией companyname следует заменить. -->
+		<!-- Unique package identifier; replace companyname before publishing. -->
 		<ApplicationId>com.companyname.coffeenap.CoffeeNapSigning</ApplicationId>
 
-		<!-- Публичная версия и внутренний монотонно растущий номер сборки. -->
+		<!-- Public version and monotonically increasing internal build number. -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<!-- None запускает Windows-приложение без MSIX-пакета в режиме разработки. -->
+		<!-- None runs the Windows app without an MSIX package during development. -->
 		<WindowsPackageType>None</WindowsPackageType>
 
-		<!-- Минимальные версии ОС, на которых разрешено устанавливать приложение. -->
+		<!-- Minimum operating system versions supported for installation. -->
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
@@ -46,22 +46,22 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- Иконка: appicon.svg — фон, appiconfg.svg — адаптивный передний слой. -->
+		<!-- App icon: appicon.svg provides the background; appiconfg.svg is the adaptive foreground. -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#ffffff" />
 
-		<!-- Splash screen, автоматически преобразуемый MAUI в платформенные ресурсы. -->
+		<!-- MAUI converts the splash screen into platform resources. -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#ffffff" BaseSize="128,128" />
 
-		<!-- Все изображения папки доступны в XAML по одному имени файла. -->
+		<!-- Images in this folder are available in XAML by file name. -->
 		<MauiImage Include="Resources\Images\*" />
 
-		<!-- Шрифты пакуются как MAUIFont; их псевдонимы регистрируются в MauiProgram. -->
+		<!-- Fonts are packaged as MAUIFont; their aliases are registered in MauiProgram. -->
 		<MauiFont Include="Resources\Fonts\*" />
 
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- MVVM Toolkit генерирует RelayCommand/ObservableObject; остальные пакеты дают MAUI UI и debug-логирование. -->
+		<!-- MVVM Toolkit generates commands and observable properties; other packages provide MAUI UI and debug logging. -->
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />

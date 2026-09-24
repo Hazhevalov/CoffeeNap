@@ -3,18 +3,18 @@ using CoffeeNap.Services;
 namespace CoffeeNap.Helpers;
 
 /// <summary>
-/// Форматирует прошедшее время по-русски и выбирает правильную форму слова
-/// («1 минута», «2 минуты», «5 минут»). Не зависит от UI и легко тестируется.
+/// Formats elapsed time with localized labels and numeric word forms.
+/// Independent of the UI so formatting can be tested directly.
 /// </summary>
 public static class RelativeTimeFormatter
 {
     /// <summary>
-    /// Возвращает короткую подпись о времени употребления относительно <paramref name="now"/>.
-    /// Текущий момент передаётся параметром, чтобы результат можно было детерминированно тестировать.
+    /// Returns a short consumption time label relative to <paramref name="now"/>.
+    /// Accepts the current time explicitly for deterministic tests.
     /// </summary>
     public static string Format(DateTimeOffset consumedAt, DateTimeOffset now)
     {
-        // Для будущей даты elapsed отрицателен и также отображается как «только что».
+        // Future dates have negative elapsed time and also display as just now.
         var elapsed = now - consumedAt;
         if (elapsed < TimeSpan.FromMinutes(1))
         {
@@ -37,6 +37,7 @@ public static class RelativeTimeFormatter
         return FormatElapsed(days, "DayOne", "DayFew", "DayMany");
     }
 
+    // Formats an elapsed value with its localized time unit.
     private static string FormatElapsed(
         int value,
         string singularKey,
@@ -52,16 +53,17 @@ public static class RelativeTimeFormatter
         return localization.Format("AgoFormat", value, unit);
     }
 
+    // Selects the word form that matches the numeric value.
     private static string GetWordForm(int value, string singular, string paucal, string plural)
     {
-        // 11–14 всегда используют множественную форму, несмотря на последнюю цифру.
+        // Values ending in 11 to 14 always use the plural form.
         var lastTwoDigits = value % 100;
         if (lastTwoDigits is >= 11 and <= 14)
         {
             return plural;
         }
 
-        // В остальных случаях достаточно проверить последнюю цифру.
+        // Otherwise, the final digit determines the word form.
         return (value % 10) switch
         {
             1 => singular,

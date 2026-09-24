@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Минимальный Apple Privacy Manifest для .NET MAUI.
-Записи нужны из-за API, которые вызывает сам .NET runtime и MAUI SDK.
+Minimal Apple Privacy Manifest for .NET MAUI.
+These entries cover APIs used by the .NET runtime and MAUI SDK.
 
-При добавлении новых API разработчик обязан дополнить этот манифест.
+Update this manifest when adding APIs that require declarations.
 
 More information: https://aka.ms/maui-privacy-manifest
 -->
@@ -12,7 +12,7 @@ More information: https://aka.ms/maui-privacy-manifest
 <dict>
     <key>NSPrivacyAccessedAPITypes</key>
     <array>
-        <!-- Runtime читает временные метки файлов для работы с файловой системой. -->
+        <!-- The runtime reads file timestamps for file system operations. -->
         <dict>
             <key>NSPrivacyAccessedAPIType</key>
             <string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
@@ -21,7 +21,7 @@ More information: https://aka.ms/maui-privacy-manifest
                 <string>C617.1</string>
             </array>
         </dict>
-        <!-- Системное время загрузки используется внутренними таймерами runtime. -->
+        <!-- Internal runtime timers use the system boot time. -->
         <dict>
             <key>NSPrivacyAccessedAPIType</key>
             <string>NSPrivacyAccessedAPICategorySystemBootTime</string>
@@ -30,7 +30,7 @@ More information: https://aka.ms/maui-privacy-manifest
                 <string>35F9.1</string>
             </array>
         </dict>
-        <!-- Runtime может проверять доступный объём диска. -->
+        <!-- The runtime may check available disk space. -->
         <dict>
             <key>NSPrivacyAccessedAPIType</key>
             <string>NSPrivacyAccessedAPICategoryDiskSpace</string>
@@ -40,7 +40,7 @@ More information: https://aka.ms/maui-privacy-manifest
             </array>
         </dict>
         <!--
-            Этот блок нужно раскомментировать при использовании MAUI Preferences API.
+            Uncomment this block when using the MAUI Preferences API.
         <dict>
             <key>NSPrivacyAccessedAPIType</key>
             <string>NSPrivacyAccessedAPICategoryUserDefaults</string>

@@ -53,14 +53,14 @@
                         </Grid>
                     </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>
-                        <!-- x:DataType включает проверку привязок элемента при компиляции. -->
+                        <!-- x:DataType enables compile-time validation of item bindings. -->
                         <DataTemplate x:DataType="viewModels:ConsumptionItemViewModel">
                             <SwipeView
                                 BindingContextChanged="OnSwipeBindingContextChanged"
                                 SwipeEnded="OnSwipeEnded"
                                 SwipeStarted="OnSwipeStarted">
 
-                                <!-- Блок свайпающийся вправо -->
+                                <!-- Row with a right-swipe action. -->
                                 <SwipeView.RightItems>
                                     <SwipeItems Mode="Reveal">
                                         <SwipeItemView>
@@ -106,7 +106,7 @@
                                     </Border.StrokeShape>
 
                                     <Grid ColumnSpacing="10">
-                                        <!-- Карточка записи: иконка, название/время и доза кофеина. -->
+                                        <!-- Consumption card: icon, name, time, and caffeine dose. -->
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="44" />
                                             <ColumnDefinition Width="*" />
@@ -155,7 +155,7 @@
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-                    <!-- Фиксированный отступ позволяет полностью показать последнюю карточку. -->
+                    <!-- Fixed spacing keeps the last card fully visible. -->
                     <CollectionView.Footer>
                         <VerticalStackLayout Padding="10,8,10,20" Spacing="6">
                             <ActivityIndicator IsRunning="{Binding Source={x:Reference Panel}, Path=IsLoading}"

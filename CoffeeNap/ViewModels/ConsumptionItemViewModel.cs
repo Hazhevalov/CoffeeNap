@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CoffeeNap.ViewModels;
 
-// Объект употребления на главном экране. CaffeineConsumption прописан в Models
+// Wraps a CaffeineConsumption model for display on the main page.
 public sealed class ConsumptionItemViewModel(CaffeineConsumption model) : ObservableObject
 {
     internal CaffeineConsumption Model { get; } = model;
@@ -41,6 +41,7 @@ public sealed class ConsumptionItemViewModel(CaffeineConsumption model) : Observ
     private string? _relativeTime;
     public string RelativeTime => _relativeTime ??= RelativeTimeFormatter.Format(ConsumedAt, DateTimeOffset.Now);
 
+    // Refreshes the localized consumption name and relative time.
     public void RefreshLocalizedState()
     {
         RefreshRelativeTime();
@@ -48,6 +49,7 @@ public sealed class ConsumptionItemViewModel(CaffeineConsumption model) : Observ
         OnPropertyChanged(nameof(CaffeineDisplay));
     }
 
+    // Updates the displayed time elapsed since consumption.
     public void RefreshRelativeTime() => SetProperty(ref _relativeTime,
         RelativeTimeFormatter.Format(ConsumedAt, DateTimeOffset.Now), nameof(RelativeTime));
 }

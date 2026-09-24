@@ -5,6 +5,7 @@ namespace CoffeeNap.Services;
 // Pure numerical model: no localization, UI, storage or mutable application services.
 public static class CaffeineEstimate
 {
+    // Estimates caffeine extracted from a home coffee recipe.
     public static int Home(double grams, CoffeeBeanType bean, CoffeeBrewingMethod method)
     {
         RequirePositiveFinite(grams);
@@ -15,6 +16,7 @@ public static class CaffeineEstimate
         return (int)Math.Min(rounded, Math.Floor(raw));
     }
 
+    // Estimates caffeine for a cafe drink and serving volume.
     public static int Outside(CoffeeDrinkType drink, CoffeeBeanType bean, int volumeMl, ServingSize? size)
     {
         RequirePositiveFinite(volumeMl);
@@ -24,6 +26,7 @@ public static class CaffeineEstimate
         return RoundCaffeineEstimate(shots * CaffeineCalculationConfig.Beans[bean].CaffeineMgPerShot);
     }
 
+    // Converts cafe drink volume to an equivalent espresso shot count.
     public static double GetShotEquivalent(CoffeeDrinkType drink, double volumeMl)
     {
         RequirePositiveFinite(volumeMl);
@@ -42,12 +45,14 @@ public static class CaffeineEstimate
         return Math.Clamp(shots, CaffeineCalculationConfig.MinimumShots, CaffeineCalculationConfig.MaximumShots);
     }
 
+    // Estimates caffeine from tea weight and tea type.
     public static int Tea(double grams, TeaType type)
     {
         RequirePositiveFinite(grams);
         return RoundCaffeineEstimate(grams * CaffeineCalculationConfig.TeaMgPerGram[type]);
     }
 
+    // Rounds a valid caffeine estimate to the configured increment.
     public static int RoundCaffeineEstimate(double caffeineMg)
     {
         if (!double.IsFinite(caffeineMg) || caffeineMg < 0)
@@ -59,9 +64,11 @@ public static class CaffeineEstimate
         return (int)rounded;
     }
 
+    // Linearly interpolates or extrapolates between two points.
     private static double Interpolate(double x, double x0, double x1, double y0, double y1) =>
         y0 + (x - x0) / (x1 - x0) * (y1 - y0);
 
+    // Rejects amounts that are non-positive or non-finite.
     private static void RequirePositiveFinite(double value)
     {
         if (!double.IsFinite(value) || value <= 0)

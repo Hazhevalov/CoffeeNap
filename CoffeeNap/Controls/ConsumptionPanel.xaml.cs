@@ -4,8 +4,8 @@ using System.Windows.Input;
 namespace CoffeeNap.Controls;
 
 /// <summary>
-/// Фиксированный блок истории употреблений с виртуализированным списком.
-/// Данные и команда удаления передаются снаружи через bindable-свойства.
+/// Fixed consumption history panel with a virtualized list.
+/// Bindable properties supply the data and delete command.
 /// </summary>
 public partial class ConsumptionPanel : ContentView
 {
@@ -21,6 +21,7 @@ public partial class ConsumptionPanel : ContentView
     public bool IsLoading { get => (bool)GetValue(IsLoadingProperty); set => SetValue(IsLoadingProperty, value); }
     public event Action<int, int>? VisibleRangeChanged;
 
+    // Reports the visible consumption item range after scrolling.
     private void OnScrolled(object? sender, ItemsViewScrolledEventArgs args) =>
         VisibleRangeChanged?.Invoke(args.FirstVisibleItemIndex, args.LastVisibleItemIndex);
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
@@ -31,6 +32,7 @@ public partial class ConsumptionPanel : ContentView
 
     private SwipeView? _openSwipeView;
 
+    // Initializes the consumption panel.
     public ConsumptionPanel()
     {
         InitializeComponent();
@@ -48,6 +50,7 @@ public partial class ConsumptionPanel : ContentView
         set => SetValue(DeleteCommandProperty, value);
     }
 
+    // Closes the previous swipe row before opening another.
     private void OnSwipeStarted(object? sender, SwipeStartedEventArgs eventArgs)
     {
         if (sender is not SwipeView swipeView)
@@ -63,6 +66,7 @@ public partial class ConsumptionPanel : ContentView
         _openSwipeView = swipeView;
     }
 
+    // Clears the tracked swipe row when it closes.
     private void OnSwipeEnded(object? sender, SwipeEndedEventArgs eventArgs)
     {
         if (!eventArgs.IsOpen && ReferenceEquals(_openSwipeView, sender))
@@ -71,6 +75,7 @@ public partial class ConsumptionPanel : ContentView
         }
     }
 
+    // Resets a recycled swipe row and refreshes its relative time.
     private void OnSwipeBindingContextChanged(object? sender, EventArgs eventArgs)
     {
         if (sender is not SwipeView swipeView)
@@ -87,6 +92,7 @@ public partial class ConsumptionPanel : ContentView
         }
     }
 
+    // Closes the swipe row after its delete action is tapped.
     private void OnDeleteActionTapped(object? sender, TappedEventArgs eventArgs)
     {
         var element = sender as Element;

@@ -1,5 +1,6 @@
 namespace CoffeeNap.Models;
 
+// Stores the caffeine estimate and formatted quiz result fields.
 public sealed record ConsumptionCalculationResult(
     int CaffeineMg,
     string DisplayName,

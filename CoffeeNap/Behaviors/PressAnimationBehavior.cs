@@ -24,6 +24,7 @@ public sealed class PressAnimationBehavior : Behavior<View>
         set => SetValue(PressedScaleProperty, value);
     }
 
+    // Attaches press feedback handlers to the view.
     protected override void OnAttachedTo(View bindable)
     {
         base.OnAttachedTo(bindable);
@@ -48,6 +49,7 @@ public sealed class PressAnimationBehavior : Behavior<View>
         }
     }
 
+    // Removes press handlers and restores the view's scale.
     protected override void OnDetachingFrom(View bindable)
     {
         bindable.CancelAnimations();
@@ -75,15 +77,20 @@ public sealed class PressAnimationBehavior : Behavior<View>
         base.OnDetachingFrom(bindable);
     }
 
+    // Starts the pressed-state animation.
     private void OnButtonPressed(object? sender, EventArgs eventArgs) => AnimatePressed();
 
+    // Restores the released-state appearance.
     private void OnButtonReleased(object? sender, EventArgs eventArgs) => AnimateReleased();
 
+    // Starts the pressed-state animation.
     private void OnPointerPressed(object? sender, PointerEventArgs eventArgs) => AnimatePressed();
 
+    // Restores the released-state appearance.
     private void OnPointerReleased(object? sender, PointerEventArgs eventArgs) => AnimateReleased();
 
 #if ANDROID
+    // Reconnects native touch handlers after the MAUI handler changes.
     private void OnElementHandlerChanged(object? sender, EventArgs eventArgs)
     {
         DetachAndroidTouch();
@@ -94,6 +101,7 @@ public sealed class PressAnimationBehavior : Behavior<View>
         }
     }
 
+    // Subscribes to touch events on the current Android view.
     private void AttachAndroidTouch(View element)
     {
         if (element.Handler?.PlatformView is not Android.Views.View androidView ||
@@ -106,6 +114,7 @@ public sealed class PressAnimationBehavior : Behavior<View>
         androidView.Touch += OnAndroidTouch;
     }
 
+    // Removes the native Android touch subscription.
     private void DetachAndroidTouch()
     {
         if (_androidView is not { } androidView)
@@ -117,6 +126,7 @@ public sealed class PressAnimationBehavior : Behavior<View>
         _androidView = null;
     }
 
+    // Updates press feedback for the native Android touch sequence.
     private void OnAndroidTouch(object? sender, Android.Views.View.TouchEventArgs eventArgs)
     {
         switch (eventArgs.Event?.ActionMasked)
@@ -138,6 +148,7 @@ public sealed class PressAnimationBehavior : Behavior<View>
     }
 #endif
 
+    // Scales the enabled view down while pressed.
     private async void AnimatePressed()
     {
         if (_element is not { IsEnabled: true } element)
@@ -149,6 +160,7 @@ public sealed class PressAnimationBehavior : Behavior<View>
         await element.ScaleToAsync(PressedScale, PressDuration, Easing.CubicOut);
     }
 
+    // Animates the view back to its normal scale.
     private async void AnimateReleased()
     {
         if (_element is not { } element)

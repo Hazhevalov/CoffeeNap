@@ -5,7 +5,7 @@ using CoffeeNap.ViewModels;
 namespace CoffeeNap.Views;
 
 /// <summary>
-/// Экран настроек; вся логика предоставляется SettingsPageViewModel.
+/// Settings screen with behavior supplied by SettingsPageViewModel.
 /// </summary>
 public partial class SettingsPage : ContentPage
 {
@@ -23,6 +23,7 @@ public partial class SettingsPage : ContentPage
     private Task _languageMenuTransition = Task.CompletedTask;
     private Task _deleteWarningTransition = Task.CompletedTask;
 
+    // Initializes the settings page.
     public SettingsPage(SettingsPageViewModel viewModel)
     {
         InitializeComponent();
@@ -43,12 +44,14 @@ public partial class SettingsPage : ContentPage
         _viewModel.DeleteWarningTransitionRequested += WaitForDeleteWarningTransitionAsync;
     }
 
+    // Resets temporary panel state when settings disappears.
     protected override void OnDisappearing()
     {
         _viewModel.ResetTransientUiState();
         base.OnDisappearing();
     }
 
+    // Schedules panel transitions when view model state changes.
     private void OnViewModelPropertyChanged(
         object? sender,
         PropertyChangedEventArgs eventArgs)
@@ -65,6 +68,7 @@ public partial class SettingsPage : ContentPage
         }
     }
 
+    // Queues a language panel visibility transition.
     private void ScheduleLanguageMenuTransition(bool isVisible)
     {
         _languageMenuTargetVisible = isVisible;
@@ -75,6 +79,7 @@ public partial class SettingsPage : ContentPage
         }
     }
 
+    // Runs pending language panel animations in sequence.
     private async Task RunLanguageMenuTransitionsAsync()
     {
         _languageMenuAnimationRunning = true;
@@ -136,6 +141,7 @@ public partial class SettingsPage : ContentPage
         }
     }
 
+    // Queues a delete confirmation panel visibility transition.
     private void ScheduleDeleteWarningTransition(bool isVisible)
     {
         _deleteWarningTargetVisible = isVisible;
@@ -146,6 +152,7 @@ public partial class SettingsPage : ContentPage
         }
     }
 
+    // Runs pending delete confirmation animations in sequence.
     private async Task RunDeleteWarningTransitionsAsync()
     {
         _deleteWarningAnimationRunning = true;
@@ -205,9 +212,11 @@ public partial class SettingsPage : ContentPage
         }
     }
 
+    // Waits for the current language panel transition.
     private Task WaitForLanguageMenuTransitionAsync()
         => _languageMenuTransition;
 
+    // Waits for the current delete confirmation transition.
     private Task WaitForDeleteWarningTransitionAsync()
         => _deleteWarningTransition;
 }

@@ -20,6 +20,7 @@ public partial class SettingsPageViewModel : ObservableObject
     public event Func<Task>? LanguageMenuTransitionRequested;
     public event Func<Task>? DeleteWarningTransitionRequested;
 
+    // Initializes the settings page view model.
     public SettingsPageViewModel(
         BottomNavigationViewModel navigation,
         LocalizationService localization,
@@ -71,6 +72,7 @@ public partial class SettingsPageViewModel : ObservableObject
         }
     }
 
+    // Toggles the language selection panel.
     [RelayCommand]
     private void ToggleLanguagePanel()
     {
@@ -81,6 +83,7 @@ public partial class SettingsPageViewModel : ObservableObject
         }
     }
 
+    // Saves the selected language and restarts the application.
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task ChangeLanguageAsync(string? languageCode)
     {
@@ -121,16 +124,19 @@ public partial class SettingsPageViewModel : ObservableObject
         }
     }
 
+    // Navigates back unless data deletion is in progress.
     [RelayCommand(AllowConcurrentExecutions = false)]
     private Task BackAsync() => IsDeletingData
         ? Task.CompletedTask
         : _navigationService.GoBackAsync();
 
+    // Opens the privacy policy page.
     [RelayCommand(AllowConcurrentExecutions = false)]
     private Task OpenPrivacyPolicyAsync() => IsDeletingData
         ? Task.CompletedTask
         : _navigationService.OpenPrivacyPolicyAsync();
 
+    // Opens the data deletion confirmation panel.
     [RelayCommand]
     private void DeleteData()
     {
@@ -141,9 +147,11 @@ public partial class SettingsPageViewModel : ObservableObject
         }
     }
 
+    // Closes the data deletion confirmation panel.
     [RelayCommand]
     private void CancelDelete() => IsDeleteConfirmationVisible = false;
 
+    // Deletes user data and closes the application.
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task ConfirmDeleteAsync()
     {
@@ -174,9 +182,11 @@ public partial class SettingsPageViewModel : ObservableObject
         }
     }
 
+    // Waits for the optional panel transition to finish.
     private static Task AwaitTransitionAsync(Func<Task>? transition) =>
         transition?.Invoke() ?? Task.CompletedTask;
 
+    // Resets temporary settings panel state.
     internal void ResetTransientUiState()
     {
         IsLanguagePanelVisible = false;

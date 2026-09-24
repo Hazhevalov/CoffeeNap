@@ -11,7 +11,7 @@
     Shell.NavBarIsVisible="False"
     Shell.TabBarIsVisible="False">
 
-    <!-- Корневые элементы скрыты от UI; нужный выбирается до показа первого окна. -->
+    <!-- Root items are hidden from the UI; select one before showing the first window. -->
     <FlyoutItem
         x:Name="OnboardingShellItem"
         Route="OnboardingPage">

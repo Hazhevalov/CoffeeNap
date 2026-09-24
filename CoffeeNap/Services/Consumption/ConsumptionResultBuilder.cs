@@ -5,6 +5,7 @@ namespace CoffeeNap.Services;
 // Formats the calculated snapshot; formulas belong to CaffeineEstimate.
 internal static class ConsumptionResultBuilder
 {
+    // Builds the calculation result for the selected drink category.
     public static ConsumptionCalculationResult Build(AddConsumptionQuizState state, int caffeine)
     {
         ArgumentNullException.ThrowIfNull(state);
@@ -17,6 +18,7 @@ internal static class ConsumptionResultBuilder
         };
     }
 
+    // Builds a coffee result using the selected preparation location.
     private static ConsumptionCalculationResult BuildCoffee(AddConsumptionQuizState state, int caffeine) =>
         state.CoffeeLocation switch
         {
@@ -25,6 +27,7 @@ internal static class ConsumptionResultBuilder
             _ => throw new InvalidOperationException("Coffee location is required.")
         };
 
+    // Formats the tea result with the supplied caffeine estimate.
     private static ConsumptionCalculationResult BuildTea(AddConsumptionQuizState state, int caffeine)
     {
         if (state.TeaType is not { } teaType || state.TeaAmountGrams is not > 0)
@@ -52,6 +55,7 @@ internal static class ConsumptionResultBuilder
             string.Empty);
     }
 
+    // Formats the energy drink result with the supplied caffeine estimate.
     private static ConsumptionCalculationResult BuildEnergyDrink(AddConsumptionQuizState state, int caffeine)
     {
         if (state.EnergyDrinkVolumeMl is not > 0)

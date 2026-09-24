@@ -21,7 +21,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
-        <!-- Топ бар экрана -->
+        <!-- Page header. -->
         <Border
             Padding="10"
             BackgroundColor="{StaticResource SurfaceColor}"
@@ -58,10 +58,10 @@
             </Grid>
         </Border>
 
-        <!--Список кнопок настроек-->
+        <!-- Settings action buttons. -->
         <VerticalStackLayout Grid.Row="1" Spacing="10">
             
-            <!--  Кнопка смены языка  -->
+            <!-- Language selection button. -->
             <Border
                 Padding="15"
                 BackgroundColor="{StaticResource White}"
@@ -98,7 +98,7 @@
                 </Grid>
             </Border>
 
-            <!--  Кнопка политики конфиденциальности  -->
+            <!-- Privacy policy button. -->
             <Border
                 AutomationId="OpenPrivacy"
                 Padding="15"
@@ -129,7 +129,7 @@
                 </Grid>
             </Border>
 
-            <!--  Кнопка удаления данных  -->
+            <!-- Delete data button. -->
             <Border Padding="15" BackgroundColor="{StaticResource White}" 
                 Stroke="{StaticResource DividerColor}">
                 <Border.Behaviors>
@@ -158,7 +158,7 @@
             </Border>
         </VerticalStackLayout>
         
-        <!--Всплывашка для смены языка-->
+        <!-- Language selection panel. -->
         <Border x:Name="LanguageMenu"
                 IsVisible="False"
                 Grid.Row="2"
@@ -174,7 +174,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <!--  Хуйня для сворачивания панели  -->
+                <!-- Panel dismissal handle. -->
                 <Grid SafeAreaEdges="None" Grid.Row="0" BackgroundColor="Transparent">
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ToggleLanguagePanelCommand}" />
@@ -188,13 +188,13 @@
                         WidthRequest="42" />
                 </Grid>
 
-                <!--  Список кнопок  -->
+                <!-- Action buttons. -->
                 <VerticalStackLayout
                     Grid.Row="1"
                     Padding="10,10"
                     Spacing="10">
                     
-                    <!--  Русский  -->
+                    <!-- Russian language option. -->
                     <Border Padding="20" Stroke="{StaticResource EnergyDrinkIcoFill}">
                         <Border.Behaviors>
                             <behaviors:PressAnimationBehavior />
@@ -233,7 +233,7 @@
                         </Grid>
                     </Border>
 
-                    <!--  Английский  -->
+                    <!-- English language option. -->
                     <Border Padding="20" Stroke="{StaticResource DividerColor}">
                         <Border.Behaviors>
                             <behaviors:PressAnimationBehavior />
@@ -275,7 +275,7 @@
             </Grid>
         </Border>
 
-        <!--Всплывашка для удаления данных-->
+        <!-- Data deletion confirmation panel. -->
         <Border x:Name="DeleteWarning"
                 IsVisible="False"
                 Grid.Row="1" 
@@ -355,7 +355,7 @@
         </Border>
         
         <!--  Nav Bar  -->
-        <!--  Нижняя навигация вынесена в отдельный переиспользуемый контрол.  -->
+        <!-- The bottom navigation is a separate reusable control. -->
         <controls:BottomNavigationBar
             x:Name="BottomNavigationBar"
             Grid.Row="2"

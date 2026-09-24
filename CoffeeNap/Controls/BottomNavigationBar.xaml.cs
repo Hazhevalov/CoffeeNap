@@ -19,6 +19,7 @@ public partial class BottomNavigationBar : ContentView
     private NavigationTab _displayedTab = NavigationTab.None;
     private int _animationVersion;
 
+    // Initializes the bottom navigation bar.
     public BottomNavigationBar()
     {
         InitializeComponent();
@@ -26,6 +27,7 @@ public partial class BottomNavigationBar : ContentView
         Unloaded += OnUnloaded;
     }
 
+    // Reconnects navigation bindings and synchronizes the selected tab.
     protected override void OnBindingContextChanged()
     {
         if (_viewModel is not null)
@@ -47,6 +49,7 @@ public partial class BottomNavigationBar : ContentView
         }
     }
 
+    // Updates the selection indicator when the active tab changes.
     private async void OnSelectionChanged(object? sender, PropertyChangedEventArgs eventArgs)
     {
         if (eventArgs.PropertyName is nameof(BottomNavigationViewModel.ActiveTab) or null)
@@ -71,6 +74,7 @@ public partial class BottomNavigationBar : ContentView
         }
     }
 
+    // Animates the indicator and icons to the selected tab.
     private async Task AnimateSelectionAsync(NavigationTab tab, bool animate)
     {
         var version = Interlocked.Increment(ref _animationVersion);
@@ -167,6 +171,7 @@ public partial class BottomNavigationBar : ContentView
         }
     }
 
+    // Cancels animations and applies the selected tab immediately.
     private void SetSelectionImmediately(NavigationTab tab)
     {
         Interlocked.Increment(ref _animationVersion);
@@ -174,6 +179,7 @@ public partial class BottomNavigationBar : ContentView
         NormalizeSelection(tab);
     }
 
+    // Restores indicator geometry and icons for the selected tab.
     private void NormalizeSelection(NavigationTab tab)
     {
         var index = GetIndex(tab);
@@ -183,11 +189,13 @@ public partial class BottomNavigationBar : ContentView
         SetIcons(tab);
     }
 
+    // Sets the indicator's horizontal bounds.
     private void SetIndicatorBounds(double x) =>
         AbsoluteLayout.SetLayoutBounds(
             SelectionIndicator,
             new Rect(x, 0, 96, 56));
 
+    // Animates the indicator to its target position.
     private Task AnimateIndicatorPositionAsync(double targetX)
     {
         var completion = new TaskCompletionSource(
@@ -216,24 +224,29 @@ public partial class BottomNavigationBar : ContentView
         return completion.Task;
     }
 
+    // Lays out the indicator at its current horizontal position.
     private void LayoutIndicatorFrame(double x) =>
         SelectionIndicator.Arrange(new Rect(x, 0, 96, 56));
 
+    // Synchronizes the selection when the navigation bar loads.
     private void OnLoaded(object? sender, EventArgs eventArgs) =>
         SetSelectionImmediately(_viewModel?.ActiveTab ?? NavigationTab.None);
 
+    // Stops selection animations when the navigation bar unloads.
     private void OnUnloaded(object? sender, EventArgs eventArgs)
     {
         Interlocked.Increment(ref _animationVersion);
         AbortSelectionAnimations();
     }
 
+    // Cancels active selection animations.
     private void AbortSelectionAnimations()
     {
         SelectionIndicator.AbortAnimation(IndicatorPositionAnimation);
         SelectionIndicator.CancelAnimations();
     }
 
+    // Maps a navigation tab to its visual index.
     private static int GetIndex(NavigationTab tab) => tab switch
     {
         NavigationTab.AddConsumption => 0,
@@ -242,6 +255,7 @@ public partial class BottomNavigationBar : ContentView
         _ => -1
     };
 
+    // Updates navigation icons for the selected tab.
     private void SetIcons(NavigationTab tab)
     {
         _displayedTab = tab;

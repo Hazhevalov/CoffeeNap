@@ -29,6 +29,7 @@ if (args is ["--seed", var output, var countText] && int.TryParse(countText, out
 }
 
 var checks = 0;
+// Records whether a test condition passes.
 void Check(bool condition, string message)
 {
     checks++;
@@ -218,6 +219,7 @@ finally
     Directory.Delete(directory, recursive: true);
 }
 
+// Waits until the expected UI callbacks are queued.
 static async Task WaitForUiCallbacksAsync(int count)
 {
     using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
@@ -227,6 +229,7 @@ static async Task WaitForUiCallbacksAsync(int count)
 public sealed class TestDialogs : IDialogService
 {
     public int Errors { get; private set; }
+    // Captures an error dialog request for verification.
     public Task ShowErrorAsync(string title, string message, string cancel)
     {
         Errors++;

@@ -27,7 +27,7 @@
             SafeAreaEdges="None"
             VerticalOptions="Start" />
 
-        <!--  Контент под header'ом  -->
+        <!-- Content below the header. -->
         <ScrollView x:Name="QuizScroll" Grid.Row="1" VerticalScrollBarVisibility="Default">
         <Grid SafeAreaEdges="None"
             MinimumHeightRequest="{Binding Height, Source={x:Reference QuizScroll}, x:DataType=ScrollView}"
@@ -37,7 +37,7 @@
             RowSpacing="20"
             VerticalOptions="Fill">
 
-            <!--  Кнопка назад и прогресс  -->
+            <!-- Back button and progress indicator. -->
             <Grid SafeAreaEdges="None" Grid.Row="0">
 
                 <Button
@@ -53,7 +53,7 @@
                     VerticalOptions="Center"
                     WidthRequest="54" />
 
-                <!-- Количество точек соответствует длине выбранной ветки quiz. -->
+                <!-- The dot count matches the selected quiz branch length. -->
                 <controls:QuizProgressView
                     CurrentPosition="{Binding ProgressPosition}"
                     HorizontalOptions="Center"
@@ -83,7 +83,7 @@
 
             <steps:EnergyDrinkVolume Grid.Row="1" />
 
-            <!-- Надпись ошибки -->
+            <!-- Validation error label. -->
             <Label
                 Grid.Row="2"
                 FontSize="13"

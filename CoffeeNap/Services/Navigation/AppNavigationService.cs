@@ -12,11 +12,13 @@ public sealed class AppNavigationService : IAppNavigationService
     private readonly SemaphoreSlim _navigationLock = new(1, 1);
     private long _lastBackNavigationTimestamp;
 
+    // Initializes the app navigation service.
     public AppNavigationService(IServiceProvider services)
     {
         _services = services;
     }
 
+    // Opens the settings page.
     public Task OpenSettingsAsync() => RunNavigationAsync(async shell =>
     {
         if (shell.Navigation.ModalStack.Count > 0)
@@ -30,6 +32,7 @@ public sealed class AppNavigationService : IAppNavigationService
         await shell.Navigation.PushModalAsync(navigationPage, NavigationAnimation.IsEnabled);
     });
 
+    // Opens the privacy policy page.
     public Task OpenPrivacyPolicyAsync() => RunNavigationAsync(async shell =>
     {
         if (shell.Navigation.ModalStack.LastOrDefault() is not NavigationPage navigationPage ||
@@ -42,6 +45,7 @@ public sealed class AppNavigationService : IAppNavigationService
         await navigationPage.PushAsync(privacyPage, NavigationAnimation.IsEnabled);
     });
 
+    // Navigates back to the previous page.
     public Task GoBackAsync() => RunNavigationAsync(async shell =>
     {
         if (shell.Navigation.ModalStack.LastOrDefault() is not NavigationPage navigationPage)
@@ -69,6 +73,7 @@ public sealed class AppNavigationService : IAppNavigationService
         await shell.Navigation.PopModalAsync(NavigationAnimation.IsEnabled);
     });
 
+    // Navigates to the requested top-level route.
     public async Task NavigateToTopLevelAsync(
         string absoluteRoute,
         BottomNavigationViewModel? sourceNavigation = null)
@@ -124,6 +129,7 @@ public sealed class AppNavigationService : IAppNavigationService
         }, dropIfBusy: sourceNavigation is not null);
     }
 
+    // Maps a route to its navigation tab.
     private static NavigationTab GetTab(string absoluteRoute) => absoluteRoute switch
     {
         AppShell.MainAbsoluteRoute => NavigationTab.Home,
@@ -132,6 +138,7 @@ public sealed class AppNavigationService : IAppNavigationService
         _ => NavigationTab.None
     };
 
+    // Serializes navigation and executes it on the main thread.
     private async Task RunNavigationAsync(
         Func<Shell, Task> navigation,
         bool dropIfBusy = false)
@@ -161,6 +168,7 @@ public sealed class AppNavigationService : IAppNavigationService
         }
     }
 
+    // Waits until the navigation lock is acquired.
     private async Task<bool> WaitForNavigationLockAsync()
     {
         await _navigationLock.WaitAsync();

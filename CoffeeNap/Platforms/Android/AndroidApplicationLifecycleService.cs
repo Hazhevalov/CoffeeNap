@@ -4,6 +4,7 @@ namespace CoffeeNap.Platforms.Android;
 
 public sealed class AndroidApplicationLifecycleService : IApplicationLifecycleService
 {
+    // Relaunches the Android root task and terminates the current process.
     public Task RestartApplicationAsync()
     {
         var activity = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
@@ -23,6 +24,7 @@ public sealed class AndroidApplicationLifecycleService : IApplicationLifecycleSe
         return Task.CompletedTask;
     }
 
+    // Finishes the Android activity and removes its task.
     public void CloseApplication()
     {
         var activity = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;

@@ -5,8 +5,8 @@ using Microsoft.Extensions.Logging;
 namespace CoffeeNap.Services;
 
 /// <summary>
-/// Централизует инициализацию, legacy-миграцию, defaults и нормализацию данных
-/// перед записью в SQLite.
+/// Centralizes initialization, legacy migration, defaults, and data normalization
+/// before writing to SQLite.
 /// </summary>
 public sealed class AppDataService : IAppDataService
 {
@@ -31,6 +31,7 @@ public sealed class AppDataService : IAppDataService
     private bool _isLastRecipeLoaded;
     private LastConsumptionRecipe? _lastRecipe;
 
+    // Initializes the app data service.
     public AppDataService(
         AppDatabase database,
         ILogger<AppDataService> logger)
@@ -39,6 +40,7 @@ public sealed class AppDataService : IAppDataService
         _logger = logger;
     }
 
+    // Initializes persistence and prepares required application data.
     public async Task InitializeAsync()
     {
         if (_isInitialized)
@@ -65,12 +67,14 @@ public sealed class AppDataService : IAppDataService
         }
     }
 
+    // Loads the saved user profile.
     public async Task<UserProfile?> GetUserProfileAsync()
     {
         await InitializeAsync();
         return await _database.GetUserProfileAsync();
     }
 
+    // Saves the user profile.
     public async Task SaveUserProfileAsync(UserProfile profile)
     {
         ArgumentNullException.ThrowIfNull(profile);
@@ -81,6 +85,7 @@ public sealed class AppDataService : IAppDataService
         await _database.SaveUserProfileAsync(profile);
     }
 
+    // Loads application settings.
     public async Task<AppSettings> GetSettingsAsync()
     {
         await InitializeAsync();
@@ -94,6 +99,7 @@ public sealed class AppDataService : IAppDataService
         return settings;
     }
 
+    // Saves application settings.
     public async Task SaveSettingsAsync(AppSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
@@ -117,12 +123,14 @@ public sealed class AppDataService : IAppDataService
         await _database.SaveSettingsAsync(settings);
     }
 
+    // Loads the consumption history.
     public async Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsAsync()
     {
         await InitializeAsync();
         return await _database.GetConsumptionsAsync();
     }
 
+    // Loads a page of consumption records using the supplied cursor.
     public async Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsPageAsync(ConsumptionCursor? before, int pageSize)
     {
         if (pageSize is < 1 or > 100) throw new ArgumentOutOfRangeException(nameof(pageSize));
@@ -130,12 +138,14 @@ public sealed class AppDataService : IAppDataService
         return await _database.GetConsumptionsPageAsync(before, pageSize);
     }
 
+    // Loads daily caffeine totals and consumption counts.
     public async Task<ConsumptionOverview> GetConsumptionOverviewAsync(DateTimeOffset now)
     {
         await InitializeAsync();
         return await _database.GetConsumptionOverviewAsync(now);
     }
 
+    // Loads consumption records within the specified time range.
     public async Task<IReadOnlyList<CaffeineConsumption>> GetConsumptionsBetweenAsync(
         DateTimeOffset fromInclusive,
         DateTimeOffset toExclusive)
@@ -153,6 +163,7 @@ public sealed class AppDataService : IAppDataService
             toExclusive.ToUniversalTime()).ConfigureAwait(false);
     }
 
+    // Validates and saves a consumption together with its recipe.
     public async Task AddConsumptionAndSaveRecipeAsync(
         CaffeineConsumption consumption,
         LastConsumptionRecipe recipe)
@@ -172,6 +183,7 @@ public sealed class AppDataService : IAppDataService
         PublishSafely(ConsumptionAdded, consumption);
     }
 
+    // Loads the last saved consumption recipe.
     public async Task<LastConsumptionRecipe?> GetLastConsumptionRecipeAsync()
     {
         await InitializeAsync();
@@ -197,6 +209,7 @@ public sealed class AppDataService : IAppDataService
         }
     }
 
+    // Deletes a consumption record by its identifier.
     public async Task DeleteConsumptionAsync(int id)
     {
         if (id <= 0)
@@ -216,6 +229,7 @@ public sealed class AppDataService : IAppDataService
         PublishSafely(ConsumptionDeleted, consumption);
     }
 
+    // Deletes all stored user data.
     public async Task DeleteAllUserDataAsync()
     {
         await InitializeAsync();
@@ -238,6 +252,7 @@ public sealed class AppDataService : IAppDataService
         }
     }
 
+    // Notifies consumption subscribers while isolating handler failures.
     private void PublishSafely(EventHandler<CaffeineConsumption>? handlers, CaffeineConsumption consumption)
     {
         if (handlers is null) return;
@@ -248,6 +263,7 @@ public sealed class AppDataService : IAppDataService
         }
     }
 
+    // Migrates legacy preferences into the database.
     private async Task MigrateLegacyPreferencesAsync()
     {
         if (await _database.GetUserProfileAsync() is not null)
@@ -270,7 +286,7 @@ public sealed class AppDataService : IAppDataService
 
         await _database.SaveUserProfileAsync(profile);
 
-        // Удаляем legacy user data только после успешной записи одной profile-row.
+        // Remove legacy user data only after successfully saving the profile row.
         Preferences.Default.Remove(LegacyUserNameKey);
         Preferences.Default.Remove(LegacyOnboardingCompletedKey);
         if (!string.IsNullOrEmpty(legacyName) || legacyOnboardingCompleted)
@@ -279,6 +295,7 @@ public sealed class AppDataService : IAppDataService
         }
     }
 
+    // Creates settings when no saved settings exist.
     private async Task EnsureDefaultSettingsAsync()
     {
         if (await _database.GetSettingsAsync() is null)
@@ -287,12 +304,14 @@ public sealed class AppDataService : IAppDataService
         }
     }
 
+    // Creates the default application settings.
     private static AppSettings CreateDefaultSettings() => new()
     {
         Id = DatabaseConstants.SettingsId,
         LanguageCode = AppSettings.DefaultLanguageCode
     };
 
+    // Validates a consumption before saving it.
     private static void ValidateConsumption(CaffeineConsumption consumption)
     {
         ArgumentNullException.ThrowIfNull(consumption);
@@ -314,6 +333,7 @@ public sealed class AppDataService : IAppDataService
         }
     }
 
+    // Validates a recipe before saving it.
     private static void ValidateRecipe(LastConsumptionRecipe recipe)
     {
         ArgumentNullException.ThrowIfNull(recipe);

@@ -1,8 +1,8 @@
 namespace CoffeeNap.Controls;
 
 /// <summary>
-/// Адаптивная скруглённая полоса без платформенной рамки. Track и заполнение
-/// рисуются внутри фактических границ самого контрола.
+/// Responsive rounded progress bar without a platform border.
+/// Draws the track and fill within the control's actual bounds.
 /// </summary>
 public sealed class RoundedProgressBar : GraphicsView, IDrawable
 {
@@ -27,6 +27,7 @@ public sealed class RoundedProgressBar : GraphicsView, IDrawable
         Colors.Transparent,
         propertyChanged: OnVisualPropertyChanged);
 
+    // Initializes the rounded progress bar.
     public RoundedProgressBar()
     {
         Drawable = this;
@@ -50,6 +51,7 @@ public sealed class RoundedProgressBar : GraphicsView, IDrawable
         set => SetValue(TrackColorProperty, value);
     }
 
+    // Draws the rounded progress track and fill.
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
         var trackRadius = dirtyRect.Height / 2;
@@ -72,6 +74,7 @@ public sealed class RoundedProgressBar : GraphicsView, IDrawable
             fillRadius);
     }
 
+    // Redraws the progress bar when its appearance changes.
     private static void OnVisualPropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
         ((RoundedProgressBar)bindable).Invalidate();

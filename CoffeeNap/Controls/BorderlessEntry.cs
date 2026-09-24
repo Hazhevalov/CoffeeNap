@@ -1,8 +1,8 @@
 namespace CoffeeNap.Controls;
 
 /// <summary>
-/// Entry без нативного декоративного background. Используется только там,
-/// где внешнюю рамку и скругление полностью рисует MAUI Border.
+/// Entry without a native decorative background; use it where
+/// a MAUI Border draws the outline and rounded corners.
 /// </summary>
 public class BorderlessEntry : Entry
 {

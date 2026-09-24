@@ -20,7 +20,7 @@
             Spacing="10"
             VerticalOptions="Start">
             
-            <!-- Блок "Дневная норма кофеина" -->
+            <!-- Daily caffeine allowance section. -->
             <Border
                 MinimumHeightRequest="150"
                 Padding="15,20"
@@ -70,7 +70,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <!-- Прогресс бар -->
+                        <!-- Progress bar. -->
                         <controls:RoundedProgressBar
                             HeightRequest="15"
                             VerticalOptions="Center"
@@ -110,7 +110,7 @@
                 </Grid>
             </Border>
 
-            <!-- Блок "Ваши источники кофеина" -->
+            <!-- Caffeine sources section. -->
             <Border
                 Padding="15,20"
                 BackgroundColor="{StaticResource SurfaceColor}"
@@ -128,7 +128,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <!-- Заголовок блока и кнопка перехода -->
+                    <!-- Section heading and navigation button. -->
                     <Grid SafeAreaEdges="None" ColumnSpacing="8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -150,7 +150,7 @@
                             Source="more_black_ico.png" />
                     </Grid>
 
-                    <!-- Полосы статистики -->
+                    <!-- Statistics bars. -->
                     <Border
                         Grid.Row="1"
                         BackgroundColor="{StaticResource DividerColor}"
@@ -170,8 +170,8 @@
                                     Width="{Binding EnergyDrinkSource.SegmentWidth}" />
                             </Grid.ColumnDefinitions>
 
-                            <!-- Легенда блока -->
-                            <!-- Кофе -->
+                            <!-- Section legend. -->
+                            <!-- Coffee. -->
                             <Grid SafeAreaEdges="None"
                                 Grid.Column="0"
                                 BackgroundColor="{Binding CoffeeSource.Color}"
@@ -191,7 +191,7 @@
                                     VerticalTextAlignment="Center" />
                             </Grid>
 
-                            <!-- Чой -->
+                            <!-- Tea. -->
                             <Grid SafeAreaEdges="None"
                                 Grid.Column="1"
                                 BackgroundColor="{Binding TeaSource.Color}"
@@ -211,7 +211,7 @@
                                     VerticalTextAlignment="Center" />
                             </Grid>
 
-                            <!-- Энергетик -->
+                            <!-- Energy drink. -->
                             <Grid SafeAreaEdges="None"
                                 Grid.Column="2"
                                 BackgroundColor="{Binding EnergyDrinkSource.Color}"

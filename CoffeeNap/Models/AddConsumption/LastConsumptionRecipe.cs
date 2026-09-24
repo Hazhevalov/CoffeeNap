@@ -4,8 +4,8 @@ using SQLite;
 namespace CoffeeNap.Models;
 
 /// <summary>
-/// Последние успешно сохранённые исходные ответы quiz. В таблице всегда не более
-/// одной строки; вычисляемые и локализованные значения сюда не записываются.
+/// Stores the last successfully saved quiz answers in at most one row.
+/// Calculated and localized values are not persisted here.
 /// </summary>
 [Table("LastConsumptionRecipes")]
 public sealed class LastConsumptionRecipe

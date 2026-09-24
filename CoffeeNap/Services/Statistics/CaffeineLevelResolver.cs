@@ -13,6 +13,7 @@ public static class CaffeineLevelResolver
     public const double MediumProgressMaximum = 0.70;
     public const double LimitProgressMinimum = 1.00;
 
+    // Classifies a daily caffeine total using the configured limit.
     public static CaffeineLevel ResolveDailyTotal(int totalCaffeineMg) => totalCaffeineMg switch
     {
         <= 0 => CaffeineLevel.None,
@@ -22,6 +23,7 @@ public static class CaffeineLevelResolver
         _ => CaffeineLevel.LimitExceeded
     };
 
+    // Classifies the fraction of the daily caffeine limit consumed.
     public static CaffeineLevel ResolveProgress(double ratio) => ratio switch
     {
         <= LowProgressMaximum => CaffeineLevel.Low,

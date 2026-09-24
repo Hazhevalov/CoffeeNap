@@ -26,6 +26,7 @@ public partial class TabHostPage : ContentPage
     private bool _observingVisibility;
     private ITabContent? _activatedContent;
 
+    // Initializes the tab host page.
     public TabHostPage(
         AppPageFactory pageFactory,
         BottomNavigationViewModel navigation,
@@ -51,6 +52,7 @@ public partial class TabHostPage : ContentPage
 
     internal NavigationTab ActiveTab => _activeContent.Tab;
 
+    // Activates the current tab when the host appears.
     protected override void OnAppearing()
     {
         base.OnAppearing();
@@ -59,6 +61,7 @@ public partial class TabHostPage : ContentPage
         ActivateIfVisible();
     }
 
+    // Deactivates the current tab when the host disappears.
     protected override void OnDisappearing()
     {
         _isHostVisible = false;
@@ -67,6 +70,7 @@ public partial class TabHostPage : ContentPage
         base.OnDisappearing();
     }
 
+    // Activates tab content after the host loads.
     private void OnHostLoaded(object? sender, EventArgs args)
     {
         if (_observingVisibility) return;
@@ -75,6 +79,7 @@ public partial class TabHostPage : ContentPage
         ActivateIfVisible();
     }
 
+    // Deactivates tab content when the host unloads.
     private void OnHostUnloaded(object? sender, EventArgs args)
     {
         _activeContent.Deactivate();
@@ -83,6 +88,7 @@ public partial class TabHostPage : ContentPage
         _observingVisibility = false;
     }
 
+    // Updates tab activity when application visibility changes.
     private void OnVisibilityChanged(object? sender, EventArgs args)
     {
         if (!_visibility.IsActive)
@@ -93,6 +99,7 @@ public partial class TabHostPage : ContentPage
         else ActivateIfVisible();
     }
 
+    // Activates the current content only when the host is visible.
     private void ActivateIfVisible()
     {
         if (!_observingVisibility || !_isHostVisible || !_visibility.IsActive ||
@@ -101,6 +108,7 @@ public partial class TabHostPage : ContentPage
         _ = ActivateSafelyAsync(_activeContent);
     }
 
+    // Releases all cached tab content.
     internal void Release()
     {
         _isHostVisible = false;
@@ -111,6 +119,7 @@ public partial class TabHostPage : ContentPage
         _contents.Clear();
     }
 
+    // Switches tabs and coordinates their lifecycle and animations.
     internal async Task NavigateToAsync(
         NavigationTab targetTab,
         BottomNavigationViewModel? sourceNavigation = null)
@@ -235,6 +244,7 @@ public partial class TabHostPage : ContentPage
         }
     }
 
+    // Returns cached tab content or creates it on demand.
     private ITabContent GetOrCreateContent(NavigationTab tab)
     {
         if (_contents.TryGetValue(tab, out var existing))
@@ -259,6 +269,7 @@ public partial class TabHostPage : ContentPage
         return content;
     }
 
+    // Activates tab content and reports activation failures.
     private async Task ActivateSafelyAsync(ITabContent content)
     {
         try
@@ -271,6 +282,7 @@ public partial class TabHostPage : ContentPage
         }
     }
 
+    // Commits the active tab and updates navigation state.
     private void CommitSelection(
         NavigationTab targetTab,
         BottomNavigationViewModel? sourceNavigation,
@@ -286,6 +298,7 @@ public partial class TabHostPage : ContentPage
         }
     }
 
+    // Waits until the view has a handler and nonzero layout bounds.
     private static async Task<bool> WaitForFirstLayoutAsync(View view)
     {
         if (view.Handler is not null && view.Width > 0 && view.Height > 0)
@@ -296,6 +309,7 @@ public partial class TabHostPage : ContentPage
         var completion = new TaskCompletionSource<bool>(
             TaskCreationOptions.RunContinuationsAsynchronously);
 
+        // Completes the layout wait once the view is ready.
         void CompleteWhenReady(object? sender, EventArgs eventArgs)
         {
             if (view.Handler is not null && view.Width > 0 && view.Height > 0)
@@ -323,6 +337,7 @@ public partial class TabHostPage : ContentPage
         }
     }
 
+    // Maps a navigation tab to its visual index.
     private static int GetIndex(NavigationTab tab) => tab switch
     {
         NavigationTab.AddConsumption => 0,
@@ -331,6 +346,7 @@ public partial class TabHostPage : ContentPage
         _ => throw new ArgumentOutOfRangeException(nameof(tab))
     };
 
+    // Shows tab content with its final visual state.
     private static void ShowImmediately(ITabContent content)
     {
         var view = (View)content;
@@ -342,6 +358,7 @@ public partial class TabHostPage : ContentPage
         AutomationProperties.SetExcludedWithChildren(view, false);
     }
 
+    // Hides tab content and resets its visual state.
     private static void Hide(ITabContent content)
     {
         var view = (View)content;

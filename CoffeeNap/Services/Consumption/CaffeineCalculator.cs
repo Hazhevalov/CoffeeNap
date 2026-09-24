@@ -5,6 +5,7 @@ namespace CoffeeNap.Services;
 // The existing quiz facade; all arithmetic is pure and display formatting is separate.
 public sealed class CaffeineCalculator : ICaffeineCalculator
 {
+    // Calculates the caffeine result from the current quiz answers.
     public ConsumptionCalculationResult Calculate(AddConsumptionQuizState state)
     {
         ArgumentNullException.ThrowIfNull(state);

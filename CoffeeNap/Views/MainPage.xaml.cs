@@ -3,14 +3,15 @@
 namespace CoffeeNap.Views;
 
 /// <summary>
-/// Главный экран приложения. Разметка находится в MainPage.xaml, а code-behind
-/// отвечает только за жизненный цикл MainPageViewModel.
+/// Main application screen with layout defined in MainPage.xaml.
+/// The code-behind manages the MainPageViewModel lifecycle.
 /// </summary>
 public partial class MainPage : ContentView, ITabContent
 {
     private readonly MainPageViewModel _viewModel;
     private bool _isPageVisible;
 
+    // Initializes the main page.
     public MainPage(MainPageViewModel viewModel)
     {
         InitializeComponent();
@@ -21,6 +22,7 @@ public partial class MainPage : ContentView, ITabContent
 
     NavigationTab ITabContent.Tab => NavigationTab.Home;
 
+    // Loads main page data and starts relative-time updates.
     async Task ITabContent.ActivateAsync()
     {
         _isPageVisible = true;
@@ -31,12 +33,14 @@ public partial class MainPage : ContentView, ITabContent
         }
     }
 
+    // Stops relative-time updates while the main tab is hidden.
     void ITabContent.Deactivate()
     {
         _isPageVisible = false;
         _viewModel.StopRelativeTimeTimer();
     }
 
+    // Releases main page resources and event subscriptions.
     void ITabContent.Release()
     {
         _isPageVisible = false;

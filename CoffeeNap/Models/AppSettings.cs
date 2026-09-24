@@ -2,7 +2,7 @@ using SQLite;
 
 namespace CoffeeNap.Models;
 
-// Настройки приложения
+// Application settings.
 [Table("AppSettings")]
 public sealed class AppSettings
 {

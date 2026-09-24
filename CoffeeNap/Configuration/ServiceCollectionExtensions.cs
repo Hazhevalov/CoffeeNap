@@ -8,6 +8,7 @@ namespace CoffeeNap;
 
 internal static class ServiceCollectionExtensions
 {
+    // Registers application services, pages, and view models.
     internal static IServiceCollection AddCoffeeNap(this IServiceCollection services)
     {
         services.AddSingleton<AppDatabase>();

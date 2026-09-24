@@ -32,6 +32,7 @@ public partial class CalendarPageViewModel : ObservableObject
     private DateTime _lastObservedDate = DateTime.Today;
     private string _lastObservedZone = string.Empty;
 
+    // Initializes the calendar page view model.
     public CalendarPageViewModel(
         CalendarStatisticsService statisticsService,
         LocalizationService localization,
@@ -120,6 +121,7 @@ public partial class CalendarPageViewModel : ObservableObject
     /// </summary>
     public Task RefreshAsync() => LoadCurrentStateAsync(prefetchAdjacentMonths: true);
 
+    // Loads and publishes statistics for the selected month and week.
     private async Task LoadCurrentStateAsync(bool prefetchAdjacentMonths)
     {
         await _initializationLock.WaitAsync();
@@ -159,6 +161,7 @@ public partial class CalendarPageViewModel : ObservableObject
         }
     }
 
+    // Starts monitoring local date and time zone changes.
     public void StartDateChangeMonitor()
     {
         if (_dateMonitorCancellation is { IsCancellationRequested: false })
@@ -172,6 +175,7 @@ public partial class CalendarPageViewModel : ObservableObject
         _ = MonitorDateChangeAsync(_dateMonitorCancellation.Token);
     }
 
+    // Stops monitoring and unsubscribes from calendar events.
     public void Release()
     {
         StopDateChangeMonitor();
@@ -179,6 +183,7 @@ public partial class CalendarPageViewModel : ObservableObject
         _localization.CultureChanged -= OnCultureChanged;
     }
 
+    // Cancels the date change monitor.
     public void StopDateChangeMonitor()
     {
         var cancellation = _dateMonitorCancellation;
@@ -187,18 +192,22 @@ public partial class CalendarPageViewModel : ObservableObject
         cancellation?.Dispose();
     }
 
+    // Switches to the previous calendar month.
     [RelayCommand(AllowConcurrentExecutions = true)]
     private Task ShowPreviousMonthAsync() => ChangeMonthAsync(-1);
 
+    // Switches to the next calendar month.
     [RelayCommand(AllowConcurrentExecutions = true)]
     private Task ShowNextMonthAsync() => ChangeMonthAsync(1);
 
+    // Returns the Monday that starts the given date's week.
     public static DateTime GetWeekStart(DateTime date)
     {
         var mondayOffset = ((int)date.DayOfWeek + 6) % 7;
         return date.Date.AddDays(-mondayOffset);
     }
 
+    // Loads and displays another month while coordinating transitions.
     private async Task ChangeMonthAsync(int offset)
     {
         var targetMonth = _requestedMonth.AddMonths(offset);
@@ -242,6 +251,7 @@ public partial class CalendarPageViewModel : ObservableObject
         }
     }
 
+    // Updates month bindings only when the statistics change.
     private void PublishMonthIfChanged(
         CalendarMonthStatistics statistics,
         DateTime today)
@@ -264,6 +274,7 @@ public partial class CalendarPageViewModel : ObservableObject
         OnPropertyChanged(nameof(MostConsumedInDayValue));
     }
 
+    // Updates week bindings only when the statistics change.
     private void PublishWeekIfChanged(
         CalendarWeekStatistics statistics,
         DateTime today)
@@ -279,6 +290,7 @@ public partial class CalendarPageViewModel : ObservableObject
         WeeklyDays = BuildWeeklyDays(today, statistics.Days);
     }
 
+    // Builds the displayed month grid from daily statistics.
     private static IReadOnlyList<CalendarDayItem> BuildCalendarDays(
         DateTime month,
         DateTime today,
@@ -310,6 +322,7 @@ public partial class CalendarPageViewModel : ObservableObject
         return result;
     }
 
+    // Builds weekly chart items from daily statistics.
     private IReadOnlyList<WeeklyConsumptionItem> BuildWeeklyDays(
         DateTime today,
         IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> statistics)
@@ -332,12 +345,14 @@ public partial class CalendarPageViewModel : ObservableObject
         return result;
     }
 
+    // Formats the localized month heading.
     private string FormatMonthTitle(DateTime month)
     {
         var title = month.ToString("MMMM yyyy", _localization.CurrentCulture);
         return _localization.CurrentCulture.TextInfo.ToTitleCase(title);
     }
 
+    // Returns the localized weekday label.
     private string GetWeekdayLabel(DayOfWeek dayOfWeek) => dayOfWeek switch
     {
         DayOfWeek.Monday => _localization["MondayShort"],
@@ -350,6 +365,7 @@ public partial class CalendarPageViewModel : ObservableObject
         _ => string.Empty
     };
 
+    // Refreshes calendar labels after a culture change.
     private void OnCultureChanged(object? sender, EventArgs eventArgs)
     {
         MonthTitle = FormatMonthTitle(_publishedMonth);
@@ -375,6 +391,7 @@ public partial class CalendarPageViewModel : ObservableObject
         }
     }
 
+    // Publishes the loading state on the main thread.
     private async Task SetLoadingStateAsync(bool isLoading, string? error)
     {
         await MainThread.InvokeOnMainThreadAsync(() =>
@@ -384,6 +401,7 @@ public partial class CalendarPageViewModel : ObservableObject
         });
     }
 
+    // Selects the localized day word form for a count.
     private string GetDayWordForm(int value)
     {
         var lastTwoDigits = value % 100;
@@ -400,6 +418,7 @@ public partial class CalendarPageViewModel : ObservableObject
         };
     }
 
+    // Refreshes calendar data when the date or time zone changes.
     private async Task MonitorDateChangeAsync(CancellationToken cancellationToken)
     {
         try

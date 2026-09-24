@@ -4,8 +4,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace CoffeeNap.Services;
 
 /// <summary>
-/// Единое observable-состояние профиля во время работы приложения. Persistent
-/// данные читаются и записываются только через IAppDataService.
+/// Shared observable profile state for the running application.
+/// Reads and writes persistent data only through IAppDataService.
 /// </summary>
 public sealed class UserStateService : ObservableObject
 {
@@ -17,6 +17,7 @@ public sealed class UserStateService : ObservableObject
     private bool _isOnboardingCompleted;
     private bool _isInitialized;
 
+    // Initializes the user state service.
     public UserStateService(
         IAppDataService dataService,
         LocalizationService localization)
@@ -44,6 +45,7 @@ public sealed class UserStateService : ObservableObject
 
     public bool IsInitialized => _isInitialized;
 
+    // Loads the user profile into shared observable state.
     public async Task InitializeAsync()
     {
         if (_isInitialized)
@@ -70,6 +72,7 @@ public sealed class UserStateService : ObservableObject
         }
     }
 
+    // Saves the user name and completes onboarding.
     public async Task CompleteOnboardingAsync(string userName)
     {
         var normalizedName = NormalizeUserName(userName);
@@ -89,6 +92,7 @@ public sealed class UserStateService : ObservableObject
         }
     }
 
+    // Publishes profile changes on the main thread.
     private async Task PublishProfileAsync(UserProfile profile)
     {
         var displayName = string.IsNullOrWhiteSpace(profile.UserName)
@@ -111,6 +115,7 @@ public sealed class UserStateService : ObservableObject
         });
     }
 
+    // Trims the user name and validates its length.
     private static string NormalizeUserName(string userName)
     {
         ArgumentNullException.ThrowIfNull(userName);
@@ -125,6 +130,7 @@ public sealed class UserStateService : ObservableObject
         return normalizedName;
     }
 
+    // Resets the shared profile after user data is deleted.
     private void OnUserDataDeleted(object? sender, EventArgs eventArgs)
     {
         _profile = new UserProfile();
@@ -135,6 +141,7 @@ public sealed class UserStateService : ObservableObject
         OnPropertyChanged(nameof(IsInitialized));
     }
 
+    // Refreshes profile display values after a culture change.
     private void OnCultureChanged(object? sender, EventArgs eventArgs)
     {
         if (string.IsNullOrWhiteSpace(_profile.UserName))

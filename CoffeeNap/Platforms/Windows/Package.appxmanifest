@@ -6,31 +6,31 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap rescap">
 
-  <!-- Идентификатор, издатель и версия пакета. Placeholder-значения MAUI заменяет при сборке. -->
+  <!-- Package identity, publisher, and version; MAUI replaces placeholders during the build. -->
   <Identity Name="maui-package-name-placeholder" Publisher="CN=User Name" Version="0.0.0.0" />
 
-  <!-- Унаследованный идентификатор семейства Windows Phone, требуемый форматом манифеста. -->
+  <!-- Legacy Windows Phone family identifier required by the manifest format. -->
   <mp:PhoneIdentity PhoneProductId="0B5E4887-79D1-41BA-BA8D-B699F1A24102" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
-  <!-- Метаданные, отображаемые Windows в свойствах установленного приложения. -->
+  <!-- Metadata displayed in the installed application's Windows properties. -->
   <Properties>
     <DisplayName>$placeholder$</DisplayName>
     <PublisherDisplayName>User Name</PublisherDisplayName>
     <Logo>$placeholder$.png</Logo>
   </Properties>
 
-  <!-- Минимальная и протестированная версии Windows для универсального и desktop-семейств. -->
+  <!-- Minimum and tested Windows versions for universal and desktop device families. -->
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
   </Dependencies>
 
-  <!-- x-generate просит сборку автоматически сформировать языковые ресурсы. -->
+  <!-- x-generate asks the build to generate language resources automatically. -->
   <Resources>
     <Resource Language="x-generate" />
   </Resources>
 
-  <!-- Точка входа, плитки и splash screen Windows-приложения. -->
+  <!-- Windows application entry point, tiles, and splash screen. -->
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
       <uap:VisualElements
@@ -45,7 +45,7 @@
     </Application>
   </Applications>
 
-  <!-- runFullTrust разрешает desktop-приложению работать как обычный Win32-процесс. -->
+  <!-- runFullTrust allows the desktop application to run as a regular Win32 process. -->
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>

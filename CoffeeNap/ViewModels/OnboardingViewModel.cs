@@ -12,7 +12,7 @@ public enum OnboardingStep
     NameSetup
 }
 
-/// <summary>Единая модель двух последовательных состояний onboarding.</summary>
+/// <summary>Shared view model for the two sequential onboarding steps.</summary>
 public partial class OnboardingViewModel : ObservableObject
 {
     private readonly UserStateService _userState;
@@ -24,6 +24,7 @@ public partial class OnboardingViewModel : ObservableObject
     private bool _hasValidationError;
     private string _validationMessage = string.Empty;
 
+    // Initializes the onboarding view model.
     public OnboardingViewModel(
         UserStateService userState,
         IAppNavigationService appNavigation,
@@ -67,6 +68,7 @@ public partial class OnboardingViewModel : ObservableObject
         private set => SetProperty(ref _validationMessage, value);
     }
 
+    // Advances onboarding to the name entry step.
     [RelayCommand]
     private void Start()
     {
@@ -80,7 +82,7 @@ public partial class OnboardingViewModel : ObservableObject
     [RelayCommand]
     private void ReturnToWelcome() => CurrentStep = OnboardingStep.Welcome;
 
-    // Подтверждение имени, переход на основной экран
+    // Validates and saves the user name, then opens the main screen.
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task ConfirmNameAsync()
     {
@@ -107,7 +109,7 @@ public partial class OnboardingViewModel : ObservableObject
             return;
         }
 
-        // Абсолютный маршрут не оставляет onboarding доступным через Back.
+        // The absolute route prevents returning to onboarding through Back.
         await _appNavigation.NavigateToTopLevelAsync(AppShell.MainAbsoluteRoute);
     }
 }

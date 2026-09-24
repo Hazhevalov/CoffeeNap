@@ -2,12 +2,14 @@ namespace CoffeeNap.Services;
 
 public sealed class DefaultApplicationLifecycleService : IApplicationLifecycleService
 {
+    // Closes the application so it can be reopened manually.
     public Task RestartApplicationAsync()
     {
         CloseApplication();
         return Task.CompletedTask;
     }
 
+    // Closes the current application.
     public void CloseApplication()
     {
         var application = Application.Current;

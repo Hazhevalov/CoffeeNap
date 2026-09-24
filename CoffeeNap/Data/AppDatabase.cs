@@ -4,8 +4,8 @@ using SQLite;
 namespace CoffeeNap.Data;
 
 /// <summary>
-/// Единственный владелец SQLite-соединения. Инициализация сериализована и не
-/// пересоздаёт существующие таблицы или пользовательские данные.
+/// Owns the SQLite connection and serializes initialization
+/// without recreating existing tables or user data.
 /// </summary>
 public sealed class AppDatabase
 {
@@ -13,6 +13,7 @@ public sealed class AppDatabase
     private readonly SQLiteAsyncConnection _connection;
     private bool _isInitialized;
 
+    // Initializes the app database.
     public AppDatabase()
     {
         DatabasePath = Path.Combine(FileSystem.AppDataDirectory, DatabaseConstants.FileName);
@@ -23,6 +24,7 @@ public sealed class AppDatabase
 
     public string DatabasePath { get; }
 
+    // Initializes database tables and migrates older schema data once.
     public async Task InitializeAsync()
     {
         if (_isInitialized)
@@ -79,26 +81,33 @@ public sealed class AppDatabase
         }
     }
 
+    // Loads the saved user profile.
     public async Task<UserProfile?> GetUserProfileAsync() =>
         await _connection.FindAsync<UserProfile>(DatabaseConstants.UserProfileId);
 
+    // Saves the user profile.
     public Task<int> SaveUserProfileAsync(UserProfile profile) =>
         _connection.InsertOrReplaceAsync(profile);
 
+    // Loads application settings.
     public async Task<AppSettings?> GetSettingsAsync() =>
         await _connection.FindAsync<AppSettings>(DatabaseConstants.SettingsId);
 
+    // Saves application settings.
     public Task<int> SaveSettingsAsync(AppSettings settings) =>
         _connection.InsertOrReplaceAsync(settings);
 
+    // Loads the consumption history.
     public Task<List<CaffeineConsumption>> GetConsumptionsAsync() =>
         _connection.Table<CaffeineConsumption>()
             .OrderByDescending(consumption => consumption.ConsumedAt)
             .ToListAsync();
 
+    // Loads a consumption record by its identifier.
     public async Task<CaffeineConsumption?> GetConsumptionAsync(int id) =>
         await _connection.FindAsync<CaffeineConsumption>(id);
 
+    // Loads a page of consumption records using the supplied cursor.
     public Task<List<CaffeineConsumption>> GetConsumptionsPageAsync(ConsumptionCursor? before, int pageSize)
     {
         var query = _connection.Table<CaffeineConsumption>();
@@ -114,6 +123,7 @@ public sealed class AppDatabase
             .ThenByDescending(item => item.Id).Take(pageSize).ToListAsync();
     }
 
+    // Loads daily caffeine totals and consumption counts.
     public async Task<ConsumptionOverview> GetConsumptionOverviewAsync(DateTimeOffset now)
     {
         var date = now.ToLocalTime().Date;
@@ -140,6 +150,7 @@ public sealed class AppDatabase
         public int Count { get; set; }
     }
 
+    // Loads consumption records within the specified time range.
     public Task<List<CaffeineConsumption>> GetConsumptionsBetweenAsync(
         DateTimeOffset fromInclusive,
         DateTimeOffset toExclusive) =>
@@ -150,12 +161,13 @@ public sealed class AppDatabase
             .OrderByDescending(consumption => consumption.ConsumedAt)
             .ToListAsync();
 
+    // Loads the last saved consumption recipe.
     public async Task<LastConsumptionRecipe?> GetLastConsumptionRecipeAsync() =>
         await _connection.FindAsync<LastConsumptionRecipe>(
             DatabaseConstants.LastConsumptionRecipeId);
 
     /// <summary>
-    /// Записывает новое употребление и заменяет singleton-рецепт одной SQLite-транзакцией.
+    /// Saves a consumption and replaces the singleton recipe in one SQLite transaction.
     /// </summary>
     public Task SaveConsumptionAndRecipeAsync(
         CaffeineConsumption consumption,
@@ -166,6 +178,7 @@ public sealed class AppDatabase
             connection.InsertOrReplace(recipe);
         });
 
+    // Deletes a consumption record by its identifier.
     public Task<int> DeleteConsumptionAsync(int id) =>
         _connection.DeleteAsync<CaffeineConsumption>(id);
 

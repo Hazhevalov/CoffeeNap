@@ -19,6 +19,7 @@ public sealed class WeeklyConsumptionChartView : GraphicsView, IDrawable
         propertyChanged: static (bindable, _, _) =>
             ((WeeklyConsumptionChartView)bindable).Invalidate());
 
+    // Initializes the weekly consumption chart view.
     public WeeklyConsumptionChartView()
     {
         Drawable = this;
@@ -32,6 +33,7 @@ public sealed class WeeklyConsumptionChartView : GraphicsView, IDrawable
         set => SetValue(ItemsSourceProperty, value);
     }
 
+    // Draws the weekly chart with stacked consumption bars.
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
         var items = ItemsSource;
@@ -89,6 +91,7 @@ public sealed class WeeklyConsumptionChartView : GraphicsView, IDrawable
         }
     }
 
+    // Draws one colored segment of a consumption bar.
     private static float DrawSegment(
         ICanvas canvas,
         Color color,
@@ -105,6 +108,7 @@ public sealed class WeeklyConsumptionChartView : GraphicsView, IDrawable
         return left + width;
     }
 
+    // Returns a resource color or the supplied fallback.
     private static Color GetResourceColor(string key, Color fallback) =>
         Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
             ? color

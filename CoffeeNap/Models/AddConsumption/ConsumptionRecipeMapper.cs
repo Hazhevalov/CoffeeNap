@@ -3,9 +3,10 @@ using CoffeeNap.Services;
 
 namespace CoffeeNap.Models;
 
-/// <summary>Единая двусторонняя проекция persistent recipe и runtime QuizState.</summary>
+/// <summary>Maps between persistent recipes and runtime quiz state in both directions.</summary>
 public static class ConsumptionRecipeMapper
 {
+    // Copies quiz answers into a persistent recipe.
     public static LastConsumptionRecipe CreateFrom(AddConsumptionQuizState state)
     {
         ArgumentNullException.ThrowIfNull(state);
@@ -33,6 +34,7 @@ public static class ConsumptionRecipeMapper
         };
     }
 
+    // Restores quiz answers and display labels from a saved recipe.
     public static void ApplyTo(LastConsumptionRecipe recipe, AddConsumptionQuizState state)
     {
         ArgumentNullException.ThrowIfNull(recipe);
@@ -62,6 +64,7 @@ public static class ConsumptionRecipeMapper
         }
     }
 
+    // Restores coffee-specific quiz answers from a recipe.
     private static void ApplyCoffee(LastConsumptionRecipe recipe, AddConsumptionQuizState state)
     {
         state.CoffeeLocation = recipe.CoffeeLocation;
@@ -86,6 +89,7 @@ public static class ConsumptionRecipeMapper
             : BuildVolumeDisplay(recipe.VolumeMl);
     }
 
+    // Builds the display label for the saved ingredient amount.
     private static string? BuildAmountDisplay(double? grams, int? spoonCount)
     {
         if (spoonCount is > 0)
@@ -98,6 +102,7 @@ public static class ConsumptionRecipeMapper
             : null;
     }
 
+    // Builds the display label for the saved drink volume.
     private static string? BuildVolumeDisplay(int? volumeMl) => volumeMl is > 0
         ? $"{volumeMl} {LocalizationService.Current["MilliliterShort"]}"
         : null;

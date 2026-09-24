@@ -18,7 +18,7 @@
 
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Spacing="10">
-                <!-- Выбор месяца -->
+                <!-- Month selection. -->
                 <Border
                     Padding="10"
                     BackgroundColor="{StaticResource SurfaceColor}"
@@ -60,7 +60,7 @@
                     </Grid>
                 </Border>
 
-                <!-- Блок календаря -->
+                <!-- Calendar section. -->
                 <Border
                     Padding="14,18"
                     BackgroundColor="{StaticResource SurfaceColor}"
@@ -101,7 +101,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Статистика источников кофеина -->
+                <!-- Caffeine source statistics. -->
                 <Border
                     Padding="15,20"
                     BackgroundColor="{StaticResource SurfaceColor}"
@@ -134,7 +134,7 @@
                     Text="{Binding LoadError}"
                     TextColor="{StaticResource ValidationErrorColor}" />
 
-                <!-- Лучшее комбо -->
+                <!-- Best combination. -->
                 <Border
                     Background="{StaticResource White}"
                     Stroke="{StaticResource DividerColor}"
@@ -157,7 +157,7 @@
                     </Grid>
                 </Border>
 
-                <!-- Максимальное кол-во выпитого кофеина -->
+                <!-- Highest daily caffeine total. -->
                 <Border
                     Background="{StaticResource White}"
                     Stroke="{StaticResource DividerColor}"

@@ -8,6 +8,7 @@ public static partial class UserNameValidator
 {
     public const int MinimumLength = 3;
 
+    // Returns a validation error for an invalid user name.
     public static string? GetValidationError(string? value)
     {
         var name = value?.Trim() ?? string.Empty;
@@ -33,6 +34,7 @@ public static partial class UserNameValidator
             : LocalizationService.Current["NameInvalidCharacters"];
     }
 
+    // Provides the generated pattern for allowed user name characters.
     [GeneratedRegex("^[a-zA-Z0-9]+$", RegexOptions.CultureInvariant)]
     private static partial Regex AllowedNameRegex();
 }

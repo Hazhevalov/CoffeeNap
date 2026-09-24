@@ -10,6 +10,7 @@ namespace CoffeeNap.Controls.AddConsumption.Steps;
 /// </summary>
 internal static class LazyStepLoader
 {
+    // Defers loading the view until its quiz step becomes active.
     public static void LoadWhenCurrent(
         ContentView owner,
         AddConsumptionStep step,
@@ -19,6 +20,7 @@ internal static class LazyStepLoader
         initializer.Start();
     }
 
+    // Captures the owner, quiz step, and deferred content loader.
     private sealed class StepInitializer(
         ContentView owner,
         AddConsumptionStep step,
@@ -27,6 +29,7 @@ internal static class LazyStepLoader
         private AddConsumptionPageViewModel? _viewModel;
         private bool _isLoaded;
 
+        // Subscribes to binding changes and initializes the step state.
         public void Start()
         {
             owner.IsVisible = false;
@@ -34,9 +37,11 @@ internal static class LazyStepLoader
             AttachToCurrentBindingContext();
         }
 
+        // Reconnects the step to its current view model.
         private void OnBindingContextChanged(object? sender, EventArgs eventArgs) =>
             AttachToCurrentBindingContext();
 
+        // Subscribes to the current quiz view model and updates visibility.
         private void AttachToCurrentBindingContext()
         {
             UnsubscribeFromViewModel();
@@ -50,6 +55,7 @@ internal static class LazyStepLoader
             UpdateStepState();
         }
 
+        // Updates the view when the active quiz step changes.
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs eventArgs)
         {
             if (string.IsNullOrEmpty(eventArgs.PropertyName) ||
@@ -59,6 +65,7 @@ internal static class LazyStepLoader
             }
         }
 
+        // Shows the active step and loads its content once.
         private void UpdateStepState()
         {
             var isCurrentStep = _viewModel?.CurrentStep == step;
@@ -80,6 +87,7 @@ internal static class LazyStepLoader
             }
         }
 
+        // Detaches property change handlers from the previous view model.
         private void UnsubscribeFromViewModel()
         {
             if (_viewModel is null)

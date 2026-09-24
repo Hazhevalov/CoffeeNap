@@ -7,7 +7,7 @@
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:AddConsumptionPageViewModel">
-<!--  Home Option 1 "Как заваривали?"  -->
+<!-- Home coffee: brewing method. -->
             <Grid
                 Grid.Row="1"
                 Padding="10,10,10,0"
@@ -27,7 +27,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <!--  Заголовки  -->
+                    <!-- Headings. -->
                     <Grid Grid.Row="0" RowSpacing="5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -55,7 +55,7 @@
                             TextColor="{StaticResource InkColor}" />
                     </Grid>
 
-                    <!--  Скроллящийся список методов приготовления  -->
+                    <!-- Scrollable list of brewing methods. -->
                     <ContentView Grid.Row="1">
                         <Grid ColumnSpacing="5" RowSpacing="5">
                             <Grid.RowDefinitions>
@@ -70,7 +70,7 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <!--  Чайник  -->
+                            <!-- Kettle. -->
                             <Border
                                 Grid.Row="0"
                                 Grid.Column="0"
@@ -119,7 +119,7 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!--  Эспрессо машина  -->
+                            <!-- Espresso machine. -->
                             <Border
                                 Grid.Row="0"
                                 Grid.Column="1"
@@ -217,7 +217,7 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!--  Гейзер  -->
+                            <!-- Moka pot. -->
                             <Border
                                 Grid.Row="1"
                                 Grid.Column="1"
@@ -266,7 +266,7 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!--  Френч пресс  -->
+                            <!-- French press. -->
                             <Border
                                 Grid.Row="2"
                                 Grid.Column="1"
@@ -315,7 +315,7 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!--  Турка  -->
+                            <!-- Turkish coffee pot. -->
                             <Border
                                 Grid.Row="2"
                                 Grid.Column="0"
@@ -364,7 +364,7 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!--  Воронка  -->
+                            <!-- Pour-over dripper. -->
                             <Border
                                 Grid.Row="3"
                                 Grid.Column="0"

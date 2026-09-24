@@ -19,12 +19,14 @@ public sealed class AddConsumptionQuizState
     public string? TeaAmountDisplay { get; set; }
     public int? EnergyDrinkVolumeMl { get; set; }
 
+    // Resets all quiz answers.
     public void Reset()
     {
         DrinkType = null;
         ClearAfterDrinkType();
     }
 
+    // Clears answers that depend on the selected drink type.
     public void ClearAfterDrinkType()
     {
         CoffeeLocation = null;
@@ -33,6 +35,7 @@ public sealed class AddConsumptionQuizState
         ClearEnergyDrinkBranch();
     }
 
+    // Clears all coffee-specific quiz answers.
     public void ClearCoffeeBranches()
     {
         CoffeeDrinkType = null;
@@ -46,6 +49,7 @@ public sealed class AddConsumptionQuizState
         BeanType = null;
     }
 
+    // Clears all tea-specific quiz answers.
     public void ClearTeaBranch()
     {
         TeaType = null;
@@ -54,5 +58,6 @@ public sealed class AddConsumptionQuizState
         TeaAmountDisplay = null;
     }
 
+    // Clears all energy drink quiz answers.
     public void ClearEnergyDrinkBranch() => EnergyDrinkVolumeMl = null;
 }

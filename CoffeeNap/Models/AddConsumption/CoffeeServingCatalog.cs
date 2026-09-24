@@ -1,6 +1,6 @@
 namespace CoffeeNap.Models;
 
-// Стандартные объёмы кофе вне дома
+// Standard serving volumes for cafe coffee.
 public static class CoffeeServingCatalog
 {
     private static readonly IReadOnlyDictionary<CoffeeDrinkType, CoffeeDrinkServingProfile> Profiles =
@@ -16,6 +16,7 @@ public static class CoffeeServingCatalog
             [CoffeeDrinkType.Affogato] = new(60, 90, 120)
         };
 
+    // Returns the serving volumes for a coffee drink.
     public static CoffeeDrinkServingProfile GetServingProfile(CoffeeDrinkType drinkType)
     {
         if (Profiles.TryGetValue(drinkType, out var profile))
@@ -26,6 +27,7 @@ public static class CoffeeServingCatalog
         throw new InvalidOperationException($"Serving profile is not configured for {drinkType}.");
     }
 
+    // Returns the volume for the selected serving size.
     public static int GetVolumeMl(CoffeeDrinkType drinkType, ServingSize servingSize) =>
         GetServingProfile(drinkType).GetVolumeMl(servingSize);
 }

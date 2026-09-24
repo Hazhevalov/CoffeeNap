@@ -5,6 +5,7 @@ namespace CoffeeNap.Services;
 /// <summary>Reusable count-based distribution calculator for MainPage and CalendarPage.</summary>
 public static class ConsumptionTypeDistributionCalculator
 {
+    // Counts consumptions by drink category.
     public static ConsumptionTypeDistribution Calculate(
         IEnumerable<CaffeineConsumption> consumptions)
     {

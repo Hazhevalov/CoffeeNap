@@ -4,9 +4,10 @@ using CoffeeNap.Helpers;
 
 namespace CoffeeNap.ViewModels;
 
-// Объект "Ваши источники кофеина" на главном экране
+// Represents a caffeine source in the main page statistics.
 public sealed class CaffeineSourceStatViewModel
 {
+    // Initializes the caffeine source stat view model.
     public CaffeineSourceStatViewModel(
         CaffeineConsumptionType type,
         int count,

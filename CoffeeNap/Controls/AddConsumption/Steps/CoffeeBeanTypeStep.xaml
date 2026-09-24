@@ -7,7 +7,7 @@
     xmlns:models="clr-namespace:CoffeeNap.Models"
     xmlns:viewModels="clr-namespace:CoffeeNap.ViewModels"
     x:DataType="viewModels:AddConsumptionPageViewModel">
-<!--  Home Option 4 "Какой кофе?"  -->
+<!-- Home coffee: bean type. -->
             <Grid
                 Grid.Row="1"
                 Padding="10,10,10,0"
@@ -27,7 +27,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <!--  Заголовки  -->
+                    <!-- Headings. -->
                     <Grid Grid.Row="0" RowSpacing="5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -55,7 +55,7 @@
                             TextColor="{StaticResource InkColor}" />
                     </Grid>
 
-                    <!--  Варианты выбора  -->
+                    <!-- Selection options. -->
                     <Grid Grid.Row="1" RowSpacing="5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />

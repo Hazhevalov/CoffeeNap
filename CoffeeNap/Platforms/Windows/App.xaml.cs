@@ -3,20 +3,20 @@
 namespace CoffeeNap.WinUI
 {
     /// <summary>
-    /// Нативная точка входа Windows/WinUI. Этот класс не следует путать с общим
-    /// CoffeeNap.App: он создаёт MAUI-хост, который затем запускает общий App.
+    /// Native Windows/WinUI entry point, distinct from CoffeeNap.App.
+    /// Creates the MAUI host that launches the shared application.
     /// </summary>
     public partial class App : MauiWinUIApplication
     {
         /// <summary>
-        /// Создаёт singleton-объект WinUI-приложения; это эквивалент Main/WinMain.
+        /// Creates the singleton WinUI application, equivalent to Main or WinMain.
         /// </summary>
         public App()
         {
             this.InitializeComponent();
         }
 
-        /// <summary>Передаёт сборку приложения общей конфигурации MauiProgram.</summary>
+        /// <summary>Delegates application construction to the shared MauiProgram configuration.</summary>
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
     }
 

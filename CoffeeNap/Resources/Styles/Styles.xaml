@@ -4,35 +4,35 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <!--
-        Неименованные Style применяются ко всем контролам соответствующего типа.
-        AppThemeBinding выбирает значение по системной светлой или тёмной теме.
-        VisualState Disabled задаёт внешний вид недоступного контрола.
+        Implicit styles apply to every control of the matching type.
+        AppThemeBinding selects values for the system light or dark theme.
+        The Disabled visual state defines the appearance of unavailable controls.
     -->
 
-    <!-- Цвет системного индикатора выполнения операции. -->
+    <!-- System activity indicator color. -->
     <Style TargetType="ActivityIndicator">
         <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
     </Style>
 
-    <!-- Точки-переключатели для CarouselView. -->
+    <!-- CarouselView page indicator dots. -->
     <Style TargetType="IndicatorView">
         <Setter Property="IndicatorColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}"/>
         <Setter Property="SelectedIndicatorColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray100}}"/>
     </Style>
 
-    <!-- Рамка по умолчанию; конкретные карточки часто переопределяют эти значения. -->
+    <!-- Default border appearance; individual cards may override these values. -->
     <Style TargetType="Border">
         <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
         <Setter Property="StrokeShape" Value="Rectangle"/>
         <Setter Property="StrokeThickness" Value="1"/>
     </Style>
 
-    <!-- Базовый цвет простых декоративных прямоугольников. -->
+    <!-- Base color for simple decorative rectangles. -->
     <Style TargetType="BoxView">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
     </Style>
 
-    <!-- Общий вид текстовых кнопок и минимальная область касания 44x44. -->
+    <!-- Shared text button appearance with a minimum 44x44 touch target. -->
     <Style TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource PrimaryDarkText}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
@@ -59,7 +59,7 @@
         </Setter>
     </Style>
 
-    <!-- Цвет и доступная для касания область флажков. -->
+    <!-- Checkbox color and touch target. -->
     <Style TargetType="CheckBox">
         <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
         <Setter Property="MinimumHeightRequest" Value="44"/>
@@ -78,7 +78,7 @@
         </Setter>
     </Style>
 
-    <!-- Поле выбора даты. -->
+    <!-- Date selection field. -->
     <Style TargetType="DatePicker">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
@@ -100,7 +100,7 @@
         </Setter>
     </Style>
 
-    <!-- Многострочное текстовое поле. -->
+    <!-- Multiline text field. -->
     <Style TargetType="Editor">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
@@ -123,7 +123,7 @@
         </Setter>
     </Style>
 
-    <!-- Однострочное текстовое поле. -->
+    <!-- Single-line text field. -->
     <Style TargetType="Entry">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
@@ -146,7 +146,7 @@
         </Setter>
     </Style>
 
-    <!-- Кнопка-изображение; disabled-состояние обозначается прозрачностью. -->
+    <!-- Image button with reduced opacity when disabled. -->
     <Style TargetType="ImageButton">
         <Setter Property="Opacity" Value="1" />
         <Setter Property="BorderColor" Value="Transparent"/>
@@ -169,7 +169,7 @@
         </Setter>
     </Style>
 
-    <!-- Основная типографика всех текстовых меток. -->
+    <!-- Default typography for text labels. -->
     <Style TargetType="Label">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
@@ -189,7 +189,7 @@
         </Setter>
     </Style>
 
-    <!-- Именованный крупный заголовок: применяется явно через ключ Headline. -->
+    <!-- Named large heading applied explicitly through the Headline key. -->
     <Style TargetType="Label" x:Key="Headline">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MidnightBlue}, Dark={StaticResource White}}" />
         <Setter Property="FontSize" Value="32" />
@@ -197,7 +197,7 @@
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
-    <!-- Именованный подзаголовок. -->
+    <!-- Named subheading style. -->
     <Style TargetType="Label" x:Key="SubHeadline">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MidnightBlue}, Dark={StaticResource White}}" />
         <Setter Property="FontSize" Value="24" />
@@ -205,7 +205,7 @@
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
-    <!-- Выпадающий список Picker. -->
+    <!-- Picker drop-down list. -->
     <Style TargetType="Picker">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         <Setter Property="TitleColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray200}}" />
@@ -229,7 +229,7 @@
         </Setter>
     </Style>
 
-    <!-- Индикатор прогресса; MainPage переопределяет его цвет динамической привязкой. -->
+    <!-- Progress indicator; MainPage overrides its color through a dynamic binding. -->
     <Style TargetType="ProgressBar">
         <Setter Property="ProgressColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
@@ -246,7 +246,7 @@
         </Setter>
     </Style>
 
-    <!-- RadioButton: типографика, область касания и приглушённое disabled-состояние. -->
+    <!-- RadioButton typography, touch target, and muted disabled state. -->
     <Style TargetType="RadioButton">
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
@@ -268,12 +268,12 @@
         </Setter>
     </Style>
 
-    <!-- Цвет индикатора жеста pull-to-refresh. -->
+    <!-- Pull-to-refresh indicator color. -->
     <Style TargetType="RefreshView">
         <Setter Property="RefreshColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray200}}" />
     </Style>
 
-    <!-- Встроенная строка поиска. -->
+    <!-- Inline search field. -->
     <Style TargetType="SearchBar">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         <Setter Property="PlaceholderColor" Value="{StaticResource Gray500}" />
@@ -298,7 +298,7 @@
         </Setter>
     </Style>
 
-    <!-- Поиск, интегрированный в Shell. -->
+    <!-- Search integrated into Shell. -->
     <Style TargetType="SearchHandler">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         <Setter Property="PlaceholderColor" Value="{StaticResource Gray500}" />
@@ -320,7 +320,7 @@
         </Setter>
     </Style>
 
-    <!-- Тень по умолчанию; карточки CoffeeNap задают более мягкие локальные значения. -->
+    <!-- Default shadow; CoffeeNap cards override it with softer local values. -->
     <Style TargetType="Shadow">
         <Setter Property="Radius" Value="15" />
         <Setter Property="Opacity" Value="0.5" />
@@ -328,7 +328,7 @@
         <Setter Property="Offset" Value="10,10" />
     </Style>
 
-    <!-- Ползунок выбора числового значения. -->
+    <!-- Slider for selecting a numeric value. -->
     <Style TargetType="Slider">
         <Setter Property="MinimumTrackColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
         <Setter Property="MaximumTrackColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
@@ -349,12 +349,12 @@
         </Setter>
     </Style>
 
-    <!-- Действие, открываемое свайпом элемента списка. -->
+    <!-- Action revealed by swiping a list item. -->
     <Style TargetType="SwipeItem">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" />
     </Style>
 
-    <!-- Переключатель с отдельными состояниями On, Off и Disabled. -->
+    <!-- Switch with separate On, Off, and Disabled states. -->
     <Style TargetType="Switch">
         <Setter Property="OnColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
         <Setter Property="ThumbColor" Value="{StaticResource White}" />
@@ -384,7 +384,7 @@
         </Setter>
     </Style>
 
-    <!-- Поле выбора времени. -->
+    <!-- Time selection field. -->
     <Style TargetType="TimePicker">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         <Setter Property="BackgroundColor" Value="Transparent"/>
@@ -406,7 +406,7 @@
         </Setter>
     </Style>
   
-    <!-- Отключённый шаблон стиля нативной TitleBar; оставлен для будущей Windows-настройки.
+    <!-- Disabled native TitleBar style template reserved for future Windows customization.
     <Style TargetType="TitleBar">
         <Setter Property="MinimumHeightRequest" Value="32"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
@@ -430,13 +430,13 @@
     </Style>
     -->
 
-    <!-- Базовый фон и отступ для всех страниц, включая производные ContentPage. -->
+    <!-- Default page background and padding, including ContentPage subclasses. -->
     <Style TargetType="Page" ApplyToDerivedTypes="True">
         <Setter Property="Padding" Value="0"/>
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
     </Style>
 
-    <!-- Цвета навигационной оболочки, её navbar и tab bar для обеих тем. -->
+    <!-- Shell, navigation bar, and tab bar colors for both themes. -->
     <Style TargetType="Shell" ApplyToDerivedTypes="True">
         <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
         <Setter Property="Shell.ForegroundColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource SecondaryDarkText}}" />
@@ -450,14 +450,14 @@
         <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray200}}" />
     </Style>
 
-    <!-- Оформление NavigationPage, если она будет использована вне Shell. -->
+    <!-- NavigationPage styling if used outside Shell. -->
     <Style TargetType="NavigationPage">
         <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
         <Setter Property="BarTextColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource White}}" />
         <Setter Property="IconColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource White}}" />
     </Style>
 
-    <!-- Оформление классической TabbedPage, сейчас не используемой AppShell. -->
+    <!-- Classic TabbedPage styling, currently unused by AppShell. -->
     <Style TargetType="TabbedPage">
         <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}" />
         <Setter Property="BarTextColor" Value="{AppThemeBinding Light={StaticResource Magenta}, Dark={StaticResource White}}" />

@@ -4,6 +4,7 @@ namespace CoffeeNap;
 
 public static class MauiProgram
 {
+    // Builds the MAUI application using the shared configuration.
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();

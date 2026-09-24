@@ -8,12 +8,14 @@ public partial class OnboardingPage : ContentPage
     private const uint EnterDuration = 180;
     private bool _isTransitioning;
 
+    // Initializes the onboarding page.
     public OnboardingPage(OnboardingViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
     }
 
+    // Synchronizes onboarding visuals when the page appears.
     protected override void OnAppearing()
     {
         base.OnAppearing();
@@ -23,7 +25,7 @@ public partial class OnboardingPage : ContentPage
         }
     }
 
-    // Возврат при свайпе назад
+    // Handles back navigation between onboarding steps.
     protected override bool OnBackButtonPressed()
     {
         if (BindingContext is OnboardingViewModel { CurrentStep: OnboardingStep.NameSetup })
@@ -39,7 +41,7 @@ public partial class OnboardingPage : ContentPage
         return base.OnBackButtonPressed();
     }
 
-    // Кнопка продолжить
+    // Animates the transition from the welcome step to name entry.
     private async void OnStartButtonClicked(object? sender, EventArgs e)
     {
         if (_isTransitioning || BindingContext is not OnboardingViewModel viewModel)
@@ -69,7 +71,7 @@ public partial class OnboardingPage : ContentPage
         }
     }
 
-    // Переключение между экранами
+    // Animates the return to the welcome step.
     private async Task ShowWelcomeStepAsync()
     {
         if (_isTransitioning || BindingContext is not OnboardingViewModel viewModel)
@@ -99,16 +101,19 @@ public partial class OnboardingPage : ContentPage
         }
     }
 
+    // Fades and moves a view out of the visible step.
     private static Task AnimateOutAsync(VisualElement element, double translationX) =>
         Task.WhenAll(
             element.TranslateToAsync(translationX, 0, ExitDuration, Easing.CubicIn),
             element.FadeToAsync(0, ExitDuration, Easing.CubicIn));
 
+    // Fades and moves a view into its final position.
     private static Task AnimateInAsync(VisualElement element) =>
         Task.WhenAll(
             element.TranslateToAsync(0, 0, EnterDuration, Easing.CubicOut),
             element.FadeToAsync(1, EnterDuration, Easing.CubicOut));
 
+    // Sets the initial opacity and position for an entrance animation.
     private static void PrepareForEntrance(VisualElement element, double translationX)
     {
         element.TranslationX = translationX;
@@ -117,6 +122,7 @@ public partial class OnboardingPage : ContentPage
         element.IsVisible = true;
     }
 
+    // Applies the active onboarding step without animation.
     private void ApplyStepWithoutAnimation(OnboardingStep step)
     {
         var isWelcome = step == OnboardingStep.Welcome;

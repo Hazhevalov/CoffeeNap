@@ -37,6 +37,7 @@ public partial class MainPageViewModel : ObservableObject
     private CaffeineSourceStatViewModel _teaSource = new(CaffeineConsumptionType.Tea, 0, 0);
     private CaffeineSourceStatViewModel _energyDrinkSource = new(CaffeineConsumptionType.EnergyDrink, 0, 0);
 
+    // Initializes the main page view model.
     public MainPageViewModel(IAppDataService dataService, LocalizationService localization,
         ILogger<MainPageViewModel> logger, MainHeaderViewModel header, IDialogService dialogs)
     {
@@ -123,7 +124,7 @@ public partial class MainPageViewModel : ObservableObject
         ? 0
         : Math.Clamp(CurrentCaffeine / DailyCaffeineLimit, 0, 1);
 
-    // Полоска дневной нормы кофеина
+    // Daily caffeine progress bar.
     public Color DailyProgressColor
     {
         get
@@ -141,6 +142,7 @@ public partial class MainPageViewModel : ObservableObject
     public bool HasMore => _hasMore;
     public string DailyLimitDisplay => $"{DailyCaffeineLimit:0} {_localization["MilligramShort"]}";
 
+    // Loads the initial consumption page and overview.
     public async Task InitializeAsync()
     {
         await _operationLock.WaitAsync();
@@ -178,15 +180,18 @@ public partial class MainPageViewModel : ObservableObject
         finally { IsBusy = false; _operationLock.Release(); }
     }
 
+    // Retries loading the main page data.
     [RelayCommand]
     private Task RetryAsync() => !IsInitialized ? InitializeAsync() : RetryLoadedStateAsync();
 
+    // Refreshes loaded data and retries the next history page.
     private async Task RetryLoadedStateAsync()
     {
         await InitializeAsync();
         if (!HasLoadError && _hasMore) await LoadMoreAsync();
     }
 
+    // Loads the next page of consumption history.
     [RelayCommand]
     private async Task LoadMoreAsync()
     {
@@ -219,6 +224,7 @@ public partial class MainPageViewModel : ObservableObject
         finally { IsBusy = false; _operationLock.Release(); }
     }
 
+    // Updates the pagination cursor from the loaded records.
     private void UpdateCursor(IReadOnlyList<CaffeineConsumption> rows)
     {
         _hasMore = rows.Count > PageSize;
@@ -227,6 +233,7 @@ public partial class MainPageViewModel : ObservableObject
         OnPropertyChanged(nameof(HasMore));
     }
 
+    // Deletes the selected consumption through the data service.
     [RelayCommand]
     private async Task DeleteConsumptionAsync(ConsumptionItemViewModel? item)
     {
@@ -240,9 +247,12 @@ public partial class MainPageViewModel : ObservableObject
         }
     }
 
+    // Queues a consumption change for the displayed history.
     private void OnConsumptionAdded(object? sender, CaffeineConsumption item) => QueueChange(item, added: true);
+    // Queues a consumption change for the displayed history.
     private void OnConsumptionDeleted(object? sender, CaffeineConsumption item) => QueueChange(item, added: false);
 
+    // Stops timers and unsubscribes from shared events.
     public void Release()
     {
         StopRelativeTimeTimer();
@@ -252,6 +262,7 @@ public partial class MainPageViewModel : ObservableObject
         _localization.CultureChanged -= OnCultureChanged;
     }
 
+    // Schedules a consumption change for processing.
     private void QueueChange(CaffeineConsumption item, bool added)
     {
         var version = Interlocked.Increment(ref _dataVersion);
@@ -259,6 +270,7 @@ public partial class MainPageViewModel : ObservableObject
         _ = MainThread.InvokeOnMainThreadAsync(() => ApplyChangeAsync(item, added, version));
     }
 
+    // Applies a consumption change to history and overview data.
     private async Task ApplyChangeAsync(CaffeineConsumption row, bool added, int version)
     {
         await _operationLock.WaitAsync();
@@ -300,6 +312,7 @@ public partial class MainPageViewModel : ObservableObject
         finally { _operationLock.Release(); }
     }
 
+    // Reloads the daily total and source distribution.
     private async Task RefreshOverviewCoreAsync()
     {
         int version;
@@ -318,6 +331,7 @@ public partial class MainPageViewModel : ObservableObject
         PublishDistribution();
     }
 
+    // Updates the displayed consumption source statistics.
     private void PublishDistribution()
     {
         CoffeeSource = new(CaffeineConsumptionType.Coffee, _distribution.CoffeeCount, _distribution.TotalCount);
@@ -325,6 +339,7 @@ public partial class MainPageViewModel : ObservableObject
         EnergyDrinkSource = new(CaffeineConsumptionType.EnergyDrink, _distribution.EnergyDrinkCount, _distribution.TotalCount);
     }
 
+    // Records the currently visible history item range.
     public void SetVisibleRange(int first, int last)
     {
         _firstVisible = Math.Max(0, first);
@@ -332,12 +347,14 @@ public partial class MainPageViewModel : ObservableObject
         RefreshVisibleTimes();
     }
 
+    // Refreshes relative times for visible history items.
     private void RefreshVisibleTimes()
     {
         for (var index = _firstVisible; index <= _lastVisible && index < Consumptions.Count; index++)
             Consumptions[index].RefreshRelativeTime();
     }
 
+    // Starts the periodic relative-time refresh loop.
     public void StartRelativeTimeTimer()
     {
         if (_relativeTimeCancellation is not null) return;
@@ -346,6 +363,7 @@ public partial class MainPageViewModel : ObservableObject
         _ = RunRelativeTimeTimerAsync(_relativeTimeCancellation.Token);
     }
 
+    // Cancels the relative-time refresh loop.
     public void StopRelativeTimeTimer()
     {
         var cancellation = _relativeTimeCancellation;
@@ -354,6 +372,7 @@ public partial class MainPageViewModel : ObservableObject
         cancellation?.Dispose();
     }
 
+    // Periodically refreshes visible relative times and daily statistics.
     private async Task RunRelativeTimeTimerAsync(CancellationToken token)
     {
         try
@@ -374,12 +393,14 @@ public partial class MainPageViewModel : ObservableObject
         catch (Exception exception) { _logger.LogError(exception, "History timer failed."); }
     }
 
+    // Publishes the localized data loading error.
     private void ShowLoadError(Exception exception)
     {
         InitializationError = _localization["LoadDataFailed"];
         _logger.LogError(exception, "History refresh failed.");
     }
 
+    // Refreshes main page labels after a culture change.
     private void OnCultureChanged(object? sender, EventArgs args)
     {
         foreach (var item in Consumptions) item.RefreshLocalizedState();
@@ -388,6 +409,7 @@ public partial class MainPageViewModel : ObservableObject
         if (HasLoadError) InitializationError = _localization["LoadDataFailed"];
     }
 
+    // Clears main page data after user data is deleted.
     private void OnUserDataDeleted(object? sender, EventArgs args)
     {
         Interlocked.Increment(ref _dataVersion);

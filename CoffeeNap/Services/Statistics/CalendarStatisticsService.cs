@@ -26,6 +26,7 @@ public sealed class CalendarStatisticsService
     private long _accessSequence;
     private string _zoneKey;
 
+    // Initializes the calendar statistics service.
     public CalendarStatisticsService(
         IAppDataService dataService,
         ILogger<CalendarStatisticsService> logger,
@@ -40,6 +41,7 @@ public sealed class CalendarStatisticsService
         _dataService.UserDataDeleted += OnUserDataDeleted;
     }
 
+    // Loads the initial month and current week statistics.
     public async Task<CalendarInitialStatistics> GetInitialAsync(
         DateTime month,
         DateTime today,
@@ -63,6 +65,7 @@ public sealed class CalendarStatisticsService
         return new CalendarInitialStatistics(monthResult, weekResult);
     }
 
+    // Returns cached month statistics or loads them.
     public Task<CalendarMonthStatistics> GetMonthAsync(
         DateTime month,
         CancellationToken cancellationToken = default)
@@ -90,6 +93,7 @@ public sealed class CalendarStatisticsService
             : load;
     }
 
+    // Returns cached current-week statistics or loads them.
     public Task<CalendarWeekStatistics> GetCurrentWeekAsync(
         DateTime today,
         CancellationToken cancellationToken = default)
@@ -116,6 +120,7 @@ public sealed class CalendarStatisticsService
             : load;
     }
 
+    // Starts preloading the months adjacent to the selected month.
     public void PrefetchAdjacentMonths(DateTime month)
     {
         month = FirstOfMonth(month);
@@ -123,6 +128,7 @@ public sealed class CalendarStatisticsService
         _ = ObservePrefetchAsync(month.AddMonths(1));
     }
 
+    // Loads and caches month statistics if they are still current.
     private async Task<CalendarMonthStatistics> LoadMonthAndCacheAsync(
         DateTime month,
         MonthKey key)
@@ -180,6 +186,7 @@ public sealed class CalendarStatisticsService
         }
     }
 
+    // Loads and caches week statistics if they are still current.
     private async Task<CalendarWeekStatistics> LoadWeekAndCacheAsync(DateTime weekStart)
     {
         await Task.Yield();
@@ -232,6 +239,7 @@ public sealed class CalendarStatisticsService
         }
     }
 
+    // Observes a prefetch task and logs failures.
     private async Task ObservePrefetchAsync(DateTime month)
     {
         try
@@ -244,6 +252,7 @@ public sealed class CalendarStatisticsService
         }
     }
 
+    // Tries to retrieve valid cached month statistics.
     private bool TryGetMonth(DateTime month, out CalendarMonthStatistics? result)
     {
         var key = MonthKey.From(month);
@@ -262,6 +271,7 @@ public sealed class CalendarStatisticsService
         return false;
     }
 
+    // Tries to retrieve valid cached week statistics.
     private bool TryGetWeek(DateTime weekStart, out CalendarWeekStatistics? result)
     {
         lock (_cacheGate)
@@ -278,6 +288,7 @@ public sealed class CalendarStatisticsService
         return false;
     }
 
+    // Caches month statistics and maintains the cache size limit.
     private void StoreMonth(MonthKey key, CalendarMonthStatistics data)
     {
         _monthCache[key] = new MonthCacheEntry(data, ++_accessSequence);
@@ -288,12 +299,15 @@ public sealed class CalendarStatisticsService
         }
     }
 
+    // Invalidates statistics affected by a consumption change.
     private void OnConsumptionAdded(object? sender, CaffeineConsumption consumption) =>
         InvalidateConsumptionDate(consumption);
 
+    // Invalidates statistics affected by a consumption change.
     private void OnConsumptionDeleted(object? sender, CaffeineConsumption consumption) =>
         InvalidateConsumptionDate(consumption);
 
+    // Invalidates cached statistics for the consumption's local date.
     private void InvalidateConsumptionDate(CaffeineConsumption consumption)
     {
         var localDate = TimeZoneInfo.ConvertTime(consumption.ConsumedAt, _timeProvider.LocalTimeZone).Date;
@@ -313,6 +327,7 @@ public sealed class CalendarStatisticsService
         }
     }
 
+    // Clears cached statistics after user data is deleted.
     private void OnUserDataDeleted(object? sender, EventArgs eventArgs)
     {
         lock (_cacheGate)
@@ -335,9 +350,11 @@ public sealed class CalendarStatisticsService
         _dataGeneration++;
     }
 
+    // Returns the cache generation for a month.
     private int GetMonthGeneration(MonthKey key) =>
         _monthGenerations.GetValueOrDefault(key);
 
+    // Groups consumptions into statistics by local calendar date.
     private IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> Aggregate(
         IReadOnlyList<CaffeineConsumption> consumptions)
     {
@@ -357,6 +374,7 @@ public sealed class CalendarStatisticsService
         return builders.ToDictionary(pair => pair.Key, pair => pair.Value.Build());
     }
 
+    // Builds month totals and highlights from daily statistics.
     private static CalendarMonthStatistics BuildMonthStatistics(
         DateTime month,
         IReadOnlyDictionary<DateOnly, CalendarDailyStatistics> days)
@@ -389,15 +407,18 @@ public sealed class CalendarStatisticsService
             mostConsumedInDayMg);
     }
 
+    // Returns the first day of the given month.
     private static DateTime FirstOfMonth(DateTime value) =>
         new(value.Year, value.Month, 1);
 
+    // Returns the Monday that starts the given date's week.
     private static DateTime GetWeekStart(DateTime date)
     {
         var mondayOffset = ((int)date.DayOfWeek + 6) % 7;
         return date.Date.AddDays(-mondayOffset);
     }
 
+    // Converts a local date boundary to UTC.
     private DateTimeOffset ToUtcBoundary(DateTime localDate)
     {
         var unspecified = DateTime.SpecifyKind(localDate, DateTimeKind.Unspecified);
@@ -407,11 +428,14 @@ public sealed class CalendarStatisticsService
             .ToUniversalTime();
     }
 
+    // Identifies a calendar month by year and month number.
     private readonly record struct MonthKey(int Year, int Month)
     {
+        // Creates a cache key from the date's year and month.
         public static MonthKey From(DateTime value) => new(value.Year, value.Month);
     }
 
+    // Stores cached month statistics and their last access marker.
     private sealed class MonthCacheEntry(
         CalendarMonthStatistics data,
         long lastAccess)
@@ -427,6 +451,7 @@ public sealed class CalendarStatisticsService
         private int _energyDrinkCount;
         private int _totalCaffeineMg;
 
+        // Adds a consumption to the daily statistics totals.
         public void Add(CaffeineConsumption consumption)
         {
             _totalCaffeineMg = (int)Math.Min(
@@ -446,6 +471,7 @@ public sealed class CalendarStatisticsService
             }
         }
 
+        // Creates daily statistics from the accumulated totals.
         public CalendarDailyStatistics Build() => new(
             _totalCaffeineMg,
             new ConsumptionTypeDistribution(

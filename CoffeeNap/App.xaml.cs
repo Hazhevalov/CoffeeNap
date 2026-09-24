@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CoffeeNap;
 
-/// <summary>Создаёт окно и завершает startup data flow до показа AppShell.</summary>
+/// <summary>Creates the window and completes startup data loading before showing AppShell.</summary>
 public partial class App : Application
 {
     private readonly UserStateService _userState;
@@ -14,6 +14,7 @@ public partial class App : Application
     private readonly CalendarStatisticsService _calendarStatistics;
     private readonly ApplicationVisibility _visibility;
 
+    // Initializes the app.
     public App(
         UserStateService userState,
         LocalizationService localization,
@@ -31,6 +32,7 @@ public partial class App : Application
         _visibility = visibility;
     }
 
+    // Creates the window and starts application initialization.
     protected override Window CreateWindow(IActivationState? activationState)
     {
         var window = new Window(CreateLoadingPage());
@@ -42,6 +44,7 @@ public partial class App : Application
         return window;
     }
 
+    // Loads startup data and displays the shell or an error page.
     private async Task CompleteStartupAsync(Window window)
     {
         try
@@ -64,6 +67,7 @@ public partial class App : Application
         }
     }
 
+    // Starts warming the calendar cache after the shell loads.
     private void OnShellLoaded(object? sender, EventArgs eventArgs)
     {
         if (sender is AppShell shell)
@@ -75,6 +79,7 @@ public partial class App : Application
         _ = Task.Run(WarmUpCalendarDataAsync);
     }
 
+    // Preloads calendar statistics in the background.
     private async Task WarmUpCalendarDataAsync()
     {
         try
@@ -88,6 +93,7 @@ public partial class App : Application
         }
     }
 
+    // Creates the startup loading screen.
     private static ContentPage CreateLoadingPage() => new()
     {
         BackgroundColor = Color.FromArgb("#F7F7F7"),
@@ -100,6 +106,7 @@ public partial class App : Application
         }
     };
 
+    // Creates the localized startup error screen.
     private ContentPage CreateStartupErrorPage() => new()
     {
         BackgroundColor = Color.FromArgb("#F7F7F7"),

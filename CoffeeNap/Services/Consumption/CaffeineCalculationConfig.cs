@@ -3,10 +3,13 @@ using CoffeeNap.Models;
 
 namespace CoffeeNap.Services;
 
+// Stores caffeine content per gram of beans and per espresso shot.
 public sealed record CoffeeCaffeineProfile(double CaffeineMgPerGram, double CaffeineMgPerShot);
 
+// Stores espresso shot counts for the standard serving sizes.
 public sealed record CoffeeShopRecipeProfile(double SmallShots, double MediumShots, double LargeShots)
 {
+    // Returns the espresso shot count for the selected serving size.
     public double GetShots(ServingSize size) => size switch
     {
         ServingSize.Small => SmallShots,

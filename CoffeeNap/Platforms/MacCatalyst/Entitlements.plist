@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-    <!-- Entitlements объявляют возможности, разрешённые песочницей macOS. -->
+    <!-- Entitlements declare capabilities permitted by the macOS sandbox. -->
     <dict>
-        <!-- Песочница обязательна для публикации Mac Catalyst в Mac App Store. -->
+        <!-- Sandboxing is required for Mac Catalyst distribution in the Mac App Store. -->
         <key>com.apple.security.app-sandbox</key>
         <true/>
-        <!-- Разрешает исходящие сетевые соединения из песочницы. -->
+        <!-- Allows outbound network connections from the sandbox. -->
         <key>com.apple.security.network.client</key>
         <true/>
     </dict>

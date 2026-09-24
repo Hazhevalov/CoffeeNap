@@ -4,11 +4,12 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CoffeeNap.ViewModels;
 
-/// <summary>Логика переиспользуемой шапки, независимая от PageViewModel.</summary>
+/// <summary>Reusable header logic independent of page view models.</summary>
 public partial class MainHeaderViewModel : ObservableObject
 {
     private readonly IAppNavigationService _navigationService;
 
+    // Initializes the main header view model.
     public MainHeaderViewModel(
         UserStateService userState,
         IAppNavigationService navigationService)
@@ -19,6 +20,7 @@ public partial class MainHeaderViewModel : ObservableObject
 
     public UserStateService UserState { get; }
 
+    // Opens the settings page.
     [RelayCommand(AllowConcurrentExecutions = false)]
     private Task OpenSettingsAsync() => _navigationService.OpenSettingsAsync();
 }

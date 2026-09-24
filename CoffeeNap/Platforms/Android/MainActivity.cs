@@ -7,13 +7,14 @@ using AndroidX.Core.View;
 namespace CoffeeNap
 {
     /// <summary>
-    /// Единственная Android Activity и точка входа пользовательского интерфейса.
-    /// Атрибут назначает splash-тему, делает Activity стартовой и сообщает, какие
-    /// изменения конфигурации MAUI обработает без полного пересоздания Activity.
+    /// The application's single Android activity and UI entry point.
+    /// The attribute assigns the splash theme and launcher role, and declares
+    /// configuration changes MAUI handles without recreating the activity.
     /// </summary>
     [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, WindowSoftInputMode = SoftInput.AdjustResize, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
     public class MainActivity : MauiAppCompatActivity
     {
+        // Initializes the activity and installs shared safe-area handling.
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -29,6 +30,7 @@ namespace CoffeeNap
 
         private sealed class AppInsetsListener : Java.Lang.Object, IOnApplyWindowInsetsListener
         {
+            // Applies system and keyboard insets once at the root view.
             public WindowInsetsCompat? OnApplyWindowInsets(Android.Views.View? view, WindowInsetsCompat? insets)
             {
                 var safeArea = insets?.GetInsets(

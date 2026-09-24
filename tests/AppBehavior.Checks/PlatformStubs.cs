@@ -7,7 +7,9 @@ public static class FileSystem
 public sealed class Preferences
 {
     public static Preferences Default { get; } = new();
+    // Returns the default preference value in the test stub.
     public T Get<T>(string key, T defaultValue) => defaultValue;
+    // Ignores preference removal in the test stub.
     public void Remove(string key) { }
 }
 
@@ -16,6 +18,7 @@ public static class MainThread
     public static bool IsMainThread => true;
     public static readonly System.Collections.Concurrent.ConcurrentQueue<(Action Action, TaskCompletionSource Completion)> Pending = new();
     public static bool HoldActions;
+    // Runs or queues an action through the simulated UI dispatcher.
     public static Task InvokeOnMainThreadAsync(Action action)
     {
         if (!HoldActions) { action(); return Task.CompletedTask; }
@@ -23,7 +26,9 @@ public static class MainThread
         Pending.Enqueue((action, completion));
         return completion.Task;
     }
+    // Runs an asynchronous callback in the test dispatcher.
     public static Task InvokeOnMainThreadAsync(Func<Task> action) => action();
+    // Executes and completes the next queued UI callback.
     public static void RunNext()
     {
         if (!Pending.TryDequeue(out var item)) throw new InvalidOperationException("No queued UI callback");
@@ -34,6 +39,7 @@ public static class MainThread
 
 public sealed class Color
 {
+    // Creates a placeholder color for platform-independent checks.
     public static Color FromArgb(string value) => new();
 }
 public static class Colors
@@ -47,6 +53,7 @@ public static class Colors
     public static Color Red { get; } = new();
 }
 public enum GridUnitType { Star }
+// Stores a grid length and unit for platform-independent checks.
 public readonly record struct GridLength(double Value, GridUnitType Type = GridUnitType.Star);
 public sealed class Application
 {

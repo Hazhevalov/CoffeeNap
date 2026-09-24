@@ -2,9 +2,12 @@ using CoffeeNap.Models;
 using CoffeeNap.Services;
 
 var checks = 0;
+// Records whether a test condition passes.
 void Check(bool ok, string name) { checks++; if (!ok) throw new Exception(name); }
+// Checks that a calculated caffeine amount matches the expected value.
 void Equal(double expected, double actual, string name) => Check(Math.Abs(expected - actual) < 1e-8, $"{name}: expected {expected}, got {actual}");
 var calculator = new CaffeineCalculator();
+// Creates home coffee quiz answers for calculation checks.
 AddConsumptionQuizState Home(double grams, CoffeeBeanType bean, CoffeeBrewingMethod method) => new()
 {
     DrinkType = CaffeineConsumptionType.Coffee, CoffeeLocation = CoffeeLocation.Home,

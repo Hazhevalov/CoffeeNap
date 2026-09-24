@@ -3,7 +3,7 @@ using CoffeeNap.Views;
 
 namespace CoffeeNap;
 
-/// <summary>Shell создаётся только после чтения startup profile из SQLite.</summary>
+/// <summary>Creates the shell after loading the startup profile from SQLite.</summary>
 public partial class AppShell : Shell
 {
     public const string MainAbsoluteRoute = "//AppTabs/MainPage";
@@ -13,6 +13,7 @@ public partial class AppShell : Shell
     private readonly AppPageFactory _pageFactory;
     private TabHostPage? _tabHostPage;
 
+    // Initializes the app shell.
     public AppShell(
         UserStateService userState,
         AppPageFactory pageFactory)
@@ -29,9 +30,11 @@ public partial class AppShell : Shell
             : OnboardingShellItem;
     }
 
+    // Returns the shell's tab host page.
     internal TabHostPage GetTabHostPage() =>
         _tabHostPage ??= _pageFactory.CreateTabHostPage();
 
+    // Releases the content owned by the shell.
     internal void ReleaseContent()
     {
         _tabHostPage?.Release();

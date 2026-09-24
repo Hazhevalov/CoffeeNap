@@ -6,6 +6,7 @@ public sealed class ApplicationVisibility
     public bool IsActive { get; private set; } = true;
     public event EventHandler? Changed;
 
+    // Updates application visibility and notifies subscribers.
     public void SetActive(bool active)
     {
         if (IsActive == active) return;

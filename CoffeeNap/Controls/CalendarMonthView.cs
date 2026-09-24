@@ -23,6 +23,7 @@ public sealed class CalendarMonthView : GraphicsView, IDrawable
         propertyChanged: static (bindable, _, _) =>
             ((CalendarMonthView)bindable).Invalidate());
 
+    // Initializes the calendar month view.
     public CalendarMonthView()
     {
         Drawable = this;
@@ -36,6 +37,7 @@ public sealed class CalendarMonthView : GraphicsView, IDrawable
         set => SetValue(ItemsSourceProperty, value);
     }
 
+    // Draws the calendar grid and daily caffeine markers.
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
         var items = ItemsSource;
@@ -93,6 +95,7 @@ public sealed class CalendarMonthView : GraphicsView, IDrawable
         }
     }
 
+    // Returns a resource color or the supplied fallback.
     private static Color GetResourceColor(string key, Color fallback) =>
         Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
             ? color

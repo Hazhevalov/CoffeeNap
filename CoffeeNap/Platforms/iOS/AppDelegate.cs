@@ -3,13 +3,13 @@
 namespace CoffeeNap
 {
     /// <summary>
-    /// Делегат жизненного цикла iOS. Атрибут Register делает класс доступным
-    /// Objective-C runtime, а создание приложения делегируется MauiProgram.
+    /// iOS lifecycle delegate exposed to the Objective-C runtime by Register.
+    /// Delegates application creation to MauiProgram.
     /// </summary>
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate
     {
-        /// <summary>Создаёт общий экземпляр MAUI-приложения.</summary>
+        /// <summary>Creates the shared MAUI application instance.</summary>
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
     }
 }

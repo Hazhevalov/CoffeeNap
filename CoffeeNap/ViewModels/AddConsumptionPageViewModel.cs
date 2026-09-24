@@ -9,7 +9,7 @@ namespace CoffeeNap.ViewModels;
 
 public partial class AddConsumptionPageViewModel : ObservableObject
 {
-    // Путь для кофе дома
+    // Home coffee quiz steps.
     private static readonly AddConsumptionStep[] HomeFlow =
     [
         AddConsumptionStep.DrinkType, AddConsumptionStep.CoffeeLocation,
@@ -17,7 +17,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         AddConsumptionStep.CoffeeBeanType, AddConsumptionStep.Result
     ];
 
-    // Путь для кофе вне дома
+    // Cafe coffee quiz steps.
     private static readonly AddConsumptionStep[] OutsideFlow =
     [
         AddConsumptionStep.DrinkType, AddConsumptionStep.CoffeeLocation,
@@ -52,6 +52,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
     private bool _isSaving;
     private bool _isUsingLastRecipe;
 
+    // Initializes the add consumption page view model.
     public AddConsumptionPageViewModel(
         MainHeaderViewModel header,
         IAppDataService dataService,
@@ -70,6 +71,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         _localization.CultureChanged += OnCultureChanged;
     }
 
+    // Unsubscribes the quiz view model from shared events.
     public void Release()
     {
         _dataService.UserDataDeleted -= OnUserDataDeleted;
@@ -167,7 +169,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         ? string.Empty
         : $"+{CalculationResult.CaffeineMg} {_localization["MilligramShort"]}";
 
-    // Выбрать тип напитка
+    // Selects the drink category and advances to its quiz branch.
     [RelayCommand]
     private void SelectDrinkType(CaffeineConsumptionType type)
     {
@@ -190,6 +192,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         TransitionTo(nextStep);
     }
 
+    // Selects the coffee location and updates the quiz branch.
     [RelayCommand]
     private void SelectCoffeeLocation(CoffeeLocation location)
     {
@@ -203,6 +206,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
             : AddConsumptionStep.CoffeeDrinkType);
     }
 
+    // Stores the brewing method and advances the quiz.
     [RelayCommand]
     private void SelectBrewingMethod(CoffeeBrewingMethod method)
     {
@@ -214,6 +218,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         TransitionTo(AddConsumptionStep.CoffeeAmount);
     }
 
+    // Stores the selected coffee amount and advances the quiz.
     [RelayCommand]
     private void SelectCoffeeAmount(int spoonCount)
     {
@@ -226,6 +231,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         TransitionTo(AddConsumptionStep.CoffeeBeanType);
     }
 
+    // Validates the manually entered coffee amount and advances.
     [RelayCommand]
     private void ConfirmManualCoffeeAmount()
     {
@@ -245,6 +251,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         TransitionTo(AddConsumptionStep.CoffeeBeanType);
     }
 
+    // Stores the cafe drink type and advances the quiz.
     [RelayCommand]
     private void SelectCoffeeDrinkType(CoffeeDrinkType type)
     {
@@ -262,7 +269,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         TransitionTo(AddConsumptionStep.CoffeeVolume);
     }
 
-    // Объем напитка
+    // Stores the selected serving volume and advances the quiz.
     [RelayCommand]
     private void SelectVolume(ServingSize servingSize)
     {
@@ -293,7 +300,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         TransitionTo(AddConsumptionStep.CoffeeBeanType);
     }
 
-    // Ручной ввод объема кофе
+    // Validates the manually entered drink volume and advances.
     [RelayCommand]
     private void ConfirmManualVolume()
     {
@@ -312,6 +319,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         TransitionTo(AddConsumptionStep.CoffeeBeanType);
     }
 
+    // Stores the bean type and completes the coffee quiz.
     [RelayCommand]
     private void SelectBeanType(CoffeeBeanType type)
     {
@@ -319,6 +327,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         CompleteQuiz();
     }
 
+    // Stores the tea type and advances the quiz.
     [RelayCommand]
     private void SelectTeaType(TeaType type)
     {
@@ -332,6 +341,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         TransitionTo(AddConsumptionStep.TeaAmount);
     }
 
+    // Stores the selected tea amount and completes the quiz.
     [RelayCommand]
     private void SelectTeaAmount(int spoonCount)
     {
@@ -342,6 +352,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         CompleteQuiz();
     }
 
+    // Validates the manually entered tea amount and completes the quiz.
     [RelayCommand]
     private void ConfirmManualTeaAmount()
     {
@@ -358,6 +369,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         CompleteQuiz();
     }
 
+    // Stores the energy drink volume and completes the quiz.
     [RelayCommand]
     private void SelectEnergyDrinkVolume(int volumeMl)
     {
@@ -371,6 +383,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         CompleteQuiz();
     }
 
+    // Validates quiz answers and builds the calculation result.
     private void CompleteQuiz()
     {
         ClearValidation();
@@ -392,6 +405,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         }
     }
 
+    // Restores the last saved recipe into the quiz.
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task UseLastRecipeAsync()
     {
@@ -439,7 +453,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         }
     }
 
-    // Кнопка вернуться назад
+    // Returns to the previous quiz step or leaves the page.
     [RelayCommand]
     private async Task BackAsync()
     {
@@ -454,7 +468,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         await _appNavigation.NavigateToTopLevelAsync(AppShell.MainAbsoluteRoute);
     }
 
-    // Перезапуск квиза
+    // Clears quiz answers and returns to the first step.
     [RelayCommand]
     private void RestartQuiz()
     {
@@ -468,7 +482,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         CurrentStep = AddConsumptionStep.DrinkType;
     }
 
-    // Сохранить как новое употребление
+    // Saves the calculated consumption and its recipe.
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task SaveConsumptionAsync()
     {
@@ -502,7 +516,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         }
     }
 
-    // Дебаг тема для поиска ошибок
+    // Checks quiz completeness and supplies a localized error message.
     private bool TryValidateQuiz(out string message)
     {
         if (QuizState.DrinkType is not { } drinkType)
@@ -525,7 +539,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         return isValid;
     }
 
-    // Построение шаблона для употребления
+    // Creates a consumption record from the current result.
     private static CaffeineConsumption BuildConsumption(ConsumptionCalculationResult snapshot) => new()
     {
         Name = snapshot.DisplayName,
@@ -534,7 +548,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         ConsumedAt = DateTimeOffset.UtcNow
     };
 
-    // Переход к следующему шагу
+    // Changes the active quiz step and updates dependent properties.
     private void TransitionTo(AddConsumptionStep nextStep)
     {
         if (CurrentStep == nextStep)
@@ -548,6 +562,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         _logger.LogDebug("Add consumption quiz transitioned to {Step}.", nextStep);
     }
 
+    // Returns the step sequence for the selected quiz branch.
     private AddConsumptionStep[] GetCurrentFlow() => QuizState.DrinkType switch
     {
         CaffeineConsumptionType.Tea => TeaFlow,
@@ -555,20 +570,24 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         CaffeineConsumptionType.Coffee when QuizState.CoffeeLocation == CoffeeLocation.Outside => OutsideFlow,
         _ => HomeFlow
     };
+    // Clears the current validation message.
     private void ClearValidation() => ValidationMessage = string.Empty;
 
+    // Clears the cached calculation result.
     private void InvalidateResult()
     {
         _calculationResult = null;
         NotifyResultChanged();
     }
 
+    // Notifies bindings that the quiz step state changed.
     private void NotifyStepStateChanged()
     {
         OnPropertyChanged(nameof(ProgressPosition));
         OnPropertyChanged(nameof(ProgressStepCount));
     }
 
+    // Notifies bindings that the calculation result changed.
     private void NotifyResultChanged()
     {
         OnPropertyChanged(nameof(CalculationResult)); OnPropertyChanged(nameof(ResultContext));
@@ -578,6 +597,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         OnPropertyChanged(nameof(ResultDetail4Value)); OnPropertyChanged(nameof(ResultCaffeine));
     }
 
+    // Parses a positive finite number from user input.
     private static bool TryParsePositiveDouble(string value, out double result)
     {
         var normalized = value.Replace(',', CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]);
@@ -585,6 +605,7 @@ public partial class AddConsumptionPageViewModel : ObservableObject
             CultureInfo.CurrentCulture, out result) && double.IsFinite(result) && result > 0;
     }
 
+    // Refreshes quiz labels and results after a culture change.
     private void OnCultureChanged(object? sender, EventArgs eventArgs)
     {
         if (QuizState.ServingSize is { } servingSize)
@@ -623,5 +644,6 @@ public partial class AddConsumptionPageViewModel : ObservableObject
         }
     }
 
+    // Resets the quiz after stored user data is deleted.
     private void OnUserDataDeleted(object? sender, EventArgs eventArgs) => RestartQuiz();
 }

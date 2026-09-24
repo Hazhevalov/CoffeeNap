@@ -3,13 +3,13 @@
 namespace CoffeeNap
 {
     /// <summary>
-    /// Делегат жизненного цикла Mac Catalyst. Использует ту же общую конфигурацию,
-    /// что и остальные платформы.
+    /// Mac Catalyst lifecycle delegate using the shared configuration
+    /// used by the other platforms.
     /// </summary>
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate
     {
-        /// <summary>Создаёт общий экземпляр MAUI-приложения.</summary>
+        /// <summary>Creates the shared MAUI application instance.</summary>
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
     }
 }

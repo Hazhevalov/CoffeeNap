@@ -14,6 +14,7 @@ public partial class BottomNavigationViewModel : ObservableObject
     private NavigationTab _activeTab;
     private bool _animateNextSelection = true;
 
+    // Initializes the bottom navigation view model.
     public BottomNavigationViewModel(IAppNavigationService navigationService)
     {
         _navigationService = navigationService;
@@ -39,6 +40,7 @@ public partial class BottomNavigationViewModel : ObservableObject
 
     public bool IsCalendarActive => ActiveTab == NavigationTab.Calendar;
 
+    // Updates the active navigation tab and animation preference.
     internal void SetActiveTab(NavigationTab tab, bool animate)
     {
         _animateNextSelection = animate;
@@ -52,6 +54,7 @@ public partial class BottomNavigationViewModel : ObservableObject
         }
     }
 
+    // Returns and resets the next selection's animation preference.
     internal bool ConsumeSelectionAnimation()
     {
         var animate = _animateNextSelection;
@@ -59,21 +62,25 @@ public partial class BottomNavigationViewModel : ObservableObject
         return animate;
     }
 
+    // Navigates to the home tab.
     [RelayCommand(AllowConcurrentExecutions = false)]
     private Task OpenHomeAsync() => NavigateAsync(
         NavigationTab.Home,
         AppShell.MainAbsoluteRoute);
 
+    // Navigates to the add-consumption tab.
     [RelayCommand(AllowConcurrentExecutions = false)]
     private Task OpenAddConsumptionAsync() => NavigateAsync(
         NavigationTab.AddConsumption,
         AppShell.AddConsumptionAbsoluteRoute);
 
+    // Navigates to the calendar tab.
     [RelayCommand(AllowConcurrentExecutions = false)]
     private Task OpenCalendarAsync() => NavigateAsync(
         NavigationTab.Calendar,
         AppShell.CalendarAbsoluteRoute);
 
+    // Navigates to the requested tab unless it is already active.
     private Task NavigateAsync(NavigationTab targetTab, string absoluteRoute)
     {
         if (ActiveTab == targetTab)

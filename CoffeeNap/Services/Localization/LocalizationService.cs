@@ -17,6 +17,7 @@ public sealed class LocalizationService : INotifyPropertyChanged
     private readonly SemaphoreSlim _changeLock = new(1, 1);
     private AppSettings? _settings;
 
+    // Initializes the localization service.
     public LocalizationService(IAppDataService dataService)
     {
         _dataService = dataService;
@@ -35,6 +36,7 @@ public sealed class LocalizationService : INotifyPropertyChanged
 
     public string this[string key] => Resources.GetString(key, CurrentCulture) ?? key;
 
+    // Loads and applies the saved language.
     public async Task InitializeAsync()
     {
         _settings = await _dataService.GetSettingsAsync();
@@ -85,9 +87,11 @@ public sealed class LocalizationService : INotifyPropertyChanged
     public void PrepareSavedLanguageForRestart(string languageCode) =>
         ApplyCulture(NormalizeLanguageCode(languageCode), notifyUi: false);
 
+    // Formats a localized resource with the supplied arguments.
     public string Format(string key, params object[] arguments) =>
         string.Format(CurrentCulture, this[key], arguments);
 
+    // Applies the culture and notifies localization subscribers.
     private void ApplyCulture(string languageCode, bool notifyUi = true)
     {
         var culture = new CultureInfo(languageCode);
@@ -106,11 +110,13 @@ public sealed class LocalizationService : INotifyPropertyChanged
         }
     }
 
+    // Restores the default language after user data is deleted.
     private void OnUserDataDeleted(object? sender, EventArgs eventArgs)
     {
         _settings = null;
     }
 
+    // Normalizes a language code to a supported language.
     private static string NormalizeLanguageCode(string? languageCode) =>
         string.Equals(languageCode, RussianLanguageCode, StringComparison.OrdinalIgnoreCase)
             ? RussianLanguageCode

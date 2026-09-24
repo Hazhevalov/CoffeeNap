@@ -4,6 +4,7 @@ namespace CoffeeNap.Helpers;
 
 public static class CaffeineSourceColorProvider
 {
+    // Returns the display color for a caffeine source.
     public static Color GetColor(CaffeineConsumptionType type) => type switch
     {
         CaffeineConsumptionType.Coffee => GetResourceColor("CaffeeIcoFill", Colors.Black),
@@ -12,6 +13,7 @@ public static class CaffeineSourceColorProvider
         _ => Colors.Transparent
     };
 
+    // Returns a resource color or the supplied fallback.
     private static Color GetResourceColor(string key, Color fallback) =>
         Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
             ? color

@@ -18,7 +18,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Общий индикатор меняет состояние вместе с CurrentStep. -->
+        <!-- The shared indicator follows CurrentStep. -->
         <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
             <BoxView
                 WidthRequest="8"
@@ -50,7 +50,7 @@
             </BoxView>
         </HorizontalStackLayout>
 
-        <!-- Одинаковая область для обоих шагов предотвращает layout jump. -->
+        <!-- Equal space for both steps prevents layout jumps. -->
         <Grid Grid.Row="1">
             <Grid
                 x:Name="WelcomeStepContainer"

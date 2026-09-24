@@ -2,7 +2,7 @@ using SQLite;
 
 namespace CoffeeNap.Models;
 
-/// <summary>Единственный локальный профиль пользователя приложения.</summary>
+/// <summary>The application's single local user profile.</summary>
 [Table("UserProfiles")]
 public sealed class UserProfile
 {

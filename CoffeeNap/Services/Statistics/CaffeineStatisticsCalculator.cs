@@ -2,9 +2,10 @@ using CoffeeNap.Models;
 
 namespace CoffeeNap.Services;
 
-// Подсчёт ДНЕВНОЙ нормы кофеина
+// Daily caffeine total calculation.
 public static class CaffeineStatisticsCalculator
 {
+    // Totals caffeine consumed during the specified day.
     public static double CalculateDailyCaffeine(
         IEnumerable<CaffeineConsumption> consumptions,
         DateTimeOffset now)
