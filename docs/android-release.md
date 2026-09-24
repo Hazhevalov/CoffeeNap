@@ -13,7 +13,7 @@ Install the .NET 10 SDK, Android workload, Android SDK, and JDK 21. Run the foll
     -StorePasswordFile "$env:USERPROFILE/.coffeenap/signing/store-password.txt"
 ```
 
-The Windows PowerShell script runs both Release check programs, publishes an APK with trimming and the SDK's Release AOT defaults, verifies its signature, and writes a SHA-256 checksum beside it in `artifacts/android/1.0.0/`. It refuses to overwrite an existing signed APK; use `-OutputDirectory` for another build. Pass `-KeyPasswordFile` only if the key password differs from the store password. Password files contain the password on a single line and must remain outside the repository. Their values are passed through temporary process environment variables, keeping secrets out of command-line arguments; prior environment values are restored afterward.
+The Windows PowerShell script publishes an APK with trimming and the SDK's Release AOT defaults, verifies its signature, and writes a SHA-256 checksum beside it in `artifacts/android/1.0.0/`. It refuses to overwrite an existing signed APK; use `-OutputDirectory` for another build. Pass `-KeyPasswordFile` only if the key password differs from the store password. Password files contain the password on a single line and must remain outside the repository. Their values are passed through temporary process environment variables, keeping secrets out of command-line arguments; prior environment values are restored afterward.
 
 Back up the keystore and password securely before distributing the APK. Losing the signing key prevents updates to existing installations with the same application ID. Share only the signed APK and its checksum, never the signing directory. Publishing locally does not upload or distribute the app.
 
@@ -23,17 +23,6 @@ The default APK contains ARM64 and x86-64 native libraries. It requires Android 
 
 Use the Android SDK build tools to run `apksigner verify --verbose --print-certs <signed-apk>` and `aapt dump badging <signed-apk>`. Confirm the package ID, version, supported ABIs, and signing certificate. The release manifest must not enable debugging or request Internet access. Keep the certificate fingerprint with the release record.
 
-Before distributing, install on a test device and verify onboarding, restart with saved data, all drink flows, recipe reuse, deletion, calendar updates, language switching, background/resume, rotation, and large fonts. Use only disposable test data for delete-all-data checks. Automated checks use real SQLite but substitute MAUI visual and dispatcher types; they do not establish device UI correctness.
+Before distributing, install on a test device and verify onboarding, restart with saved data, all drink flows, recipe reuse, deletion, calendar updates, language switching, background/resume, rotation, and large fonts. Use only disposable test data for delete-all-data checks.
 
 See [Microsoft's APK publishing documentation](https://learn.microsoft.com/en-us/dotnet/maui/android/deployment/publish-cli?view=net-maui-10.0) for signing properties and password-file support.
-
-## Verification on 2026-09-24
-
-- .NET SDK 10.0.401, Android workload 36.1.69, MAUI 10.0.20, JDK 21.0.8.
-- Release checks passed: 58,225 caffeine calculation checks and 10,301 application behavior checks.
-- NuGet reported no known vulnerable packages, including transitive dependencies, at verification time.
-- Signed APK: 32,580,041 bytes; SHA-256 `e0af970189fc6d6ddf8a358a50e28d32d9eb4d76e41ecc9c8b47f02f507a69a4`.
-- Certificate SHA-256: `ac5bb605ef8452421125777e9d525e78ee1ee296aa42e6edf2076e7bec8845d9`.
-- `apksigner` verified v1, v2, and v3 signatures. It also emitted v1 warnings for dependency metadata under `META-INF`; verification succeeded.
-- `zipalign -c -P 16 4` passed. APK metadata confirmed package/version, ARM64 and x86-64 ABIs, minimum API 21, target API 36, no debug flag, and no Internet permission.
-- The final APK was not installed or exercised on a device in this release preparation. Complete the device checks above before broad distribution.

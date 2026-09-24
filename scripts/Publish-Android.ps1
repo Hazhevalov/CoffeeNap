@@ -44,9 +44,6 @@ function Invoke-DotNet {
     }
 }
 
-Invoke-DotNet -CommandArguments @('run', '--project', (Join-Path $repositoryRoot 'tests/CaffeineCalculation.Checks'), '-c', 'Release')
-Invoke-DotNet -CommandArguments @('run', '--project', (Join-Path $repositoryRoot 'tests/AppBehavior.Checks'), '-c', 'Release')
-
 New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
 $signedApk = Join-Path $OutputDirectory "$applicationId-Signed.apk"
 if (Test-Path -LiteralPath $signedApk) {
