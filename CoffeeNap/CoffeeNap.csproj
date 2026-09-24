@@ -27,11 +27,11 @@
 		<!-- Application name displayed to the user. -->
 		<ApplicationTitle>CoffeeNap</ApplicationTitle>
 
-		<!-- Unique package identifier; replace companyname before publishing. -->
-		<ApplicationId>com.companyname.coffeenap.CoffeeNapSigning</ApplicationId>
+		<!-- Stable package identifier used for installation and future updates. -->
+		<ApplicationId>com.hazhevalov.coffeenap</ApplicationId>
 
 		<!-- Public version and monotonically increasing internal build number. -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
 		<!-- None runs the Windows app without an MSIX package during development. -->
@@ -43,6 +43,11 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release' and $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+		<!-- Produce an installable APK; signing credentials are supplied at publish time. -->
+		<AndroidPackageFormats>apk</AndroidPackageFormats>
 	</PropertyGroup>
 
 	<ItemGroup>

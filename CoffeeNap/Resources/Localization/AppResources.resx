@@ -27,6 +27,7 @@
   <data name="OnboardingGreeting" xml:space="preserve"><value>Хорошего&#10;настроения и&#10;ароматного кофе!</value></data>
   <data name="OnboardingDescription" xml:space="preserve"><value>Мы поможем тебе понимать, когда&#10;пора подзарядиться, а когда -&#10;сделать паузу.</value></data>
   <data name="Start" xml:space="preserve"><value>Давайте начнем</value></data>
+  <data name="StartAccessibilityDescription" xml:space="preserve"><value>Давайте начнем, перейти к вводу имени</value></data>
   <data name="NamePrompt" xml:space="preserve"><value>Как Вас зовут?</value></data>
   <data name="NamePlaceholder" xml:space="preserve"><value>Имя</value></data>
   <data name="Confirm" xml:space="preserve"><value>Подтвердить</value></data>

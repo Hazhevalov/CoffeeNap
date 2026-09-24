@@ -36,6 +36,8 @@ A consumption entry and its recipe are saved in a single transaction through `IA
 
 ## Building and verification
 
+For the signed Android APK and repeatable release commands, see [Android release instructions](docs/android-release.md).
+
 The .NET 10 SDK and MAUI workloads for the target platform are required. Android also requires the Android SDK and JDK; iOS and Mac Catalyst require macOS and Xcode.
 
 Run from the repository root:
