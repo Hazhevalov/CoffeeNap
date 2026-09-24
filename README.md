@@ -2,6 +2,8 @@
 
 CoffeeNap is a caffeine intake tracker built with .NET MAUI. Log coffee, tea, and energy drinks, estimate their caffeine content, and explore your consumption history through daily summaries and calendar statistics.
 
+**Android is the primary platform.** CoffeeNap is developed primarily for Android, while its .NET MAUI foundation also allows it to run on iOS, macOS (via Mac Catalyst), and Windows.
+
 Your data stays on your device in a local SQLite database. No account or backend service is required.
 
 ## Features
@@ -23,7 +25,7 @@ Your data stays on your device in a local SQLite database. No account or backend
 - SQLite via sqlite-net-pcl
 - Dependency injection and RESX localization
 
-The project declares targets for Android, iOS, Mac Catalyst, and Windows. Windows is included only when building on a Windows host. The repository includes a dedicated Android APK release workflow; other targets require their respective platform toolchains.
+Android is the main development and release target, with a dedicated APK release workflow. The project also targets iOS, macOS via Mac Catalyst, and Windows, which require their respective platform toolchains. Windows is included only when building on a Windows host.
 
 ## Getting started
 
