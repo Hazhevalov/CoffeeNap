@@ -10,20 +10,13 @@
     AutomationId="MainTabContent"
     BackgroundColor="{StaticResource PageBackgroundColor}">
 
-    <Grid SafeAreaEdges="None" RowDefinitions="Auto,Auto,*" RowSpacing="10" Padding="12,0">
+    <Grid SafeAreaEdges="None" RowDefinitions="Auto,Auto,Auto,*" RowSpacing="10" Padding="12,0">
         <controls:MainHeaderView Grid.Row="0" MinimumHeightRequest="86" BindingContext="{Binding Header}" SafeAreaEdges="None" />
         <VerticalStackLayout Grid.Row="1" IsVisible="{Binding HasLoadError}" Spacing="4">
             <Label Text="{Binding InitializationError}" TextColor="{StaticResource InkColor}" />
             <Button Text="{localization:Translate Retry}" Command="{Binding RetryCommand}" />
         </VerticalStackLayout>
-        <controls:ConsumptionPanel
-            x:Name="ConsumptionPanel" Grid.Row="2"
-            DeleteCommand="{Binding DeleteConsumptionCommand}"
-            LoadMoreCommand="{Binding LoadMoreCommand}"
-            HasMore="{Binding HasMore}" IsLoading="{Binding IsBusy}"
-            ItemsSource="{Binding Consumptions}">
-            <controls:ConsumptionPanel.HeaderContent>
-                <VerticalStackLayout
+        <VerticalStackLayout Grid.Row="2"
             Spacing="10"
             VerticalOptions="Start">
             
@@ -312,7 +305,11 @@
                 </Grid>
             </Border>
         </VerticalStackLayout>
-            </controls:ConsumptionPanel.HeaderContent>
-        </controls:ConsumptionPanel>
+        <controls:ConsumptionPanel
+            x:Name="ConsumptionPanel" Grid.Row="3"
+            DeleteCommand="{Binding DeleteConsumptionCommand}"
+            LoadMoreCommand="{Binding LoadMoreCommand}"
+            HasMore="{Binding HasMore}" IsLoading="{Binding IsBusy}"
+            ItemsSource="{Binding Consumptions}" />
     </Grid>
 </ContentView>

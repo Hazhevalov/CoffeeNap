@@ -9,8 +9,6 @@ namespace CoffeeNap.Controls;
 /// </summary>
 public partial class ConsumptionPanel : ContentView
 {
-    public static readonly BindableProperty HeaderContentProperty = BindableProperty.Create(
-        nameof(HeaderContent), typeof(View), typeof(ConsumptionPanel));
     public static readonly BindableProperty LoadMoreCommandProperty = BindableProperty.Create(
         nameof(LoadMoreCommand), typeof(ICommand), typeof(ConsumptionPanel));
     public static readonly BindableProperty HasMoreProperty = BindableProperty.Create(
@@ -18,7 +16,6 @@ public partial class ConsumptionPanel : ContentView
     public static readonly BindableProperty IsLoadingProperty = BindableProperty.Create(
         nameof(IsLoading), typeof(bool), typeof(ConsumptionPanel), false);
 
-    public View? HeaderContent { get => (View?)GetValue(HeaderContentProperty); set => SetValue(HeaderContentProperty, value); }
     public ICommand? LoadMoreCommand { get => (ICommand?)GetValue(LoadMoreCommandProperty); set => SetValue(LoadMoreCommandProperty, value); }
     public bool HasMore { get => (bool)GetValue(HasMoreProperty); set => SetValue(HasMoreProperty, value); }
     public bool IsLoading { get => (bool)GetValue(IsLoadingProperty); set => SetValue(IsLoadingProperty, value); }
