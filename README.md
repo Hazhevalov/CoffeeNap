@@ -8,14 +8,14 @@ Your data stays on your device in a local SQLite database. No account or backend
 
 ## Features
 
-- **Guided drink logging** — enter preparation details for home-brewed coffee, choose a coffee drink and serving size when drinking out, or log tea and energy drinks.
-- **Caffeine estimates** — calculations account for coffee bean type, brewing method, dose, or serving size, depending on the drink.
-- **Recipe reuse** — quickly repeat your last saved recipe with a recalculated estimate.
-- **Daily overview** — view caffeine intake, progress against the app's daily limit, and a breakdown by drink category.
-- **Calendar and statistics** — browse consumption by day and review weekly and monthly summaries.
-- **Consumption history** — review saved entries and delete individual records.
-- **English and Russian** — select your preferred interface language in settings.
-- **Local data controls** — delete your profile, settings, and consumption data from within the app.
+- **Guided drink logging** - enter preparation details for home-brewed coffee, choose a coffee drink and serving size when drinking out, or log tea and energy drinks.
+- **Caffeine estimates** - calculations account for coffee bean type, brewing method, dose, or serving size, depending on the drink.
+- **Recipe reuse** - quickly repeat your last saved recipe with a recalculated estimate.
+- **Daily overview** - view caffeine intake, progress against the app's daily limit, and a breakdown by drink category.
+- **Calendar and statistics** - browse consumption by day and review weekly and monthly summaries.
+- **Consumption history** - review saved entries and delete individual records.
+- **English and Russian** - select your preferred interface language in settings.
+- **Local data controls** - delete your profile, settings, and consumption data from within the app.
 
 ## Technology
 
@@ -25,9 +25,23 @@ Your data stays on your device in a local SQLite database. No account or backend
 - SQLite via sqlite-net-pcl
 - Dependency injection and RESX localization
 
-Android is the main development and release target, with a dedicated APK release workflow. The project also targets iOS, macOS via Mac Catalyst, and Windows, which require their respective platform toolchains. Windows is included only when building on a Windows host.
+## Installation
 
-## Getting started
+You can try CoffeeNap by installing the prebuilt Android APK.
+
+### Android
+
+1. Go to the [latest GitHub Release](https://github.com/Hazhevalov/CoffeeNap/releases/latest).
+2. Download the `.apk` file from the **Assets** section.
+3. Open the downloaded APK on your Android device.
+4. If prompted, allow installation from unknown sources for the browser or file manager you used to download the APK.
+5. Install and launch CoffeeNap.
+
+> **Note:** CoffeeNap is not distributed through Google Play, so Android may display a warning when installing the APK manually.
+
+The APK is provided as a signed release build for demonstration and testing.
+
+## Development
 
 ### Prerequisites
 
@@ -115,9 +129,3 @@ docs/              Calculation and Android release documentation
 scripts/           Android publishing script
 CoffeeNap.slnx     Solution file
 ```
-
-## Android releases
-
-Use [scripts/Publish-Android.ps1](scripts/Publish-Android.ps1) to create a signed release APK, verify its signature, and generate a SHA-256 checksum. Signing files are supplied separately and must remain outside the repository.
-
-See the [Android release guide](docs/android-release.md) for prerequisites, signing arguments, artifact locations, and device verification steps.
